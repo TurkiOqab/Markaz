@@ -1,0 +1,154 @@
+[
+  {
+    "id": 1,
+    "type": "إطفاء",
+    "plate_number": "أ ب ج 1234",
+    "status": "في الخدمة",
+    "driver_id": 2,
+    "maintenance": [
+      { "date": "2026-01-15", "description": "تغيير زيت المحرك وفحص دوري", "cost": 1200, "contractor": "ورشة الرياض للصيانة", "status": "مكتمل" },
+      { "date": "2026-03-02", "description": "استبدال إطارات المركبة الأربعة", "cost": 4800, "contractor": "مركز الإطارات المتقدم", "status": "مكتمل" }
+    ],
+    "equipment": [
+      { "item_name": "خرطوم إطفاء 30 متر", "quantity": 4, "condition": "جيد" },
+      { "item_name": "فوهة رش متعددة الاستخدامات", "quantity": 2, "condition": "ممتاز" },
+      { "item_name": "سلم انزلاقي 6 متر", "quantity": 1, "condition": "جيد" },
+      { "item_name": "طفاية حريق مسحوق جاف", "quantity": 3, "condition": "ممتاز" },
+      { "item_name": "جهاز تنفس ذاتي SCBA", "quantity": 4, "condition": "ممتاز" }
+    ],
+    "inspections": [
+      { "inspection_date": "2026-04-01", "inspector_name": "محمد بن عبدالله الشمري", "result": "ناجح", "notes": "جميع المعدات جاهزة للاستخدام" },
+      { "inspection_date": "2026-03-01", "inspector_name": "محمد بن عبدالله الشمري", "result": "ناجح", "notes": "تم استبدال أحد الخراطيم التالفة" }
+    ]
+  },
+  {
+    "id": 2,
+    "type": "إطفاء",
+    "plate_number": "د ه و 5678",
+    "status": "في الخدمة",
+    "driver_id": 4,
+    "maintenance": [
+      { "date": "2026-02-20", "description": "صيانة نظام المضخة الرئيسية", "cost": 2500, "contractor": "ورشة الرياض للصيانة", "status": "مكتمل" }
+    ],
+    "equipment": [
+      { "item_name": "خرطوم إطفاء 30 متر", "quantity": 4, "condition": "جيد" },
+      { "item_name": "فأس إطفاء", "quantity": 2, "condition": "جيد" },
+      { "item_name": "طفاية حريق CO2", "quantity": 2, "condition": "ممتاز" },
+      { "item_name": "مصباح كشاف قوي", "quantity": 3, "condition": "جيد" }
+    ],
+    "inspections": [
+      { "inspection_date": "2026-04-05", "inspector_name": "محمد بن عبدالله الشمري", "result": "ناجح", "notes": "" }
+    ]
+  },
+  {
+    "id": 3,
+    "type": "سلم",
+    "plate_number": "ز ح ط 2345",
+    "status": "في الخدمة",
+    "driver_id": 8,
+    "maintenance": [
+      { "date": "2025-12-10", "description": "فحص السلم الهيدروليكي وتشحيم المفاصل", "cost": 1800, "contractor": "الشركة الوطنية للمعدات الثقيلة", "status": "مكتمل" },
+      { "date": "2026-03-25", "description": "صيانة نظام الرفع الهيدروليكي", "cost": 3200, "contractor": "الشركة الوطنية للمعدات الثقيلة", "status": "مكتمل" }
+    ],
+    "equipment": [
+      { "item_name": "سلم هيدروليكي 30 متر", "quantity": 1, "condition": "ممتاز" },
+      { "item_name": "سلة إنقاذ للسلم", "quantity": 1, "condition": "جيد" },
+      { "item_name": "حبل إنقاذ 50 متر", "quantity": 2, "condition": "جيد" }
+    ],
+    "inspections": [
+      { "inspection_date": "2026-04-10", "inspector_name": "فهد بن ناصر الحربي", "result": "ناجح", "notes": "السلم يعمل بكفاءة كاملة" }
+    ]
+  },
+  {
+    "id": 4,
+    "type": "إسعاف",
+    "plate_number": "ي ك ل 3456",
+    "status": "في الخدمة",
+    "driver_id": 9,
+    "maintenance": [
+      { "date": "2026-01-28", "description": "صيانة دورية وتغيير فلاتر", "cost": 950, "contractor": "وكالة السيارات المعتمدة", "status": "مكتمل" }
+    ],
+    "equipment": [
+      { "item_name": "حقيبة إسعافات أولية متقدمة", "quantity": 2, "condition": "ممتاز" },
+      { "item_name": "جهاز صدمات كهربائية AED", "quantity": 1, "condition": "ممتاز" },
+      { "item_name": "نقالة إسعاف قابلة للطي", "quantity": 1, "condition": "جيد" },
+      { "item_name": "أسطوانة أكسجين طبية", "quantity": 2, "condition": "ممتاز" },
+      { "item_name": "جهاز قياس العلامات الحيوية", "quantity": 1, "condition": "ممتاز" }
+    ],
+    "inspections": [
+      { "inspection_date": "2026-04-08", "inspector_name": "ناصر بن خالد العنزي", "result": "ناجح", "notes": "جميع المعدات الطبية جاهزة" }
+    ]
+  },
+  {
+    "id": 5,
+    "type": "إسعاف",
+    "plate_number": "م ن س 4567",
+    "status": "صيانة",
+    "driver_id": null,
+    "maintenance": [
+      { "date": "2026-04-15", "description": "إصلاح نظام التكييف الخلفي", "cost": 1500, "contractor": "وكالة السيارات المعتمدة", "status": "قيد التنفيذ" }
+    ],
+    "equipment": [
+      { "item_name": "حقيبة إسعافات أولية متقدمة", "quantity": 2, "condition": "جيد" },
+      { "item_name": "نقالة إسعاف قابلة للطي", "quantity": 1, "condition": "جيد" }
+    ],
+    "inspections": [
+      { "inspection_date": "2026-04-14", "inspector_name": "ناصر بن خالد العنزي", "result": "يحتاج صيانة", "notes": "نظام التكييف الخلفي لا يعمل" }
+    ]
+  },
+  {
+    "id": 6,
+    "type": "قيادة",
+    "plate_number": "ع ف ص 5678",
+    "status": "في الخدمة",
+    "driver_id": 1,
+    "maintenance": [
+      { "date": "2026-02-05", "description": "صيانة دورية شاملة", "cost": 700, "contractor": "وكالة السيارات المعتمدة", "status": "مكتمل" }
+    ],
+    "equipment": [
+      { "item_name": "جهاز اتصال لاسلكي متعدد القنوات", "quantity": 2, "condition": "ممتاز" },
+      { "item_name": "جهاز حاسوب محمول ميداني", "quantity": 1, "condition": "ممتاز" },
+      { "item_name": "خرائط ومستندات العمليات", "quantity": 1, "condition": "جيد" }
+    ],
+    "inspections": [
+      { "inspection_date": "2026-04-12", "inspector_name": "عبدالعزيز بن فهد العتيبي", "result": "ناجح", "notes": "" }
+    ]
+  },
+  {
+    "id": 7,
+    "type": "إنقاذ",
+    "plate_number": "ق ر ش 6789",
+    "status": "في الخدمة",
+    "driver_id": 12,
+    "maintenance": [
+      { "date": "2026-03-18", "description": "فحص معدات الإنقاذ الهيدروليكية", "cost": 2100, "contractor": "شركة معدات الإنقاذ المتخصصة", "status": "مكتمل" }
+    ],
+    "equipment": [
+      { "item_name": "قاطع هيدروليكي (فك الحياة)", "quantity": 1, "condition": "ممتاز" },
+      { "item_name": "موسع هيدروليكي", "quantity": 1, "condition": "ممتاز" },
+      { "item_name": "مجموعة أدوات إنقاذ فنية", "quantity": 1, "condition": "جيد" },
+      { "item_name": "حبال ومعدات تسلق", "quantity": 1, "condition": "جيد" },
+      { "item_name": "كاميرا حرارية", "quantity": 1, "condition": "ممتاز" }
+    ],
+    "inspections": [
+      { "inspection_date": "2026-04-02", "inspector_name": "فهد بن ناصر الحربي", "result": "ناجح", "notes": "جميع معدات الإنقاذ تعمل بكفاءة" }
+    ]
+  },
+  {
+    "id": 8,
+    "type": "إطفاء",
+    "plate_number": "ت ث خ 7890",
+    "status": "خارج الخدمة",
+    "driver_id": null,
+    "maintenance": [
+      { "date": "2026-04-10", "description": "عطل كبير في المحرك، بانتظار قطع الغيار", "cost": 0, "contractor": "ورشة الرياض للصيانة", "status": "قيد التنفيذ" }
+    ],
+    "equipment": [
+      { "item_name": "خرطوم إطفاء 30 متر", "quantity": 2, "condition": "جيد" },
+      { "item_name": "طفاية حريق مسحوق جاف", "quantity": 2, "condition": "جيد" }
+    ],
+    "inspections": [
+      { "inspection_date": "2026-04-09", "inspector_name": "محمد بن عبدالله الشمري", "result": "غير صالح", "notes": "المحرك معطل، المركبة خارج الخدمة" }
+    ]
+  }
+]

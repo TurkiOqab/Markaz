@@ -1,0 +1,548 @@
+[
+  {
+    "id": 1,
+    "name": "عبدالعزيز بن فهد العتيبي",
+    "rank": "عقيد",
+    "specialty": "قيادة",
+    "date_of_birth": "1974-03-15",
+    "marital_status": "متزوج",
+    "physical_ability": "ممتاز",
+    "national_id": "1023456789",
+    "phone": "0501234567",
+    "email": "a.alotaibi@markaz.gov.sa",
+    "team_id": 1,
+    "shift": "صباحية",
+    "certifications": [
+      { "name": "شهادة القيادة والإدارة المتقدمة", "issuing_authority": "معهد الدفاع المدني", "issue_date": "2018-06-10", "expiry_date": "2028-06-10" },
+      { "name": "شهادة إدارة الأزمات والكوارث", "issuing_authority": "المديرية العامة للدفاع المدني", "issue_date": "2020-09-15", "expiry_date": "2025-09-15" }
+    ],
+    "equipment": [
+      { "item_name": "بدلة إطفاء كاملة", "serial_number": "UF-001", "assigned_date": "2020-01-10", "condition": "ممتاز" },
+      { "item_name": "جهاز لاسلكي قائد", "serial_number": "RD-001", "assigned_date": "2020-01-10", "condition": "ممتاز" }
+    ],
+    "monthly_ratings": [
+      { "year": 2025, "month": 12, "rating": 4.9, "notes": "أداء متميز خلال العام" },
+      { "year": 2026, "month": 1, "rating": 4.8, "notes": "" },
+      { "year": 2026, "month": 2, "rating": 5.0, "notes": "قيادة مثالية خلال عملية الإنقاذ الكبرى" },
+      { "year": 2026, "month": 3, "rating": 4.9, "notes": "" }
+    ]
+  },
+  {
+    "id": 2,
+    "name": "خالد بن سعد القحطاني",
+    "rank": "مقدم",
+    "specialty": "مكافحة حرائق",
+    "date_of_birth": "1978-07-22",
+    "marital_status": "متزوج",
+    "physical_ability": "جيد جداً",
+    "national_id": "1034567890",
+    "phone": "0502345678",
+    "email": "k.alqahtani@markaz.gov.sa",
+    "team_id": 1,
+    "shift": "صباحية",
+    "certifications": [
+      { "name": "شهادة مكافحة الحرائق المتقدمة", "issuing_authority": "معهد الدفاع المدني", "issue_date": "2015-04-20", "expiry_date": "2025-04-20" },
+      { "name": "شهادة قيادة مركبات الإطفاء الثقيلة", "issuing_authority": "المديرية العامة للدفاع المدني", "issue_date": "2017-11-05", "expiry_date": "2027-11-05" },
+      { "name": "شهادة الإسعافات الأولية", "issuing_authority": "الهيئة السعودية للتخصصات الصحية", "issue_date": "2022-02-18", "expiry_date": "2026-02-18" }
+    ],
+    "equipment": [
+      { "item_name": "بدلة إطفاء كاملة", "serial_number": "UF-002", "assigned_date": "2019-03-15", "condition": "جيد" },
+      { "item_name": "خوذة إطفاء", "serial_number": "HM-002", "assigned_date": "2019-03-15", "condition": "جيد" },
+      { "item_name": "جهاز تنفس ذاتي SCBA", "serial_number": "SC-002", "assigned_date": "2021-06-01", "condition": "ممتاز" },
+      { "item_name": "جهاز لاسلكي", "serial_number": "RD-002", "assigned_date": "2019-03-15", "condition": "ممتاز" }
+    ],
+    "monthly_ratings": [
+      { "year": 2025, "month": 11, "rating": 4.6, "notes": "" },
+      { "year": 2025, "month": 12, "rating": 4.7, "notes": "" },
+      { "year": 2026, "month": 1, "rating": 4.5, "notes": "" },
+      { "year": 2026, "month": 2, "rating": 4.8, "notes": "قاد فريق الإطفاء بكفاءة عالية" },
+      { "year": 2026, "month": 3, "rating": 4.7, "notes": "" }
+    ]
+  },
+  {
+    "id": 3,
+    "name": "محمد بن عبدالله الشمري",
+    "rank": "رائد",
+    "specialty": "مواد خطرة",
+    "date_of_birth": "1982-11-10",
+    "marital_status": "متزوج",
+    "physical_ability": "ممتاز",
+    "national_id": "1045678901",
+    "phone": "0503456789",
+    "email": "m.alshammari@markaz.gov.sa",
+    "team_id": 1,
+    "shift": "مسائية",
+    "certifications": [
+      { "name": "شهادة التعامل مع المواد الخطرة HAZMAT", "issuing_authority": "معهد الدفاع المدني", "issue_date": "2019-08-10", "expiry_date": "2024-08-10" },
+      { "name": "شهادة مكافحة الحرائق المتقدمة", "issuing_authority": "معهد الدفاع المدني", "issue_date": "2020-03-22", "expiry_date": "2026-03-22" }
+    ],
+    "equipment": [
+      { "item_name": "بدلة واقية للمواد الخطرة", "serial_number": "HZ-003", "assigned_date": "2020-05-12", "condition": "ممتاز" },
+      { "item_name": "جهاز تنفس ذاتي SCBA", "serial_number": "SC-003", "assigned_date": "2020-05-12", "condition": "ممتاز" },
+      { "item_name": "جهاز كشف الغازات السامة", "serial_number": "GD-003", "assigned_date": "2021-09-08", "condition": "جيد" }
+    ],
+    "monthly_ratings": [
+      { "year": 2025, "month": 12, "rating": 4.6, "notes": "" },
+      { "year": 2026, "month": 1, "rating": 4.5, "notes": "" },
+      { "year": 2026, "month": 2, "rating": 4.7, "notes": "" },
+      { "year": 2026, "month": 3, "rating": 4.8, "notes": "تعامل ببراعة مع تسرب مواد كيميائية" }
+    ]
+  },
+  {
+    "id": 4,
+    "name": "فهد بن ناصر الحربي",
+    "rank": "رائد",
+    "specialty": "إنقاذ",
+    "date_of_birth": "1984-04-05",
+    "marital_status": "أعزب",
+    "physical_ability": "جيد جداً",
+    "national_id": "1056789012",
+    "phone": "0504567890",
+    "email": "f.alharbi@markaz.gov.sa",
+    "team_id": 2,
+    "shift": "صباحية",
+    "certifications": [
+      { "name": "شهادة الإنقاذ الفني المتقدم", "issuing_authority": "معهد الدفاع المدني", "issue_date": "2019-05-18", "expiry_date": "2025-05-18" },
+      { "name": "شهادة السباحة والإنقاذ المائي", "issuing_authority": "الاتحاد السعودي للسباحة", "issue_date": "2021-07-03", "expiry_date": "2026-07-03" }
+    ],
+    "equipment": [
+      { "item_name": "بدلة إطفاء كاملة", "serial_number": "UF-004", "assigned_date": "2020-02-20", "condition": "جيد" },
+      { "item_name": "حبل إنقاذ 50 متر", "serial_number": "RP-004", "assigned_date": "2020-02-20", "condition": "ممتاز" },
+      { "item_name": "حزام أمان للإنقاذ", "serial_number": "SB-004", "assigned_date": "2020-02-20", "condition": "جيد" }
+    ],
+    "monthly_ratings": [
+      { "year": 2026, "month": 1, "rating": 4.4, "notes": "" },
+      { "year": 2026, "month": 2, "rating": 4.6, "notes": "" },
+      { "year": 2026, "month": 3, "rating": 4.7, "notes": "عملية إنقاذ ناجحة من ارتفاع" }
+    ]
+  },
+  {
+    "id": 5,
+    "name": "سلطان بن تركي الدوسري",
+    "rank": "نقيب",
+    "specialty": "مكافحة حرائق",
+    "date_of_birth": "1986-09-18",
+    "marital_status": "متزوج",
+    "physical_ability": "ممتاز",
+    "national_id": "1067890123",
+    "phone": "0505678901",
+    "email": "s.aldosari@markaz.gov.sa",
+    "team_id": 2,
+    "shift": "مسائية",
+    "certifications": [
+      { "name": "شهادة مكافحة الحرائق المتقدمة", "issuing_authority": "معهد الدفاع المدني", "issue_date": "2018-12-01", "expiry_date": "2028-12-01" },
+      { "name": "شهادة الإسعافات الأولية", "issuing_authority": "الهيئة السعودية للتخصصات الصحية", "issue_date": "2023-01-15", "expiry_date": "2027-01-15" }
+    ],
+    "equipment": [
+      { "item_name": "بدلة إطفاء كاملة", "serial_number": "UF-005", "assigned_date": "2020-08-10", "condition": "ممتاز" },
+      { "item_name": "خوذة إطفاء", "serial_number": "HM-005", "assigned_date": "2020-08-10", "condition": "ممتاز" },
+      { "item_name": "جهاز تنفس ذاتي SCBA", "serial_number": "SC-005", "assigned_date": "2020-08-10", "condition": "جيد" }
+    ],
+    "monthly_ratings": [
+      { "year": 2025, "month": 12, "rating": 4.5, "notes": "" },
+      { "year": 2026, "month": 1, "rating": 4.7, "notes": "" },
+      { "year": 2026, "month": 2, "rating": 4.6, "notes": "" },
+      { "year": 2026, "month": 3, "rating": 4.8, "notes": "أداء متميز في تمرين مشترك" }
+    ]
+  },
+  {
+    "id": 6,
+    "name": "ناصر بن خالد العنزي",
+    "rank": "نقيب",
+    "specialty": "إسعاف",
+    "date_of_birth": "1987-12-25",
+    "marital_status": "متزوج",
+    "physical_ability": "جيد",
+    "national_id": "1078901234",
+    "phone": "0506789012",
+    "email": "n.alanzi@markaz.gov.sa",
+    "team_id": 3,
+    "shift": "ليلية",
+    "certifications": [
+      { "name": "شهادة الإسعاف المتقدم EMT", "issuing_authority": "الهيئة السعودية للتخصصات الصحية", "issue_date": "2020-04-12", "expiry_date": "2025-04-12" },
+      { "name": "شهادة الإنعاش القلبي الرئوي CPR", "issuing_authority": "الهيئة السعودية للتخصصات الصحية", "issue_date": "2023-06-20", "expiry_date": "2026-06-20" }
+    ],
+    "equipment": [
+      { "item_name": "حقيبة إسعافات أولية", "serial_number": "FA-006", "assigned_date": "2021-01-05", "condition": "ممتاز" },
+      { "item_name": "جهاز قياس العلامات الحيوية", "serial_number": "VS-006", "assigned_date": "2021-01-05", "condition": "ممتاز" }
+    ],
+    "monthly_ratings": [
+      { "year": 2025, "month": 11, "rating": 4.3, "notes": "" },
+      { "year": 2025, "month": 12, "rating": 4.4, "notes": "" },
+      { "year": 2026, "month": 1, "rating": 4.5, "notes": "" },
+      { "year": 2026, "month": 2, "rating": 4.6, "notes": "" },
+      { "year": 2026, "month": 3, "rating": 4.5, "notes": "" }
+    ]
+  },
+  {
+    "id": 7,
+    "name": "يزيد بن ماجد المطيري",
+    "rank": "ملازم أول",
+    "specialty": "مكافحة حرائق",
+    "date_of_birth": "1989-02-14",
+    "marital_status": "أعزب",
+    "physical_ability": "جيد جداً",
+    "national_id": "1089012345",
+    "phone": "0507890123",
+    "email": "y.almutairi@markaz.gov.sa",
+    "team_id": 1,
+    "shift": "ليلية",
+    "certifications": [
+      { "name": "شهادة مكافحة الحرائق الأساسية", "issuing_authority": "معهد الدفاع المدني", "issue_date": "2021-09-10", "expiry_date": "2026-09-10" }
+    ],
+    "equipment": [
+      { "item_name": "بدلة إطفاء كاملة", "serial_number": "UF-007", "assigned_date": "2021-10-01", "condition": "جيد" },
+      { "item_name": "خوذة إطفاء", "serial_number": "HM-007", "assigned_date": "2021-10-01", "condition": "جيد" },
+      { "item_name": "مصباح كشاف يدوي", "serial_number": "FL-007", "assigned_date": "2022-03-15", "condition": "ممتاز" }
+    ],
+    "monthly_ratings": [
+      { "year": 2026, "month": 1, "rating": 4.2, "notes": "" },
+      { "year": 2026, "month": 2, "rating": 4.4, "notes": "تحسن ملحوظ في الأداء" },
+      { "year": 2026, "month": 3, "rating": 4.5, "notes": "" }
+    ]
+  },
+  {
+    "id": 8,
+    "name": "تركي بن عبدالعزيز الزهراني",
+    "rank": "ملازم أول",
+    "specialty": "إنقاذ",
+    "date_of_birth": "1990-06-30",
+    "marital_status": "متزوج",
+    "physical_ability": "ممتاز",
+    "national_id": "1090123456",
+    "phone": "0508901234",
+    "email": "t.alzahrani@markaz.gov.sa",
+    "team_id": 2,
+    "shift": "صباحية",
+    "certifications": [
+      { "name": "شهادة الإنقاذ الفني", "issuing_authority": "معهد الدفاع المدني", "issue_date": "2021-03-20", "expiry_date": "2026-03-20" },
+      { "name": "شهادة قيادة مركبات السلم", "issuing_authority": "المديرية العامة للدفاع المدني", "issue_date": "2022-08-14", "expiry_date": "2027-08-14" }
+    ],
+    "equipment": [
+      { "item_name": "بدلة إطفاء كاملة", "serial_number": "UF-008", "assigned_date": "2021-04-01", "condition": "ممتاز" },
+      { "item_name": "حزام أمان للإنقاذ", "serial_number": "SB-008", "assigned_date": "2021-04-01", "condition": "جيد" }
+    ],
+    "monthly_ratings": [
+      { "year": 2025, "month": 12, "rating": 4.6, "notes": "" },
+      { "year": 2026, "month": 1, "rating": 4.7, "notes": "" },
+      { "year": 2026, "month": 2, "rating": 4.8, "notes": "عملية إنقاذ ناجحة باستخدام السلم الهيدروليكي" },
+      { "year": 2026, "month": 3, "rating": 4.7, "notes": "" }
+    ]
+  },
+  {
+    "id": 9,
+    "name": "بندر بن سعود الغامدي",
+    "rank": "ملازم",
+    "specialty": "إسعاف",
+    "date_of_birth": "1991-08-12",
+    "marital_status": "أعزب",
+    "physical_ability": "ممتاز",
+    "national_id": "1001234567",
+    "phone": "0509012345",
+    "email": "b.alghamdi@markaz.gov.sa",
+    "team_id": 3,
+    "shift": "صباحية",
+    "certifications": [
+      { "name": "شهادة الإسعاف المتقدم EMT", "issuing_authority": "الهيئة السعودية للتخصصات الصحية", "issue_date": "2022-05-08", "expiry_date": "2027-05-08" }
+    ],
+    "equipment": [
+      { "item_name": "حقيبة إسعافات أولية", "serial_number": "FA-009", "assigned_date": "2022-06-01", "condition": "ممتاز" },
+      { "item_name": "جهاز صدمات كهربائية AED محمول", "serial_number": "AED-009", "assigned_date": "2023-02-10", "condition": "ممتاز" }
+    ],
+    "monthly_ratings": [
+      { "year": 2026, "month": 1, "rating": 4.5, "notes": "" },
+      { "year": 2026, "month": 2, "rating": 4.6, "notes": "" },
+      { "year": 2026, "month": 3, "rating": 4.7, "notes": "" }
+    ]
+  },
+  {
+    "id": 10,
+    "name": "سعود بن طلال البقمي",
+    "rank": "ملازم",
+    "specialty": "مواد خطرة",
+    "date_of_birth": "1992-01-20",
+    "marital_status": "أعزب",
+    "physical_ability": "جيد جداً",
+    "national_id": "1012345678",
+    "phone": "0511234567",
+    "email": "s.albaqmi@markaz.gov.sa",
+    "team_id": 2,
+    "shift": "مسائية",
+    "certifications": [
+      { "name": "شهادة التعامل مع المواد الخطرة HAZMAT", "issuing_authority": "معهد الدفاع المدني", "issue_date": "2022-11-12", "expiry_date": "2027-11-12" }
+    ],
+    "equipment": [
+      { "item_name": "بدلة واقية للمواد الخطرة", "serial_number": "HZ-010", "assigned_date": "2022-12-01", "condition": "ممتاز" },
+      { "item_name": "جهاز كشف الغازات السامة", "serial_number": "GD-010", "assigned_date": "2023-04-15", "condition": "جيد" }
+    ],
+    "monthly_ratings": [
+      { "year": 2025, "month": 12, "rating": 4.4, "notes": "" },
+      { "year": 2026, "month": 1, "rating": 4.5, "notes": "" },
+      { "year": 2026, "month": 2, "rating": 4.4, "notes": "" },
+      { "year": 2026, "month": 3, "rating": 4.6, "notes": "" }
+    ]
+  },
+  {
+    "id": 11,
+    "name": "مشعل بن نواف السبيعي",
+    "rank": "رقيب أول",
+    "specialty": "مكافحة حرائق",
+    "date_of_birth": "1988-05-08",
+    "marital_status": "متزوج",
+    "physical_ability": "جيد جداً",
+    "national_id": "1023456780",
+    "phone": "0521234567",
+    "email": "m.alsubaie@markaz.gov.sa",
+    "team_id": 3,
+    "shift": "مسائية",
+    "certifications": [
+      { "name": "شهادة مكافحة الحرائق المتقدمة", "issuing_authority": "معهد الدفاع المدني", "issue_date": "2019-10-05", "expiry_date": "2024-10-05" },
+      { "name": "شهادة قيادة مركبات الإطفاء الثقيلة", "issuing_authority": "المديرية العامة للدفاع المدني", "issue_date": "2020-08-20", "expiry_date": "2025-08-20" }
+    ],
+    "equipment": [
+      { "item_name": "بدلة إطفاء كاملة", "serial_number": "UF-011", "assigned_date": "2019-11-01", "condition": "جيد" },
+      { "item_name": "جهاز تنفس ذاتي SCBA", "serial_number": "SC-011", "assigned_date": "2020-01-15", "condition": "جيد" },
+      { "item_name": "فأس إطفاء", "serial_number": "AX-011", "assigned_date": "2019-11-01", "condition": "جيد" }
+    ],
+    "monthly_ratings": [
+      { "year": 2025, "month": 11, "rating": 4.3, "notes": "" },
+      { "year": 2025, "month": 12, "rating": 4.4, "notes": "" },
+      { "year": 2026, "month": 1, "rating": 4.5, "notes": "" },
+      { "year": 2026, "month": 2, "rating": 4.5, "notes": "" },
+      { "year": 2026, "month": 3, "rating": 4.6, "notes": "" }
+    ]
+  },
+  {
+    "id": 12,
+    "name": "نواف بن منصور الرشيدي",
+    "rank": "رقيب أول",
+    "specialty": "إنقاذ",
+    "date_of_birth": "1989-10-17",
+    "marital_status": "متزوج",
+    "physical_ability": "جيد",
+    "national_id": "1034567801",
+    "phone": "0522345678",
+    "email": "n.alrasheedi@markaz.gov.sa",
+    "team_id": 1,
+    "shift": "ليلية",
+    "certifications": [
+      { "name": "شهادة الإنقاذ الفني", "issuing_authority": "معهد الدفاع المدني", "issue_date": "2020-07-14", "expiry_date": "2025-07-14" }
+    ],
+    "equipment": [
+      { "item_name": "بدلة إطفاء كاملة", "serial_number": "UF-012", "assigned_date": "2020-08-01", "condition": "جيد" },
+      { "item_name": "حبل إنقاذ 50 متر", "serial_number": "RP-012", "assigned_date": "2020-08-01", "condition": "جيد" }
+    ],
+    "monthly_ratings": [
+      { "year": 2026, "month": 1, "rating": 4.2, "notes": "" },
+      { "year": 2026, "month": 2, "rating": 4.3, "notes": "" },
+      { "year": 2026, "month": 3, "rating": 4.4, "notes": "" }
+    ]
+  },
+  {
+    "id": 13,
+    "name": "ماجد بن فيصل العجمي",
+    "rank": "رقيب",
+    "specialty": "إسعاف",
+    "date_of_birth": "1991-03-28",
+    "marital_status": "أعزب",
+    "physical_ability": "جيد جداً",
+    "national_id": "1045678012",
+    "phone": "0523456789",
+    "email": "m.alajmi@markaz.gov.sa",
+    "team_id": 2,
+    "shift": "ليلية",
+    "certifications": [
+      { "name": "شهادة الإسعافات الأولية", "issuing_authority": "الهيئة السعودية للتخصصات الصحية", "issue_date": "2022-03-10", "expiry_date": "2026-03-10" }
+    ],
+    "equipment": [
+      { "item_name": "حقيبة إسعافات أولية", "serial_number": "FA-013", "assigned_date": "2022-04-01", "condition": "جيد" }
+    ],
+    "monthly_ratings": [
+      { "year": 2025, "month": 12, "rating": 4.2, "notes": "" },
+      { "year": 2026, "month": 1, "rating": 4.3, "notes": "" },
+      { "year": 2026, "month": 2, "rating": 4.4, "notes": "" },
+      { "year": 2026, "month": 3, "rating": 4.5, "notes": "" }
+    ]
+  },
+  {
+    "id": 14,
+    "name": "راكان بن عمر الخالدي",
+    "rank": "رقيب",
+    "specialty": "مكافحة حرائق",
+    "date_of_birth": "1992-07-14",
+    "marital_status": "متزوج",
+    "physical_ability": "جيد",
+    "national_id": "1056780123",
+    "phone": "0524567890",
+    "email": "r.alkhalidi@markaz.gov.sa",
+    "team_id": 3,
+    "shift": "صباحية",
+    "certifications": [
+      { "name": "شهادة مكافحة الحرائق الأساسية", "issuing_authority": "معهد الدفاع المدني", "issue_date": "2021-11-08", "expiry_date": "2026-11-08" }
+    ],
+    "equipment": [
+      { "item_name": "بدلة إطفاء كاملة", "serial_number": "UF-014", "assigned_date": "2021-12-01", "condition": "جيد" },
+      { "item_name": "خوذة إطفاء", "serial_number": "HM-014", "assigned_date": "2021-12-01", "condition": "جيد" }
+    ],
+    "monthly_ratings": [
+      { "year": 2026, "month": 1, "rating": 4.1, "notes": "" },
+      { "year": 2026, "month": 2, "rating": 4.2, "notes": "" },
+      { "year": 2026, "month": 3, "rating": 4.3, "notes": "" }
+    ]
+  },
+  {
+    "id": 15,
+    "name": "عمر بن يوسف البلوي",
+    "rank": "عريف",
+    "specialty": "مكافحة حرائق",
+    "date_of_birth": "1993-11-02",
+    "marital_status": "أعزب",
+    "physical_ability": "جيد جداً",
+    "national_id": "1067801234",
+    "phone": "0525678901",
+    "email": "o.albalawi@markaz.gov.sa",
+    "team_id": 1,
+    "shift": "مسائية",
+    "certifications": [
+      { "name": "شهادة مكافحة الحرائق الأساسية", "issuing_authority": "معهد الدفاع المدني", "issue_date": "2022-06-18", "expiry_date": "2027-06-18" }
+    ],
+    "equipment": [
+      { "item_name": "بدلة إطفاء كاملة", "serial_number": "UF-015", "assigned_date": "2022-07-01", "condition": "جيد" },
+      { "item_name": "خوذة إطفاء", "serial_number": "HM-015", "assigned_date": "2022-07-01", "condition": "جيد" }
+    ],
+    "monthly_ratings": [
+      { "year": 2025, "month": 12, "rating": 4.0, "notes": "" },
+      { "year": 2026, "month": 1, "rating": 4.1, "notes": "" },
+      { "year": 2026, "month": 2, "rating": 4.3, "notes": "" },
+      { "year": 2026, "month": 3, "rating": 4.4, "notes": "تحسن مستمر" }
+    ]
+  },
+  {
+    "id": 16,
+    "name": "يوسف بن إبراهيم العتيبي",
+    "rank": "عريف",
+    "specialty": "إنقاذ",
+    "date_of_birth": "1994-04-19",
+    "marital_status": "أعزب",
+    "physical_ability": "ممتاز",
+    "national_id": "1078012345",
+    "phone": "0526789012",
+    "email": "y.alotaibi2@markaz.gov.sa",
+    "team_id": 2,
+    "shift": "مسائية",
+    "certifications": [
+      { "name": "شهادة الإنقاذ الفني", "issuing_authority": "معهد الدفاع المدني", "issue_date": "2023-01-22", "expiry_date": "2028-01-22" }
+    ],
+    "equipment": [
+      { "item_name": "بدلة إطفاء كاملة", "serial_number": "UF-016", "assigned_date": "2023-02-01", "condition": "ممتاز" },
+      { "item_name": "حزام أمان للإنقاذ", "serial_number": "SB-016", "assigned_date": "2023-02-01", "condition": "ممتاز" }
+    ],
+    "monthly_ratings": [
+      { "year": 2026, "month": 1, "rating": 4.3, "notes": "" },
+      { "year": 2026, "month": 2, "rating": 4.5, "notes": "" },
+      { "year": 2026, "month": 3, "rating": 4.6, "notes": "" }
+    ]
+  },
+  {
+    "id": 17,
+    "name": "إبراهيم بن صالح القحطاني",
+    "rank": "جندي أول",
+    "specialty": "إسعاف",
+    "date_of_birth": "1995-09-06",
+    "marital_status": "أعزب",
+    "physical_ability": "جيد",
+    "national_id": "1080123456",
+    "phone": "0527890123",
+    "email": "i.alqahtani@markaz.gov.sa",
+    "team_id": 3,
+    "shift": "ليلية",
+    "certifications": [
+      { "name": "شهادة الإسعافات الأولية", "issuing_authority": "الهيئة السعودية للتخصصات الصحية", "issue_date": "2023-05-10", "expiry_date": "2027-05-10" }
+    ],
+    "equipment": [
+      { "item_name": "حقيبة إسعافات أولية", "serial_number": "FA-017", "assigned_date": "2023-06-01", "condition": "جيد" }
+    ],
+    "monthly_ratings": [
+      { "year": 2026, "month": 1, "rating": 4.0, "notes": "" },
+      { "year": 2026, "month": 2, "rating": 4.1, "notes": "" },
+      { "year": 2026, "month": 3, "rating": 4.2, "notes": "" }
+    ]
+  },
+  {
+    "id": 18,
+    "name": "صالح بن أحمد الشمري",
+    "rank": "جندي أول",
+    "specialty": "مكافحة حرائق",
+    "date_of_birth": "1996-12-11",
+    "marital_status": "أعزب",
+    "physical_ability": "جيد جداً",
+    "national_id": "1091234567",
+    "phone": "0528901234",
+    "email": "s.alshammari2@markaz.gov.sa",
+    "team_id": 1,
+    "shift": "ليلية",
+    "certifications": [
+      { "name": "شهادة مكافحة الحرائق الأساسية", "issuing_authority": "معهد الدفاع المدني", "issue_date": "2023-08-15", "expiry_date": "2028-08-15" }
+    ],
+    "equipment": [
+      { "item_name": "بدلة إطفاء كاملة", "serial_number": "UF-018", "assigned_date": "2023-09-01", "condition": "ممتاز" },
+      { "item_name": "خوذة إطفاء", "serial_number": "HM-018", "assigned_date": "2023-09-01", "condition": "ممتاز" }
+    ],
+    "monthly_ratings": [
+      { "year": 2026, "month": 1, "rating": 4.2, "notes": "" },
+      { "year": 2026, "month": 2, "rating": 4.3, "notes": "" },
+      { "year": 2026, "month": 3, "rating": 4.4, "notes": "" }
+    ]
+  },
+  {
+    "id": 19,
+    "name": "أحمد بن محمد الحربي",
+    "rank": "جندي",
+    "specialty": "مكافحة حرائق",
+    "date_of_birth": "1998-02-27",
+    "marital_status": "أعزب",
+    "physical_ability": "ممتاز",
+    "national_id": "1002345678",
+    "phone": "0529012345",
+    "email": "a.alharbi@markaz.gov.sa",
+    "team_id": 2,
+    "shift": "صباحية",
+    "certifications": [
+      { "name": "شهادة مكافحة الحرائق الأساسية", "issuing_authority": "معهد الدفاع المدني", "issue_date": "2024-02-10", "expiry_date": "2029-02-10" }
+    ],
+    "equipment": [
+      { "item_name": "بدلة إطفاء كاملة", "serial_number": "UF-019", "assigned_date": "2024-03-01", "condition": "ممتاز" }
+    ],
+    "monthly_ratings": [
+      { "year": 2026, "month": 1, "rating": 4.1, "notes": "موظف جديد، أداء واعد" },
+      { "year": 2026, "month": 2, "rating": 4.3, "notes": "" },
+      { "year": 2026, "month": 3, "rating": 4.4, "notes": "" }
+    ]
+  },
+  {
+    "id": 20,
+    "name": "محمد بن علي الدوسري",
+    "rank": "جندي",
+    "specialty": "إنقاذ",
+    "date_of_birth": "1999-06-09",
+    "marital_status": "أعزب",
+    "physical_ability": "جيد جداً",
+    "national_id": "1013456789",
+    "phone": "0531234567",
+    "email": "m.aldosari@markaz.gov.sa",
+    "team_id": 3,
+    "shift": "صباحية",
+    "certifications": [
+      { "name": "شهادة الإنقاذ الأساسي", "issuing_authority": "معهد الدفاع المدني", "issue_date": "2024-06-05", "expiry_date": "2029-06-05" }
+    ],
+    "equipment": [
+      { "item_name": "بدلة إطفاء كاملة", "serial_number": "UF-020", "assigned_date": "2024-07-01", "condition": "ممتاز" },
+      { "item_name": "حزام أمان للإنقاذ", "serial_number": "SB-020", "assigned_date": "2024-07-01", "condition": "ممتاز" }
+    ],
+    "monthly_ratings": [
+      { "year": 2026, "month": 1, "rating": 4.0, "notes": "موظف جديد" },
+      { "year": 2026, "month": 2, "rating": 4.2, "notes": "" },
+      { "year": 2026, "month": 3, "rating": 4.3, "notes": "" }
+    ]
+  }
+]

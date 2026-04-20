@@ -1,0 +1,69 @@
+{
+  "building": {
+    "id": 1,
+    "name": "مركز الدفاع المدني الرئيسي",
+    "address": "شارع الملك فهد، الرياض، المملكة العربية السعودية",
+    "notes": "المبنى الرئيسي للمركز، يتسع لثلاث فرق عمل"
+  },
+  "rooms": [
+    { "id": 1, "type": "غرفة نوم", "name": "غرفة نوم رقم 1", "capacity": 4, "status": "جاهزة", "notes": "مخصصة للفريق أ" },
+    { "id": 2, "type": "غرفة نوم", "name": "غرفة نوم رقم 2", "capacity": 4, "status": "جاهزة", "notes": "مخصصة للفريق أ" },
+    { "id": 3, "type": "غرفة نوم", "name": "غرفة نوم رقم 3", "capacity": 4, "status": "جاهزة", "notes": "مخصصة للفريق ب" },
+    { "id": 4, "type": "غرفة نوم", "name": "غرفة نوم رقم 4", "capacity": 4, "status": "جاهزة", "notes": "مخصصة للفريق ج" },
+    { "id": 5, "type": "غرفة نوم", "name": "غرفة نوم الضباط", "capacity": 2, "status": "جاهزة", "notes": "مخصصة للضباط فقط" },
+    { "id": 6, "type": "مكتب", "name": "مكتب القائد", "capacity": 3, "status": "جاهزة", "notes": "مكتب قائد المركز" },
+    { "id": 7, "type": "مكتب", "name": "مكتب العمليات", "capacity": 6, "status": "جاهزة", "notes": "غرفة إدارة العمليات الميدانية" },
+    { "id": 8, "type": "مكتب", "name": "مكتب الموارد البشرية", "capacity": 4, "status": "جاهزة", "notes": "" },
+    { "id": 9, "type": "مكتب", "name": "مكتب الصيانة", "capacity": 3, "status": "جاهزة", "notes": "" },
+    { "id": 10, "type": "قاعة تدريس", "name": "قاعة التدريب العملي", "capacity": 20, "status": "جاهزة", "notes": "مجهزة لتدريبات مكافحة الحرائق" },
+    { "id": 11, "type": "قاعة تدريس", "name": "قاعة المحاضرات", "capacity": 30, "status": "جاهزة", "notes": "تحتوي على جهاز عرض ومكيف" },
+    { "id": 12, "type": "قاعة تدريس", "name": "قاعة الإسعافات الأولية", "capacity": 15, "status": "صيانة", "notes": "جاري تحديث معدات التدريب الطبي" },
+    { "id": 13, "type": "مرفق", "name": "صالة الطعام", "capacity": 40, "status": "جاهزة", "notes": "" },
+    { "id": 14, "type": "مرفق", "name": "المطبخ الرئيسي", "capacity": 5, "status": "جاهزة", "notes": "" },
+    { "id": 15, "type": "مرفق", "name": "الصالة الرياضية", "capacity": 20, "status": "جاهزة", "notes": "مجهزة بأجهزة لياقة بدنية متكاملة" }
+  ],
+  "inventory": [
+    { "id": 1, "item_name": "خرطوم إطفاء احتياطي 30 متر", "category": "معدات إطفاء", "quantity": 12, "location": "مخزن المعدات الرئيسي", "min_threshold": 6, "notes": "" },
+    { "id": 2, "item_name": "خرطوم إطفاء احتياطي 15 متر", "category": "معدات إطفاء", "quantity": 8, "location": "مخزن المعدات الرئيسي", "min_threshold": 4, "notes": "" },
+    { "id": 3, "item_name": "فوهة رش متعددة الاستخدامات", "category": "معدات إطفاء", "quantity": 6, "location": "مخزن المعدات الرئيسي", "min_threshold": 3, "notes": "" },
+    { "id": 4, "item_name": "طفاية حريق مسحوق جاف 6 كجم", "category": "معدات إطفاء", "quantity": 15, "location": "مخزن المعدات الرئيسي", "min_threshold": 8, "notes": "" },
+    { "id": 5, "item_name": "طفاية حريق CO2 5 كجم", "category": "معدات إطفاء", "quantity": 10, "location": "مخزن المعدات الرئيسي", "min_threshold": 5, "notes": "" },
+    { "id": 6, "item_name": "بدلة إطفاء كاملة (مقاس متوسط)", "category": "ملابس واقية", "quantity": 10, "location": "مخزن الملابس", "min_threshold": 5, "notes": "" },
+    { "id": 7, "item_name": "بدلة إطفاء كاملة (مقاس كبير)", "category": "ملابس واقية", "quantity": 8, "location": "مخزن الملابس", "min_threshold": 4, "notes": "" },
+    { "id": 8, "item_name": "خوذة إطفاء احتياطية", "category": "ملابس واقية", "quantity": 12, "location": "مخزن الملابس", "min_threshold": 6, "notes": "" },
+    { "id": 9, "item_name": "قفازات إطفاء", "category": "ملابس واقية", "quantity": 25, "location": "مخزن الملابس", "min_threshold": 10, "notes": "" },
+    { "id": 10, "item_name": "حذاء إطفاء احتياطي", "category": "ملابس واقية", "quantity": 10, "location": "مخزن الملابس", "min_threshold": 5, "notes": "" },
+    { "id": 11, "item_name": "جهاز تنفس ذاتي SCBA", "category": "معدات تنفس", "quantity": 8, "location": "مخزن معدات التنفس", "min_threshold": 4, "notes": "يتطلب فحصًا دوريًا" },
+    { "id": 12, "item_name": "أسطوانة هواء مضغوط احتياطية", "category": "معدات تنفس", "quantity": 20, "location": "مخزن معدات التنفس", "min_threshold": 10, "notes": "" },
+    { "id": 13, "item_name": "قناع وجه كامل", "category": "معدات تنفس", "quantity": 15, "location": "مخزن معدات التنفس", "min_threshold": 8, "notes": "" },
+    { "id": 14, "item_name": "حقيبة إسعافات أولية كاملة", "category": "معدات طبية", "quantity": 6, "location": "مستودع المعدات الطبية", "min_threshold": 3, "notes": "" },
+    { "id": 15, "item_name": "جهاز صدمات كهربائية AED احتياطي", "category": "معدات طبية", "quantity": 2, "location": "مستودع المعدات الطبية", "min_threshold": 1, "notes": "" },
+    { "id": 16, "item_name": "نقالة إسعاف قابلة للطي", "category": "معدات طبية", "quantity": 4, "location": "مستودع المعدات الطبية", "min_threshold": 2, "notes": "" },
+    { "id": 17, "item_name": "أسطوانة أكسجين طبية صغيرة", "category": "معدات طبية", "quantity": 8, "location": "مستودع المعدات الطبية", "min_threshold": 4, "notes": "" },
+    { "id": 18, "item_name": "ضمادات طبية متنوعة", "category": "مستلزمات طبية", "quantity": 200, "location": "مستودع المعدات الطبية", "min_threshold": 100, "notes": "" },
+    { "id": 19, "item_name": "حبل إنقاذ 50 متر", "category": "معدات إنقاذ", "quantity": 6, "location": "مخزن معدات الإنقاذ", "min_threshold": 3, "notes": "" },
+    { "id": 20, "item_name": "حزام أمان للإنقاذ", "category": "معدات إنقاذ", "quantity": 10, "location": "مخزن معدات الإنقاذ", "min_threshold": 5, "notes": "" },
+    { "id": 21, "item_name": "فأس إطفاء", "category": "أدوات يدوية", "quantity": 12, "location": "مخزن الأدوات", "min_threshold": 6, "notes": "" },
+    { "id": 22, "item_name": "مطرقة ثقيلة للاقتحام", "category": "أدوات يدوية", "quantity": 6, "location": "مخزن الأدوات", "min_threshold": 3, "notes": "" },
+    { "id": 23, "item_name": "أداة فتح الأبواب", "category": "أدوات يدوية", "quantity": 4, "location": "مخزن الأدوات", "min_threshold": 2, "notes": "" },
+    { "id": 24, "item_name": "جهاز لاسلكي محمول", "category": "أجهزة اتصال", "quantity": 25, "location": "مخزن الأجهزة", "min_threshold": 15, "notes": "يتطلب شحنًا يوميًا" },
+    { "id": 25, "item_name": "كاميرا حرارية", "category": "أجهزة متخصصة", "quantity": 3, "location": "مخزن الأجهزة", "min_threshold": 2, "notes": "" },
+    { "id": 26, "item_name": "مصباح كشاف قوي", "category": "أجهزة إنارة", "quantity": 15, "location": "مخزن الأجهزة", "min_threshold": 8, "notes": "" },
+    { "id": 27, "item_name": "بطارية احتياطية للمصابيح", "category": "أجهزة إنارة", "quantity": 40, "location": "مخزن الأجهزة", "min_threshold": 20, "notes": "" },
+    { "id": 28, "item_name": "مواد امتصاص السوائل الخطرة", "category": "مواد خطرة", "quantity": 30, "location": "مخزن المواد الخطرة", "min_threshold": 15, "notes": "يتطلب تخزينًا خاصًا" },
+    { "id": 29, "item_name": "بدلة واقية للمواد الخطرة (HAZMAT)", "category": "مواد خطرة", "quantity": 6, "location": "مخزن المواد الخطرة", "min_threshold": 3, "notes": "" },
+    { "id": 30, "item_name": "مواد رغوة مكافحة الحرائق", "category": "مواد إطفاء", "quantity": 20, "location": "مخزن المواد", "min_threshold": 10, "notes": "عبوات 20 لتر" }
+  ],
+  "maintenance": [
+    { "id": 1, "date": "2025-11-12", "description": "صيانة نظام الإنذار من الحريق في المبنى", "cost": 3500, "contractor": "شركة أنظمة السلامة", "status": "مكتمل" },
+    { "id": 2, "date": "2026-01-08", "description": "صيانة وحدات التكييف المركزي", "cost": 6200, "contractor": "شركة التكييف الموحدة", "status": "مكتمل" },
+    { "id": 3, "date": "2026-02-22", "description": "تجديد طلاء الجدران الخارجية", "cost": 12000, "contractor": "مؤسسة الدهانات الاحترافية", "status": "مكتمل" },
+    { "id": 4, "date": "2026-03-30", "description": "صيانة المولد الكهربائي الاحتياطي", "cost": 2800, "contractor": "شركة المولدات الكهربائية", "status": "مكتمل" },
+    { "id": 5, "date": "2026-04-15", "description": "تحديث معدات التدريب في قاعة الإسعافات الأولية", "cost": 8500, "contractor": "شركة معدات التدريب الطبي", "status": "قيد التنفيذ" }
+  ],
+  "reports": [
+    { "id": 1, "date": "2025-12-31", "title": "التقرير السنوي للمركز لعام 2025", "summary": "تقرير شامل يغطي جميع نشاطات المركز خلال العام 2025، بما في ذلك إحصائيات العمليات والتدريبات والصيانة." },
+    { "id": 2, "date": "2026-03-31", "title": "تقرير الربع الأول 2026", "summary": "يستعرض التقرير أداء المركز خلال الربع الأول من عام 2026، مع تقييم جاهزية الفرق والمعدات." },
+    { "id": 3, "date": "2026-04-05", "title": "تقرير تفتيش السلامة الدوري", "summary": "نتائج التفتيش الدوري للمبنى والمعدات. لوحظت الحاجة إلى تحديث معدات التدريب الطبي، وتم اتخاذ الإجراءات اللازمة." }
+  ]
+}
