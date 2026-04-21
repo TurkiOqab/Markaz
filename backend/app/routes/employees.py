@@ -14,13 +14,29 @@ from sqlalchemy.orm import Session
 
 from app.db import get_db
 from app.dependencies import get_current_chief
-from app.models import Chief, Employee, Vehicle
+from app.models import (
+    Certification,
+    Chief,
+    Employee,
+    Equipment,
+    MonthlyRating,
+    Vehicle,
+)
 from app.schemas.common import ListResponse, Shift
 from app.schemas.employees import (
+    CertificationCreate,
+    CertificationOut,
+    CertificationUpdate,
     EmployeeCreate,
     EmployeeRead,
     EmployeeSummary,
     EmployeeUpdate,
+    EquipmentCreate,
+    EquipmentOut,
+    EquipmentUpdate,
+    MonthlyRatingCreate,
+    MonthlyRatingOut,
+    MonthlyRatingUpdate,
 )
 from app.services.uploads import save_employee_photo
 
@@ -161,3 +177,260 @@ def upload_photo(
     db.commit()
     db.refresh(emp)
     return {"data": EmployeeRead.model_validate(emp).model_dump(mode="json")}
+
+
+def _get_employee_or_404(db: Session, employee_id: int) -> Employee:
+    emp = db.get(Employee, employee_id)
+    if emp is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="الموظف غير موجود")
+    return emp
+
+
+# ---------- Certifications ----------
+
+
+@router.get("/{employee_id}/certifications")
+def list_certifications(
+    employee_id: int,
+    db: Session = Depends(get_db),
+    _chief: Chief = Depends(get_current_chief),
+) -> dict:
+    _get_employee_or_404(db, employee_id)
+    rows = (
+        db.execute(select(Certification).where(Certification.employee_id == employee_id))
+        .scalars()
+        .all()
+    )
+    items = [CertificationOut.model_validate(c) for c in rows]
+    return {
+        "data": ListResponse[CertificationOut](
+            items=items, total=len(items), page=1, page_size=len(items) or 1
+        ).model_dump(mode="json")
+    }
+
+
+@router.post("/{employee_id}/certifications", status_code=status.HTTP_201_CREATED)
+def create_certification(
+    employee_id: int,
+    payload: CertificationCreate,
+    db: Session = Depends(get_db),
+    _chief: Chief = Depends(get_current_chief),
+) -> dict:
+    _get_employee_or_404(db, employee_id)
+    cert = Certification(employee_id=employee_id, **payload.model_dump())
+    db.add(cert)
+    db.commit()
+    db.refresh(cert)
+    return {"data": CertificationOut.model_validate(cert).model_dump(mode="json")}
+
+
+@router.patch("/{employee_id}/certifications/{certification_id}")
+def update_certification(
+    employee_id: int,
+    certification_id: int,
+    payload: CertificationUpdate,
+    db: Session = Depends(get_db),
+    _chief: Chief = Depends(get_current_chief),
+) -> dict:
+    _get_employee_or_404(db, employee_id)
+    cert = db.get(Certification, certification_id)
+    if cert is None or cert.employee_id != employee_id:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="الشهادة غير موجودة"
+        )
+    for field, value in payload.model_dump(exclude_unset=True).items():
+        setattr(cert, field, value)
+    db.commit()
+    db.refresh(cert)
+    return {"data": CertificationOut.model_validate(cert).model_dump(mode="json")}
+
+
+@router.delete(
+    "/{employee_id}/certifications/{certification_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+)
+def delete_certification(
+    employee_id: int,
+    certification_id: int,
+    db: Session = Depends(get_db),
+    _chief: Chief = Depends(get_current_chief),
+) -> Response:
+    _get_employee_or_404(db, employee_id)
+    cert = db.get(Certification, certification_id)
+    if cert is None or cert.employee_id != employee_id:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="الشهادة غير موجودة"
+        )
+    db.delete(cert)
+    db.commit()
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
+
+
+# ---------- Equipment ----------
+
+
+@router.get("/{employee_id}/equipment")
+def list_equipment(
+    employee_id: int,
+    db: Session = Depends(get_db),
+    _chief: Chief = Depends(get_current_chief),
+) -> dict:
+    _get_employee_or_404(db, employee_id)
+    rows = (
+        db.execute(select(Equipment).where(Equipment.employee_id == employee_id))
+        .scalars()
+        .all()
+    )
+    items = [EquipmentOut.model_validate(e) for e in rows]
+    return {
+        "data": ListResponse[EquipmentOut](
+            items=items, total=len(items), page=1, page_size=len(items) or 1
+        ).model_dump(mode="json")
+    }
+
+
+@router.post("/{employee_id}/equipment", status_code=status.HTTP_201_CREATED)
+def create_equipment(
+    employee_id: int,
+    payload: EquipmentCreate,
+    db: Session = Depends(get_db),
+    _chief: Chief = Depends(get_current_chief),
+) -> dict:
+    _get_employee_or_404(db, employee_id)
+    eq = Equipment(employee_id=employee_id, **payload.model_dump())
+    db.add(eq)
+    db.commit()
+    db.refresh(eq)
+    return {"data": EquipmentOut.model_validate(eq).model_dump(mode="json")}
+
+
+@router.patch("/{employee_id}/equipment/{equipment_id}")
+def update_equipment(
+    employee_id: int,
+    equipment_id: int,
+    payload: EquipmentUpdate,
+    db: Session = Depends(get_db),
+    _chief: Chief = Depends(get_current_chief),
+) -> dict:
+    _get_employee_or_404(db, employee_id)
+    eq = db.get(Equipment, equipment_id)
+    if eq is None or eq.employee_id != employee_id:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="التجهيز غير موجود"
+        )
+    for field, value in payload.model_dump(exclude_unset=True).items():
+        setattr(eq, field, value)
+    db.commit()
+    db.refresh(eq)
+    return {"data": EquipmentOut.model_validate(eq).model_dump(mode="json")}
+
+
+@router.delete(
+    "/{employee_id}/equipment/{equipment_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+)
+def delete_equipment(
+    employee_id: int,
+    equipment_id: int,
+    db: Session = Depends(get_db),
+    _chief: Chief = Depends(get_current_chief),
+) -> Response:
+    _get_employee_or_404(db, employee_id)
+    eq = db.get(Equipment, equipment_id)
+    if eq is None or eq.employee_id != employee_id:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="التجهيز غير موجود"
+        )
+    db.delete(eq)
+    db.commit()
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
+
+
+# ---------- Monthly ratings ----------
+
+
+@router.get("/{employee_id}/ratings")
+def list_ratings(
+    employee_id: int,
+    db: Session = Depends(get_db),
+    _chief: Chief = Depends(get_current_chief),
+) -> dict:
+    _get_employee_or_404(db, employee_id)
+    rows = (
+        db.execute(
+            select(MonthlyRating)
+            .where(MonthlyRating.employee_id == employee_id)
+            .order_by(MonthlyRating.year.desc(), MonthlyRating.month.desc())
+        )
+        .scalars()
+        .all()
+    )
+    items = [MonthlyRatingOut.model_validate(r) for r in rows]
+    return {
+        "data": ListResponse[MonthlyRatingOut](
+            items=items, total=len(items), page=1, page_size=len(items) or 1
+        ).model_dump(mode="json")
+    }
+
+
+@router.post("/{employee_id}/ratings", status_code=status.HTTP_201_CREATED)
+def create_rating(
+    employee_id: int,
+    payload: MonthlyRatingCreate,
+    db: Session = Depends(get_db),
+    _chief: Chief = Depends(get_current_chief),
+) -> dict:
+    _get_employee_or_404(db, employee_id)
+    rating = MonthlyRating(employee_id=employee_id, **payload.model_dump())
+    db.add(rating)
+    try:
+        db.commit()
+    except IntegrityError as err:
+        db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="يوجد تقييم مسبق لهذا الشهر",
+        ) from err
+    db.refresh(rating)
+    return {"data": MonthlyRatingOut.model_validate(rating).model_dump(mode="json")}
+
+
+@router.patch("/{employee_id}/ratings/{rating_id}")
+def update_rating(
+    employee_id: int,
+    rating_id: int,
+    payload: MonthlyRatingUpdate,
+    db: Session = Depends(get_db),
+    _chief: Chief = Depends(get_current_chief),
+) -> dict:
+    _get_employee_or_404(db, employee_id)
+    rating = db.get(MonthlyRating, rating_id)
+    if rating is None or rating.employee_id != employee_id:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="التقييم غير موجود"
+        )
+    for field, value in payload.model_dump(exclude_unset=True).items():
+        setattr(rating, field, value)
+    db.commit()
+    db.refresh(rating)
+    return {"data": MonthlyRatingOut.model_validate(rating).model_dump(mode="json")}
+
+
+@router.delete(
+    "/{employee_id}/ratings/{rating_id}", status_code=status.HTTP_204_NO_CONTENT
+)
+def delete_rating(
+    employee_id: int,
+    rating_id: int,
+    db: Session = Depends(get_db),
+    _chief: Chief = Depends(get_current_chief),
+) -> Response:
+    _get_employee_or_404(db, employee_id)
+    rating = db.get(MonthlyRating, rating_id)
+    if rating is None or rating.employee_id != employee_id:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="التقييم غير موجود"
+        )
+    db.delete(rating)
+    db.commit()
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
