@@ -230,9 +230,7 @@ def update_maintenance(
     _get_vehicle_or_404(db, vehicle_id)
     m = db.get(VehicleMaintenance, maintenance_id)
     if m is None or m.vehicle_id != vehicle_id:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="سجل الصيانة غير موجود"
-        )
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="سجل الصيانة غير موجود")
     for field, value in payload.model_dump(exclude_unset=True).items():
         setattr(m, field, value)
     db.commit()
@@ -253,9 +251,7 @@ def delete_maintenance(
     _get_vehicle_or_404(db, vehicle_id)
     m = db.get(VehicleMaintenance, maintenance_id)
     if m is None or m.vehicle_id != vehicle_id:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="سجل الصيانة غير موجود"
-        )
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="سجل الصيانة غير موجود")
     db.delete(m)
     db.commit()
     return Response(status_code=status.HTTP_204_NO_CONTENT)
@@ -310,9 +306,7 @@ def update_vehicle_equipment(
     _get_vehicle_or_404(db, vehicle_id)
     e = db.get(VehicleEquipment, equipment_id)
     if e is None or e.vehicle_id != vehicle_id:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="التجهيز غير موجود"
-        )
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="التجهيز غير موجود")
     for field, value in payload.model_dump(exclude_unset=True).items():
         setattr(e, field, value)
     db.commit()
@@ -333,9 +327,7 @@ def delete_vehicle_equipment(
     _get_vehicle_or_404(db, vehicle_id)
     e = db.get(VehicleEquipment, equipment_id)
     if e is None or e.vehicle_id != vehicle_id:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="التجهيز غير موجود"
-        )
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="التجهيز غير موجود")
     db.delete(e)
     db.commit()
     return Response(status_code=status.HTTP_204_NO_CONTENT)
@@ -394,9 +386,7 @@ def update_inspection(
     _get_vehicle_or_404(db, vehicle_id)
     i = db.get(VehicleInspection, inspection_id)
     if i is None or i.vehicle_id != vehicle_id:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="سجل الفحص غير موجود"
-        )
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="سجل الفحص غير موجود")
     for field, value in payload.model_dump(exclude_unset=True).items():
         setattr(i, field, value)
     db.commit()
@@ -417,9 +407,7 @@ def delete_inspection(
     _get_vehicle_or_404(db, vehicle_id)
     i = db.get(VehicleInspection, inspection_id)
     if i is None or i.vehicle_id != vehicle_id:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="سجل الفحص غير موجود"
-        )
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="سجل الفحص غير موجود")
     db.delete(i)
     db.commit()
     return Response(status_code=status.HTTP_204_NO_CONTENT)
