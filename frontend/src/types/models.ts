@@ -73,3 +73,57 @@ export interface PagedResponse<T> {
   page: number;
   page_size: number;
 }
+
+// ---------- Vehicles ----------
+
+export type VehicleType = "إطفاء" | "إسعاف" | "سلم" | "قيادة" | "إنقاذ";
+export type VehicleStatus = "في الخدمة" | "خارج الخدمة" | "صيانة";
+export type MaintenanceStatus = "مكتمل" | "قيد التنفيذ" | "مجدول" | "ملغي";
+export type InspectionResult = "ناجح" | "يحتاج صيانة" | "غير صالح";
+
+export interface VehicleMaintenance {
+  id: number;
+  date: string;
+  description: string;
+  cost: number;
+  contractor: string;
+  status: MaintenanceStatus;
+}
+
+export interface VehicleOnboardEquipment {
+  id: number;
+  item_name: string;
+  quantity: number;
+  condition: EquipmentCondition;
+}
+
+export interface VehicleInspection {
+  id: number;
+  inspection_date: string;
+  inspector_name: string;
+  result: InspectionResult;
+  notes: string | null;
+}
+
+export interface VehicleSummary {
+  id: number;
+  type: VehicleType;
+  plate_number: string;
+  status: VehicleStatus;
+  driver_id: number | null;
+  photo_path: string | null;
+}
+
+export interface Vehicle {
+  id: number;
+  type: VehicleType;
+  plate_number: string;
+  status: VehicleStatus;
+  driver_id: number | null;
+  photo_path: string | null;
+  created_at: string;
+  updated_at: string;
+  maintenance: VehicleMaintenance[];
+  equipment: VehicleOnboardEquipment[];
+  inspections: VehicleInspection[];
+}
