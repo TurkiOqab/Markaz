@@ -1,21 +1,8 @@
-import { createContext, useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import { fetchAuthStatus, login as apiLogin, logout as apiLogout, setupChief } from "../api/auth";
-
-export interface AuthState {
-  loading: boolean;
-  setupComplete: boolean;
-  authenticated: boolean;
-}
-
-interface AuthContextValue extends AuthState {
-  refresh: () => Promise<void>;
-  login: (username: string, password: string) => Promise<void>;
-  logout: () => Promise<void>;
-  setup: (username: string, password: string) => Promise<void>;
-}
-
-export const AuthContext = createContext<AuthContextValue | undefined>(undefined);
+import { AuthContext } from "./AuthContext";
+import type { AuthContextValue, AuthState } from "./AuthContext";
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<AuthState>({
