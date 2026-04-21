@@ -1,4 +1,13 @@
-from fastapi import APIRouter, Depends, HTTPException, Query, Response, status
+from fastapi import (
+    APIRouter,
+    Depends,
+    File,
+    HTTPException,
+    Query,
+    Response,
+    UploadFile,
+    status,
+)
 from sqlalchemy import func, or_, select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
@@ -13,6 +22,7 @@ from app.schemas.employees import (
     EmployeeSummary,
     EmployeeUpdate,
 )
+from app.services.uploads import save_employee_photo
 
 router = APIRouter(prefix="/api/employees", tags=["employees"])
 
@@ -135,3 +145,19 @@ def delete_employee(
     db.delete(emp)
     db.commit()
     return Response(status_code=status.HTTP_204_NO_CONTENT)
+
+
+@router.post("/{employee_id}/photo")
+def upload_photo(
+    employee_id: int,
+    file: UploadFile = File(...),
+    db: Session = Depends(get_db),
+    _chief: Chief = Depends(get_current_chief),
+) -> dict:
+    emp = db.get(Employee, employee_id)
+    if emp is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="الموظف غير موجود")
+    emp.photo_path = save_employee_photo(employee_id, file)
+    db.commit()
+    db.refresh(emp)
+    return {"data": EmployeeRead.model_validate(emp).model_dump(mode="json")}
