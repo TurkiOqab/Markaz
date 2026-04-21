@@ -52,9 +52,9 @@ def test_create_and_list_certifications():
 def test_update_certification():
     emp_id = _seed_employee()
     client = make_authed_client()
-    cid = client.post(
-        f"/api/employees/{emp_id}/certifications", json=_payload()
-    ).json()["data"]["id"]
+    cid = client.post(f"/api/employees/{emp_id}/certifications", json=_payload()).json()["data"][
+        "id"
+    ]
 
     r = client.patch(
         f"/api/employees/{emp_id}/certifications/{cid}",
@@ -67,9 +67,9 @@ def test_update_certification():
 def test_delete_certification():
     emp_id = _seed_employee()
     client = make_authed_client()
-    cid = client.post(
-        f"/api/employees/{emp_id}/certifications", json=_payload()
-    ).json()["data"]["id"]
+    cid = client.post(f"/api/employees/{emp_id}/certifications", json=_payload()).json()["data"][
+        "id"
+    ]
 
     r = client.delete(f"/api/employees/{emp_id}/certifications/{cid}")
     assert r.status_code == 204

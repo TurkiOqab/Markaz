@@ -68,9 +68,7 @@ def list_employees(
     total = db.execute(select(func.count()).select_from(stmt.subquery())).scalar_one()
 
     rows = (
-        db.execute(
-            stmt.order_by(Employee.id).offset((page - 1) * page_size).limit(page_size)
-        )
+        db.execute(stmt.order_by(Employee.id).offset((page - 1) * page_size).limit(page_size))
         .scalars()
         .all()
     )
@@ -148,11 +146,7 @@ def delete_employee(
     emp = db.get(Employee, employee_id)
     if emp is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="الموظف غير موجود")
-    driven = (
-        db.execute(select(Vehicle).where(Vehicle.driver_id == employee_id))
-        .scalars()
-        .first()
-    )
+    driven = db.execute(select(Vehicle).where(Vehicle.driver_id == employee_id)).scalars().first()
     if driven is not None:
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
@@ -235,9 +229,7 @@ def update_certification(
     _get_employee_or_404(db, employee_id)
     cert = db.get(Certification, certification_id)
     if cert is None or cert.employee_id != employee_id:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="الشهادة غير موجودة"
-        )
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="الشهادة غير موجودة")
     for field, value in payload.model_dump(exclude_unset=True).items():
         setattr(cert, field, value)
     db.commit()
@@ -258,9 +250,7 @@ def delete_certification(
     _get_employee_or_404(db, employee_id)
     cert = db.get(Certification, certification_id)
     if cert is None or cert.employee_id != employee_id:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="الشهادة غير موجودة"
-        )
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="الشهادة غير موجودة")
     db.delete(cert)
     db.commit()
     return Response(status_code=status.HTTP_204_NO_CONTENT)
@@ -276,11 +266,7 @@ def list_equipment(
     _chief: Chief = Depends(get_current_chief),
 ) -> dict:
     _get_employee_or_404(db, employee_id)
-    rows = (
-        db.execute(select(Equipment).where(Equipment.employee_id == employee_id))
-        .scalars()
-        .all()
-    )
+    rows = db.execute(select(Equipment).where(Equipment.employee_id == employee_id)).scalars().all()
     items = [EquipmentOut.model_validate(e) for e in rows]
     return {
         "data": ListResponse[EquipmentOut](
@@ -315,9 +301,7 @@ def update_equipment(
     _get_employee_or_404(db, employee_id)
     eq = db.get(Equipment, equipment_id)
     if eq is None or eq.employee_id != employee_id:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="التجهيز غير موجود"
-        )
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="التجهيز غير موجود")
     for field, value in payload.model_dump(exclude_unset=True).items():
         setattr(eq, field, value)
     db.commit()
@@ -338,9 +322,7 @@ def delete_equipment(
     _get_employee_or_404(db, employee_id)
     eq = db.get(Equipment, equipment_id)
     if eq is None or eq.employee_id != employee_id:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="التجهيز غير موجود"
-        )
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="التجهيز غير موجود")
     db.delete(eq)
     db.commit()
     return Response(status_code=status.HTTP_204_NO_CONTENT)
@@ -406,9 +388,7 @@ def update_rating(
     _get_employee_or_404(db, employee_id)
     rating = db.get(MonthlyRating, rating_id)
     if rating is None or rating.employee_id != employee_id:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="التقييم غير موجود"
-        )
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="التقييم غير موجود")
     for field, value in payload.model_dump(exclude_unset=True).items():
         setattr(rating, field, value)
     db.commit()
@@ -416,9 +396,7 @@ def update_rating(
     return {"data": MonthlyRatingOut.model_validate(rating).model_dump(mode="json")}
 
 
-@router.delete(
-    "/{employee_id}/ratings/{rating_id}", status_code=status.HTTP_204_NO_CONTENT
-)
+@router.delete("/{employee_id}/ratings/{rating_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_rating(
     employee_id: int,
     rating_id: int,
@@ -428,9 +406,7 @@ def delete_rating(
     _get_employee_or_404(db, employee_id)
     rating = db.get(MonthlyRating, rating_id)
     if rating is None or rating.employee_id != employee_id:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="التقييم غير موجود"
-        )
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="التقييم غير موجود")
     db.delete(rating)
     db.commit()
     return Response(status_code=status.HTTP_204_NO_CONTENT)

@@ -55,9 +55,7 @@ def test_update_rating():
         f"/api/employees/{emp_id}/ratings",
         json={"year": 2026, "month": 3, "rating": 4.0, "notes": ""},
     ).json()["data"]["id"]
-    r = client.patch(
-        f"/api/employees/{emp_id}/ratings/{rid}", json={"rating": 4.8}
-    )
+    r = client.patch(f"/api/employees/{emp_id}/ratings/{rid}", json={"rating": 4.8})
     assert r.json()["data"]["rating"] == 4.8
 
 

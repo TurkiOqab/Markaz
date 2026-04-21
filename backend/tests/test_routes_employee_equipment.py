@@ -48,20 +48,14 @@ def test_create_list_equipment():
 def test_update_equipment():
     emp_id = _seed_employee()
     client = make_authed_client()
-    eid = client.post(
-        f"/api/employees/{emp_id}/equipment", json=_payload()
-    ).json()["data"]["id"]
-    r = client.patch(
-        f"/api/employees/{emp_id}/equipment/{eid}", json={"condition": "متوسط"}
-    )
+    eid = client.post(f"/api/employees/{emp_id}/equipment", json=_payload()).json()["data"]["id"]
+    r = client.patch(f"/api/employees/{emp_id}/equipment/{eid}", json={"condition": "متوسط"})
     assert r.json()["data"]["condition"] == "متوسط"
 
 
 def test_delete_equipment():
     emp_id = _seed_employee()
     client = make_authed_client()
-    eid = client.post(
-        f"/api/employees/{emp_id}/equipment", json=_payload()
-    ).json()["data"]["id"]
+    eid = client.post(f"/api/employees/{emp_id}/equipment", json=_payload()).json()["data"]["id"]
     r = client.delete(f"/api/employees/{emp_id}/equipment/{eid}")
     assert r.status_code == 204

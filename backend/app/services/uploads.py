@@ -1,4 +1,5 @@
 """Photo upload service: save, delete, resolve URL."""
+
 from io import BytesIO
 
 from fastapi import HTTPException, UploadFile, status
