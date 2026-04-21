@@ -6,7 +6,7 @@
 
 **Architecture:** SQLAlchemy 2.x ORM (synchronous — single-user app, no async needed) on top of plain SQLite in dev. SQLCipher encryption is deferred to Phase 9 (installer) since it is a driver-level concern that SQLAlchemy abstracts. Alembic manages schema migrations. Auth uses bcrypt-hashed passwords, random session tokens stored in DB + HTTP-only cookies, and a `failed_login_attempts` table for brute-force lockout.
 
-**Tech Stack:** SQLAlchemy 2.x, Alembic, passlib[bcrypt], pydantic, FastAPI, pytest.
+**Tech Stack:** SQLAlchemy 2.x, Alembic, bcrypt, pydantic, FastAPI, pytest.
 
 ---
 
@@ -68,7 +68,7 @@ dependencies = [
     "uvicorn[standard]>=0.27",
     "sqlalchemy>=2.0",
     "alembic>=1.13",
-    "passlib[bcrypt]>=1.7",
+    "bcrypt>=4.0",
     "pydantic>=2.6",
     "python-multipart>=0.0.9",
 ]
@@ -97,7 +97,7 @@ Expected: output ends with `Successfully installed ...` listing sqlalchemy, alem
 ```bash
 cd /Users/turkioqab/Projects/Markaz/backend
 source .venv/bin/activate
-python -c "import sqlalchemy; import alembic; import passlib.hash; import pydantic; print('ALL OK')"
+python -c "import sqlalchemy; import alembic; import bcrypt; import pydantic; print('ALL OK')"
 ```
 
 Expected: `ALL OK`
@@ -107,7 +107,7 @@ Expected: `ALL OK`
 ```bash
 cd /Users/turkioqab/Projects/Markaz
 git add backend/pyproject.toml
-git commit -m "chore(backend): add SQLAlchemy, Alembic, passlib, Pydantic"
+git commit -m "chore(backend): add SQLAlchemy, Alembic, bcrypt, Pydantic"
 ```
 
 ---
@@ -1067,17 +1067,17 @@ Expected: `ModuleNotFoundError: No module named 'app.auth.password'`.
 - [ ] **Step 4: Implement `backend/app/auth/password.py`**
 
 ```python
-from passlib.hash import bcrypt
+import bcrypt
 
 
 def hash_password(plaintext: str) -> str:
-    return bcrypt.using(rounds=12).hash(plaintext)
+    return bcrypt.hashpw(plaintext.encode("utf-8"), bcrypt.gensalt(rounds=12)).decode("utf-8")
 
 
 def verify_password(plaintext: str, hashed: str) -> bool:
     try:
-        return bcrypt.verify(plaintext, hashed)
-    except ValueError:
+        return bcrypt.checkpw(plaintext.encode("utf-8"), hashed.encode("utf-8"))
+    except (ValueError, TypeError):
         return False
 ```
 
