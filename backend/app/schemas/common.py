@@ -6,6 +6,10 @@ MaritalStatus = Literal["أعزب", "متزوج", "مطلق", "أرمل"]
 PhysicalAbility = Literal["ممتاز", "جيد جداً", "جيد", "مقبول"]
 Shift = Literal["صباحية", "مسائية", "ليلية"]
 EquipmentCondition = Literal["ممتاز", "جيد", "متوسط", "تالف"]
+VehicleType = Literal["إطفاء", "إسعاف", "سلم", "قيادة", "إنقاذ"]
+VehicleStatus = Literal["في الخدمة", "خارج الخدمة", "صيانة"]
+MaintenanceStatus = Literal["مكتمل", "قيد التنفيذ", "مجدول", "ملغي"]
+InspectionResult = Literal["ناجح", "يحتاج صيانة", "غير صالح"]
 
 T = TypeVar("T")
 
