@@ -53,3 +53,25 @@ def test_logout_clears_cookie():
     client.post("/api/auth/login", json={"username": "chief", "password": "StrongPass1!"})
     r = client.post("/api/auth/logout")
     assert r.status_code == 200
+
+
+def test_status_reports_setup_incomplete_initially():
+    client = _client()
+    r = client.get("/api/auth/status")
+    assert r.status_code == 200
+    assert r.json() == {"data": {"setup_complete": False, "authenticated": False}}
+
+
+def test_status_reports_setup_complete_after_setup():
+    client = _client()
+    client.post("/api/setup", json={"username": "chief", "password": "StrongPass1!"})
+    r = client.get("/api/auth/status")
+    assert r.json() == {"data": {"setup_complete": True, "authenticated": False}}
+
+
+def test_status_reports_authenticated_after_login():
+    client = _client()
+    client.post("/api/setup", json={"username": "chief", "password": "StrongPass1!"})
+    client.post("/api/auth/login", json={"username": "chief", "password": "StrongPass1!"})
+    r = client.get("/api/auth/status")
+    assert r.json() == {"data": {"setup_complete": True, "authenticated": True}}

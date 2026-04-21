@@ -67,3 +67,20 @@ def logout(
         delete_session(db, session_cookie)
     response.delete_cookie(SESSION_COOKIE_NAME)
     return {"data": {"ok": True}}
+
+
+@router.get("/api/auth/status")
+def auth_status(
+    db: Session = Depends(get_db),
+    session_cookie: Annotated[str | None, Cookie(alias=SESSION_COOKIE_NAME)] = None,
+) -> dict:
+    chief_count = db.execute(select(func.count()).select_from(Chief)).scalar_one()
+    setup_complete = chief_count > 0
+
+    authenticated = False
+    if setup_complete and session_cookie:
+        from app.auth.session import get_session_chief
+
+        authenticated = get_session_chief(db, session_cookie) is not None
+
+    return {"data": {"setup_complete": setup_complete, "authenticated": authenticated}}
