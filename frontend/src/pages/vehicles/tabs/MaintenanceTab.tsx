@@ -1,0 +1,225 @@
+import { useEffect, useState } from "react";
+import type { FormEvent } from "react";
+import { toast } from "sonner";
+import { ApiRequestError } from "../../../api/client";
+import {
+  createMaintenance,
+  deleteMaintenance,
+  listMaintenance,
+  updateMaintenance,
+} from "../../../api/vehicles";
+import type { MaintenanceInput } from "../../../api/vehicles";
+import { Button } from "../../../components/Button";
+import { EmptyState } from "../../../components/EmptyState";
+import { Modal } from "../../../components/Modal";
+import { SelectField } from "../../../components/SelectField";
+import { TextField } from "../../../components/TextField";
+import { MAINTENANCE_STATUSES } from "../../../constants/enums";
+import type { VehicleMaintenance } from "../../../types/models";
+
+const EMPTY: MaintenanceInput = {
+  date: "",
+  description: "",
+  cost: 0,
+  contractor: "",
+  status: "مكتمل",
+};
+
+export function MaintenanceTab({ vehicleId }: { vehicleId: number }) {
+  const [items, setItems] = useState<VehicleMaintenance[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [editing, setEditing] = useState<VehicleMaintenance | null>(null);
+  const [creating, setCreating] = useState(false);
+
+  async function reload() {
+    setLoading(true);
+    try {
+      const res = await listMaintenance(vehicleId);
+      setItems(res.items);
+    } catch (err) {
+      toast.error(err instanceof ApiRequestError ? err.message : "فشل التحميل");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    reload();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [vehicleId]);
+
+  async function handleDelete(id: number) {
+    if (!window.confirm("هل تريد حذف سجل الصيانة هذا؟")) return;
+    try {
+      await deleteMaintenance(vehicleId, id);
+      toast.success("تم الحذف");
+      reload();
+    } catch (err) {
+      toast.error(err instanceof ApiRequestError ? err.message : "فشل الحذف");
+    }
+  }
+
+  return (
+    <div className="space-y-4">
+      <div className="flex justify-end">
+        <Button onClick={() => setCreating(true)}>إضافة صيانة</Button>
+      </div>
+
+      {loading ? (
+        <p className="text-slate-500">جارِ التحميل...</p>
+      ) : items.length === 0 ? (
+        <EmptyState title="لا توجد سجلات صيانة" description="أضف سجل صيانة للبدء" />
+      ) : (
+        <table className="w-full rounded-lg border border-slate-200 bg-white text-sm">
+          <thead className="border-b border-slate-200 bg-slate-50 text-slate-600">
+            <tr>
+              <th className="px-4 py-3 text-start font-medium">التاريخ</th>
+              <th className="px-4 py-3 text-start font-medium">الوصف</th>
+              <th className="px-4 py-3 text-start font-medium">التكلفة</th>
+              <th className="px-4 py-3 text-start font-medium">المقاول</th>
+              <th className="px-4 py-3 text-start font-medium">الحالة</th>
+              <th className="px-4 py-3 text-end font-medium">الإجراءات</th>
+            </tr>
+          </thead>
+          <tbody>
+            {items.map((m) => (
+              <tr key={m.id} className="border-b border-slate-100 last:border-b-0">
+                <td className="px-4 py-3 text-slate-700">{m.date}</td>
+                <td className="px-4 py-3 font-medium text-slate-900">{m.description}</td>
+                <td className="px-4 py-3 text-slate-700">{m.cost}</td>
+                <td className="px-4 py-3 text-slate-700">{m.contractor}</td>
+                <td className="px-4 py-3 text-slate-700">{m.status}</td>
+                <td className="px-4 py-3 text-end">
+                  <div className="flex justify-end gap-2">
+                    <Button variant="secondary" onClick={() => setEditing(m)}>
+                      تعديل
+                    </Button>
+                    <Button variant="danger" onClick={() => handleDelete(m.id)}>
+                      حذف
+                    </Button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+
+      {creating ? (
+        <MaintenanceFormModal
+          title="إضافة صيانة"
+          initial={EMPTY}
+          onClose={() => setCreating(false)}
+          onSubmit={async (payload) => {
+            await createMaintenance(vehicleId, payload);
+            toast.success("تمت الإضافة");
+            setCreating(false);
+            reload();
+          }}
+        />
+      ) : null}
+
+      {editing ? (
+        <MaintenanceFormModal
+          title="تعديل الصيانة"
+          initial={{
+            date: editing.date,
+            description: editing.description,
+            cost: editing.cost,
+            contractor: editing.contractor,
+            status: editing.status,
+          }}
+          onClose={() => setEditing(null)}
+          onSubmit={async (payload) => {
+            await updateMaintenance(vehicleId, editing.id, payload);
+            toast.success("تم التحديث");
+            setEditing(null);
+            reload();
+          }}
+        />
+      ) : null}
+    </div>
+  );
+}
+
+function MaintenanceFormModal({
+  title,
+  initial,
+  onClose,
+  onSubmit,
+}: {
+  title: string;
+  initial: MaintenanceInput;
+  onClose: () => void;
+  onSubmit: (payload: MaintenanceInput) => Promise<void>;
+}) {
+  const [form, setForm] = useState<MaintenanceInput>(initial);
+  const [submitting, setSubmitting] = useState(false);
+
+  async function handleSubmit(e: FormEvent) {
+    e.preventDefault();
+    setSubmitting(true);
+    try {
+      await onSubmit(form);
+    } catch (err) {
+      toast.error(err instanceof ApiRequestError ? err.message : "فشل الحفظ");
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  return (
+    <Modal
+      open
+      onClose={onClose}
+      title={title}
+      footer={
+        <>
+          <Button variant="secondary" onClick={onClose}>
+            إلغاء
+          </Button>
+          <Button form="maint-form" type="submit" loading={submitting}>
+            حفظ
+          </Button>
+        </>
+      }
+    >
+      <form id="maint-form" onSubmit={handleSubmit} className="space-y-4">
+        <TextField
+          label="التاريخ"
+          type="date"
+          value={form.date}
+          onChange={(e) => setForm((f) => ({ ...f, date: e.target.value }))}
+          required
+        />
+        <TextField
+          label="الوصف"
+          value={form.description}
+          onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
+          required
+        />
+        <TextField
+          label="التكلفة"
+          type="number"
+          min={0}
+          step="0.01"
+          value={form.cost}
+          onChange={(e) => setForm((f) => ({ ...f, cost: Number(e.target.value) }))}
+          required
+        />
+        <TextField
+          label="المقاول"
+          value={form.contractor}
+          onChange={(e) => setForm((f) => ({ ...f, contractor: e.target.value }))}
+          required
+        />
+        <SelectField
+          label="الحالة"
+          value={form.status}
+          onChange={(e) => setForm((f) => ({ ...f, status: e.target.value as typeof f.status }))}
+          options={MAINTENANCE_STATUSES.map((s) => ({ value: s, label: s }))}
+        />
+      </form>
+    </Modal>
+  );
+}

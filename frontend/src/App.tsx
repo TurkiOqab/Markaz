@@ -9,7 +9,9 @@ import { EmployeesListPage } from "./pages/employees/EmployeesListPage";
 import { NewEmployeePage } from "./pages/employees/NewEmployeePage";
 import { LoginPage } from "./pages/LoginPage";
 import { SetupPage } from "./pages/SetupPage";
-import { VehiclesPage } from "./pages/VehiclesPage";
+import { NewVehiclePage } from "./pages/vehicles/NewVehiclePage";
+import { VehicleDetailPage } from "./pages/vehicles/VehicleDetailPage";
+import { VehiclesListPage } from "./pages/vehicles/VehiclesListPage";
 
 export default function App() {
   return (
@@ -29,7 +31,9 @@ export default function App() {
             <Route path="/employees" element={<EmployeesListPage />} />
             <Route path="/employees/new" element={<NewEmployeePage />} />
             <Route path="/employees/:id" element={<EmployeeDetailPage />} />
-            <Route path="/vehicles" element={<VehiclesPage />} />
+            <Route path="/vehicles" element={<VehiclesListPage />} />
+            <Route path="/vehicles/new" element={<NewVehiclePage />} />
+            <Route path="/vehicles/:id" element={<VehicleDetailPage />} />
             <Route path="/building" element={<BuildingPage />} />
           </Route>
         </Routes>
