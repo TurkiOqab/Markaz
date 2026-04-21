@@ -4,7 +4,9 @@ import { AppLayout } from "./components/AppLayout";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { BuildingPage } from "./pages/BuildingPage";
 import { DashboardPage } from "./pages/DashboardPage";
-import { EmployeesPage } from "./pages/EmployeesPage";
+import { EmployeeDetailPage } from "./pages/employees/EmployeeDetailPage";
+import { EmployeesListPage } from "./pages/employees/EmployeesListPage";
+import { NewEmployeePage } from "./pages/employees/NewEmployeePage";
 import { LoginPage } from "./pages/LoginPage";
 import { SetupPage } from "./pages/SetupPage";
 import { VehiclesPage } from "./pages/VehiclesPage";
@@ -24,7 +26,9 @@ export default function App() {
             }
           >
             <Route index element={<DashboardPage />} />
-            <Route path="/employees" element={<EmployeesPage />} />
+            <Route path="/employees" element={<EmployeesListPage />} />
+            <Route path="/employees/new" element={<NewEmployeePage />} />
+            <Route path="/employees/:id" element={<EmployeeDetailPage />} />
             <Route path="/vehicles" element={<VehiclesPage />} />
             <Route path="/building" element={<BuildingPage />} />
           </Route>

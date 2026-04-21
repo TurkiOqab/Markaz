@@ -29,7 +29,9 @@ function queryString(params: Record<string, unknown>): string {
 }
 
 export function listEmployees(params: EmployeeListParams = {}) {
-  return api.get<PagedResponse<EmployeeSummary>>(`/api/employees${queryString(params)}`);
+  return api.get<PagedResponse<EmployeeSummary>>(
+    `/api/employees${queryString({ ...params })}`,
+  );
 }
 
 export function getEmployee(id: number) {
