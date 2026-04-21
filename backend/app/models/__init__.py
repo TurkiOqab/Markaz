@@ -6,3 +6,9 @@ from app.models.employees import (  # noqa: F401
     MonthlyRating,
     Team,
 )
+from app.models.vehicles import (  # noqa: F401
+    Vehicle,
+    VehicleEquipment,
+    VehicleInspection,
+    VehicleMaintenance,
+)
