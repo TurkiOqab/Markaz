@@ -2,11 +2,11 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Build the full database schema from the design spec, load realistic seed data, encrypt the DB file at rest with SQLCipher, and implement the chief's authentication (first-run setup, login, logout, session, lockout).
+**Goal:** Build the full database schema from the design spec, load realistic seed data, and implement the chief's authentication (first-run setup, login, logout, session, lockout).
 
-**Architecture:** SQLAlchemy 2.x ORM (synchronous — single-user app, no async needed) on top of a SQLCipher-encrypted SQLite file. Alembic manages schema migrations. Auth uses bcrypt-hashed passwords, random session tokens stored in DB + HTTP-only cookies, and a `failed_login_attempts` table for brute-force lockout.
+**Architecture:** SQLAlchemy 2.x ORM (synchronous — single-user app, no async needed) on top of plain SQLite in dev. SQLCipher encryption is deferred to Phase 9 (installer) since it is a driver-level concern that SQLAlchemy abstracts. Alembic manages schema migrations. Auth uses bcrypt-hashed passwords, random session tokens stored in DB + HTTP-only cookies, and a `failed_login_attempts` table for brute-force lockout.
 
-**Tech Stack:** SQLAlchemy 2.x, Alembic, sqlcipher3-binary, passlib[bcrypt], pydantic, FastAPI, pytest.
+**Tech Stack:** SQLAlchemy 2.x, Alembic, passlib[bcrypt], pydantic, FastAPI, pytest.
 
 ---
 
@@ -68,7 +68,6 @@ dependencies = [
     "uvicorn[standard]>=0.27",
     "sqlalchemy>=2.0",
     "alembic>=1.13",
-    "sqlcipher3-binary>=0.5",
     "passlib[bcrypt]>=1.7",
     "pydantic>=2.6",
     "python-multipart>=0.0.9",
@@ -98,7 +97,7 @@ Expected: output ends with `Successfully installed ...` listing sqlalchemy, alem
 ```bash
 cd /Users/turkioqab/Projects/Markaz/backend
 source .venv/bin/activate
-python -c "import sqlalchemy; import alembic; import sqlcipher3; import passlib.hash; import pydantic; print('ALL OK')"
+python -c "import sqlalchemy; import alembic; import passlib.hash; import pydantic; print('ALL OK')"
 ```
 
 Expected: `ALL OK`
@@ -108,7 +107,7 @@ Expected: `ALL OK`
 ```bash
 cd /Users/turkioqab/Projects/Markaz
 git add backend/pyproject.toml
-git commit -m "chore(backend): add SQLAlchemy, Alembic, SQLCipher, passlib, Pydantic"
+git commit -m "chore(backend): add SQLAlchemy, Alembic, passlib, Pydantic"
 ```
 
 ---
@@ -128,22 +127,19 @@ from pathlib import Path
 BACKEND_DIR = Path(__file__).resolve().parent.parent
 DEFAULT_DB_PATH = BACKEND_DIR / "markaz.db"
 
-# Where the SQLCipher-encrypted SQLite file lives (production default).
+# Where the SQLite file lives on disk.
 DB_PATH = Path(os.environ.get("MARKAZ_DB_PATH", str(DEFAULT_DB_PATH)))
 
-# Key used to encrypt the SQLCipher database. Dev default is fine; the
-# production installer generates a random key and writes it to the env file.
-DB_KEY = os.environ.get("MARKAZ_DB_KEY", "dev-key-change-me")
-
-# Fully qualified SQLAlchemy URL override. If set, this wins over DB_PATH/DB_KEY.
-# Tests set this to a plain sqlite:/// URL to skip the SQLCipher layer.
+# Fully qualified SQLAlchemy URL override. If set, this wins over DB_PATH.
+# Tests set this to point at a temp file. Phase 9 (installer) sets it to a
+# SQLCipher-backed URL (sqlite+pysqlcipher://...).
 DB_URL_OVERRIDE = os.environ.get("MARKAZ_DB_URL")
 
 
 def get_db_url() -> str:
     if DB_URL_OVERRIDE:
         return DB_URL_OVERRIDE
-    return f"sqlite+pysqlcipher://:{DB_KEY}@/{DB_PATH}"
+    return f"sqlite:///{DB_PATH}"
 
 
 # Session cookie settings.

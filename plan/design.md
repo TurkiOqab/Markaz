@@ -48,7 +48,7 @@ data stored locally, no internet required.
 | Layer | Choice | Why |
 |---|---|---|
 | Backend | Python + FastAPI | Small, fast, typed, automatic API docs |
-| Database | SQLite + SQLCipher | Single encrypted file, trivial backup, no DB server |
+| Database | SQLite (SQLCipher in production) | Single file (encrypted in prod), trivial backup, no DB server |
 | Frontend | React + Vite + Tailwind (RTL plugin) | Best RTL/Arabic support, modern, fast |
 | Auth | HTTP-only session cookie + bcrypt | Simple, secure, no JWT complexity needed |
 | TLS | Self-signed HTTPS cert | Encrypted LAN traffic, one-time setup |
@@ -290,7 +290,8 @@ The chief has no technical experience, so every install/setup step must be zero-
 **Office-PC installer (`markaz-install.exe`):**
 - One double-click, Arabic GUI throughout
 - Installs Python runtime + backend (bundled, no separate Python install required)
-- Creates the SQLCipher DB and runs migrations + seed data loader on first run
+- Installs SQLCipher native library + `pysqlcipher3` driver; sets `MARKAZ_DB_URL` to a SQLCipher-backed URL so the DB file is encrypted at rest
+- Creates the encrypted DB and runs migrations + seed data loader on first run
 - Generates self-signed HTTPS cert for `https://markaz.local` (and/or the PC's LAN IP)
 - Adds the cert to Windows' Trusted Root Certification Authorities
 - Registers the backend as a Windows service set to auto-start
