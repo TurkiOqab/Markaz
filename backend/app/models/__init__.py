@@ -1,4 +1,11 @@
 from app.models.base import Base, TimestampMixin  # noqa: F401
+from app.models.building import (  # noqa: F401
+    Building,
+    BuildingMaintenance,
+    BuildingReport,
+    InventoryItem,
+    Room,
+)
 from app.models.employees import (  # noqa: F401
     Certification,
     Employee,
