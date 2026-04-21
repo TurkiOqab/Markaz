@@ -5,6 +5,7 @@ Usage:
 
 The script is idempotent: it deletes all existing rows before inserting.
 """
+
 import json
 from datetime import date
 from pathlib import Path

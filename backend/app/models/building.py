@@ -1,5 +1,4 @@
 from datetime import date
-from typing import Optional
 
 from sqlalchemy import Date, Numeric, String
 from sqlalchemy.orm import Mapped, mapped_column
@@ -13,7 +12,7 @@ class Building(Base, TimestampMixin):
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(200), nullable=False)
     address: Mapped[str] = mapped_column(String(500), nullable=False)
-    notes: Mapped[Optional[str]] = mapped_column(String(1000))
+    notes: Mapped[str | None] = mapped_column(String(1000))
 
 
 class Room(Base, TimestampMixin):
@@ -24,7 +23,7 @@ class Room(Base, TimestampMixin):
     name: Mapped[str] = mapped_column(String(200), nullable=False)
     capacity: Mapped[int] = mapped_column(nullable=False)
     status: Mapped[str] = mapped_column(String(30), nullable=False)
-    notes: Mapped[Optional[str]] = mapped_column(String(500))
+    notes: Mapped[str | None] = mapped_column(String(500))
 
 
 class InventoryItem(Base, TimestampMixin):
@@ -36,7 +35,7 @@ class InventoryItem(Base, TimestampMixin):
     quantity: Mapped[int] = mapped_column(nullable=False)
     location: Mapped[str] = mapped_column(String(200), nullable=False)
     min_threshold: Mapped[int] = mapped_column(nullable=False)
-    notes: Mapped[Optional[str]] = mapped_column(String(500))
+    notes: Mapped[str | None] = mapped_column(String(500))
 
 
 class BuildingMaintenance(Base, TimestampMixin):
@@ -57,4 +56,4 @@ class BuildingReport(Base, TimestampMixin):
     date: Mapped[date] = mapped_column(Date, nullable=False)
     title: Mapped[str] = mapped_column(String(300), nullable=False)
     summary: Mapped[str] = mapped_column(String(5000), nullable=False)
-    file_path: Mapped[Optional[str]] = mapped_column(String(500))
+    file_path: Mapped[str | None] = mapped_column(String(500))

@@ -1,5 +1,4 @@
 from datetime import date
-from typing import Optional
 
 from sqlalchemy import Date, ForeignKey, Numeric, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -15,10 +14,10 @@ class Vehicle(Base, TimestampMixin):
     type: Mapped[str] = mapped_column(String(50), nullable=False)
     plate_number: Mapped[str] = mapped_column(String(30), unique=True, nullable=False)
     status: Mapped[str] = mapped_column(String(30), nullable=False)
-    driver_id: Mapped[Optional[int]] = mapped_column(ForeignKey("employees.id"))
-    photo_path: Mapped[Optional[str]] = mapped_column(String(500))
+    driver_id: Mapped[int | None] = mapped_column(ForeignKey("employees.id"))
+    photo_path: Mapped[str | None] = mapped_column(String(500))
 
-    driver: Mapped[Optional[Employee]] = relationship()
+    driver: Mapped[Employee | None] = relationship()
     maintenance: Mapped[list["VehicleMaintenance"]] = relationship(
         back_populates="vehicle", cascade="all, delete-orphan"
     )
@@ -64,6 +63,6 @@ class VehicleInspection(Base, TimestampMixin):
     inspection_date: Mapped[date] = mapped_column(Date, nullable=False)
     inspector_name: Mapped[str] = mapped_column(String(200), nullable=False)
     result: Mapped[str] = mapped_column(String(30), nullable=False)
-    notes: Mapped[Optional[str]] = mapped_column(String(1000))
+    notes: Mapped[str | None] = mapped_column(String(1000))
 
     vehicle: Mapped[Vehicle] = relationship(back_populates="inspections")

@@ -1,5 +1,4 @@
 from datetime import date
-from typing import Optional
 
 from sqlalchemy import Date, ForeignKey, Numeric, String, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -12,7 +11,7 @@ class Team(Base, TimestampMixin):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(100), unique=True, nullable=False)
-    description: Mapped[Optional[str]] = mapped_column(String(500))
+    description: Mapped[str | None] = mapped_column(String(500))
 
     employees: Mapped[list["Employee"]] = relationship(back_populates="team")
 
@@ -28,9 +27,9 @@ class Employee(Base, TimestampMixin):
     marital_status: Mapped[str] = mapped_column(String(20), nullable=False)
     physical_ability: Mapped[str] = mapped_column(String(20), nullable=False)
     national_id: Mapped[str] = mapped_column(String(20), unique=True, nullable=False)
-    photo_path: Mapped[Optional[str]] = mapped_column(String(500))
+    photo_path: Mapped[str | None] = mapped_column(String(500))
     phone: Mapped[str] = mapped_column(String(20), nullable=False)
-    email: Mapped[Optional[str]] = mapped_column(String(200))
+    email: Mapped[str | None] = mapped_column(String(200))
     team_id: Mapped[int] = mapped_column(ForeignKey("teams.id"), nullable=False)
     shift: Mapped[str] = mapped_column(String(20), nullable=False)
 
@@ -65,7 +64,7 @@ class Equipment(Base, TimestampMixin):
     id: Mapped[int] = mapped_column(primary_key=True)
     employee_id: Mapped[int] = mapped_column(ForeignKey("employees.id"), nullable=False)
     item_name: Mapped[str] = mapped_column(String(200), nullable=False)
-    serial_number: Mapped[Optional[str]] = mapped_column(String(100))
+    serial_number: Mapped[str | None] = mapped_column(String(100))
     assigned_date: Mapped[date] = mapped_column(Date, nullable=False)
     condition: Mapped[str] = mapped_column(String(20), nullable=False)
 
@@ -81,6 +80,6 @@ class MonthlyRating(Base, TimestampMixin):
     year: Mapped[int] = mapped_column(nullable=False)
     month: Mapped[int] = mapped_column(nullable=False)
     rating: Mapped[float] = mapped_column(Numeric(3, 2), nullable=False)
-    notes: Mapped[Optional[str]] = mapped_column(String(500))
+    notes: Mapped[str | None] = mapped_column(String(500))
 
     employee: Mapped[Employee] = relationship(back_populates="monthly_ratings")

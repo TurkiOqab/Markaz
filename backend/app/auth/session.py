@@ -1,18 +1,18 @@
 from datetime import datetime, timedelta
 from secrets import token_urlsafe
-from typing import Optional
 
 from sqlalchemy.orm import Session as SA_Session
 
 from app.config import SESSION_DAYS
-from app.models import Chief, Session as SessionModel
+from app.models import Chief
+from app.models import Session as SessionModel
 
 
 def create_session(
     db: SA_Session,
     chief_id: int,
     *,
-    expires_at: Optional[datetime] = None,
+    expires_at: datetime | None = None,
 ) -> str:
     now = datetime.utcnow()
     if expires_at is None:
@@ -23,7 +23,7 @@ def create_session(
     return token
 
 
-def get_session_chief(db: SA_Session, token: str) -> Optional[Chief]:
+def get_session_chief(db: SA_Session, token: str) -> Chief | None:
     row = db.get(SessionModel, token)
     if row is None:
         return None

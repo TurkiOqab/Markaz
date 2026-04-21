@@ -1,5 +1,4 @@
 from datetime import datetime, timedelta
-from typing import Optional
 
 from sqlalchemy import delete, select
 from sqlalchemy.orm import Session
@@ -12,15 +11,11 @@ def record_failed_attempt(
     db: Session,
     username: str,
     *,
-    at: Optional[datetime] = None,
-    ip_address: Optional[str] = None,
+    at: datetime | None = None,
+    ip_address: str | None = None,
 ) -> None:
     attempted_at = at or datetime.utcnow()
-    db.add(
-        FailedLoginAttempt(
-            username=username, attempted_at=attempted_at, ip_address=ip_address
-        )
-    )
+    db.add(FailedLoginAttempt(username=username, attempted_at=attempted_at, ip_address=ip_address))
     db.commit()
 
 
@@ -35,7 +30,5 @@ def is_locked_out(db: Session, username: str) -> bool:
 
 
 def reset_attempts(db: Session, username: str) -> None:
-    db.execute(
-        delete(FailedLoginAttempt).where(FailedLoginAttempt.username == username)
-    )
+    db.execute(delete(FailedLoginAttempt).where(FailedLoginAttempt.username == username))
     db.commit()
