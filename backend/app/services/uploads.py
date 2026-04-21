@@ -1,6 +1,7 @@
 """Photo upload service: save, delete, resolve URL."""
 
 from io import BytesIO
+from pathlib import Path
 
 from fastapi import HTTPException, UploadFile, status
 from PIL import Image, UnidentifiedImageError
@@ -8,7 +9,8 @@ from PIL import Image, UnidentifiedImageError
 from app.config import BACKEND_DIR
 
 UPLOADS_DIR = BACKEND_DIR / "uploads"
-PHOTOS_DIR = UPLOADS_DIR / "employees"
+EMPLOYEES_PHOTOS_DIR = UPLOADS_DIR / "employees"
+VEHICLES_PHOTOS_DIR = UPLOADS_DIR / "vehicles"
 MAX_PHOTO_BYTES = 5 * 1024 * 1024  # 5 MB
 ALLOWED_PHOTO_EXT = {"jpg", "jpeg", "png", "webp"}
 
@@ -17,8 +19,7 @@ def _extension(filename: str) -> str:
     return filename.rsplit(".", 1)[-1].lower() if "." in filename else ""
 
 
-def save_employee_photo(employee_id: int, upload: UploadFile) -> str:
-    """Save the upload, return the relative path stored in DB (photo_path)."""
+def _save_photo(directory: Path, entity_id: int, url_prefix: str, upload: UploadFile) -> str:
     ext = _extension(upload.filename or "")
     if ext not in ALLOWED_PHOTO_EXT:
         raise HTTPException(
@@ -41,17 +42,32 @@ def save_employee_photo(employee_id: int, upload: UploadFile) -> str:
             detail="الملف ليس صورة صالحة",
         ) from err
 
-    PHOTOS_DIR.mkdir(parents=True, exist_ok=True)
-    target = PHOTOS_DIR / f"{employee_id}.{ext}"
-    for candidate in PHOTOS_DIR.glob(f"{employee_id}.*"):
+    directory.mkdir(parents=True, exist_ok=True)
+    target = directory / f"{entity_id}.{ext}"
+    for candidate in directory.glob(f"{entity_id}.*"):
         if candidate != target:
             candidate.unlink()
     target.write_bytes(data)
-    return f"/uploads/employees/{target.name}"
+    return f"{url_prefix}/{target.name}"
+
+
+def save_employee_photo(employee_id: int, upload: UploadFile) -> str:
+    return _save_photo(EMPLOYEES_PHOTOS_DIR, employee_id, "/uploads/employees", upload)
 
 
 def delete_employee_photo(employee_id: int) -> None:
-    if not PHOTOS_DIR.exists():
+    if not EMPLOYEES_PHOTOS_DIR.exists():
         return
-    for candidate in PHOTOS_DIR.glob(f"{employee_id}.*"):
+    for candidate in EMPLOYEES_PHOTOS_DIR.glob(f"{employee_id}.*"):
+        candidate.unlink()
+
+
+def save_vehicle_photo(vehicle_id: int, upload: UploadFile) -> str:
+    return _save_photo(VEHICLES_PHOTOS_DIR, vehicle_id, "/uploads/vehicles", upload)
+
+
+def delete_vehicle_photo(vehicle_id: int) -> None:
+    if not VEHICLES_PHOTOS_DIR.exists():
+        return
+    for candidate in VEHICLES_PHOTOS_DIR.glob(f"{vehicle_id}.*"):
         candidate.unlink()
