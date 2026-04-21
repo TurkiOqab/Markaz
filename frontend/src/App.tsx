@@ -1,21 +1,35 @@
-import { useEffect, useState } from 'react';
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { AuthProvider } from "./auth/AuthProvider";
+import { AppLayout } from "./components/AppLayout";
+import { ProtectedRoute } from "./components/ProtectedRoute";
+import { BuildingPage } from "./pages/BuildingPage";
+import { DashboardPage } from "./pages/DashboardPage";
+import { EmployeesPage } from "./pages/EmployeesPage";
+import { LoginPage } from "./pages/LoginPage";
+import { SetupPage } from "./pages/SetupPage";
+import { VehiclesPage } from "./pages/VehiclesPage";
 
 export default function App() {
-  const [healthStatus, setHealthStatus] = useState<string>('...');
-
-  useEffect(() => {
-    fetch('/api/health')
-      .then((r) => r.json())
-      .then((json) => setHealthStatus(json?.data?.status ?? 'unknown'))
-      .catch(() => setHealthStatus('offline'));
-  }, []);
-
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center gap-4 bg-slate-50 text-slate-900">
-      <h1 className="text-4xl font-bold">مرحباً بك في مركز</h1>
-      <p className="text-lg text-slate-600">
-        حالة الخادم: <span className="font-semibold">{healthStatus}</span>
-      </p>
-    </main>
+    <BrowserRouter>
+      <AuthProvider>
+        <Routes>
+          <Route path="/setup" element={<SetupPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route
+            element={
+              <ProtectedRoute>
+                <AppLayout />
+              </ProtectedRoute>
+            }
+          >
+            <Route index element={<DashboardPage />} />
+            <Route path="/employees" element={<EmployeesPage />} />
+            <Route path="/vehicles" element={<VehiclesPage />} />
+            <Route path="/building" element={<BuildingPage />} />
+          </Route>
+        </Routes>
+      </AuthProvider>
+    </BrowserRouter>
   );
 }
