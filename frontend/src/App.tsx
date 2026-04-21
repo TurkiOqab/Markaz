@@ -2,7 +2,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { AuthProvider } from "./auth/AuthProvider";
 import { AppLayout } from "./components/AppLayout";
 import { ProtectedRoute } from "./components/ProtectedRoute";
-import { BuildingPage } from "./pages/BuildingPage";
+import { BuildingPage } from "./pages/building/BuildingPage";
 import { DashboardPage } from "./pages/DashboardPage";
 import { EmployeeDetailPage } from "./pages/employees/EmployeeDetailPage";
 import { EmployeesListPage } from "./pages/employees/EmployeesListPage";
