@@ -127,3 +127,53 @@ export interface Vehicle {
   equipment: VehicleOnboardEquipment[];
   inspections: VehicleInspection[];
 }
+
+// ---------- Building ----------
+
+export type RoomType = "غرفة نوم" | "مكتب" | "قاعة تدريس" | "مرفق";
+export type RoomStatus = "جاهزة" | "صيانة";
+
+export interface Building {
+  id: number;
+  name: string;
+  address: string;
+  notes: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Room {
+  id: number;
+  type: RoomType;
+  name: string;
+  capacity: number;
+  status: RoomStatus;
+  notes: string | null;
+}
+
+export interface InventoryItem {
+  id: number;
+  item_name: string;
+  category: string;
+  quantity: number;
+  location: string;
+  min_threshold: number;
+  notes: string | null;
+}
+
+export interface BuildingMaintenance {
+  id: number;
+  date: string;
+  description: string;
+  cost: number;
+  contractor: string;
+  status: MaintenanceStatus;
+}
+
+export interface BuildingReport {
+  id: number;
+  date: string;
+  title: string;
+  summary: string;
+  file_path: string | null;
+}

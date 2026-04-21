@@ -4,6 +4,8 @@ import type {
   MaintenanceStatus,
   MaritalStatus,
   PhysicalAbility,
+  RoomStatus,
+  RoomType,
   Shift,
   VehicleStatus,
   VehicleType,
@@ -23,6 +25,9 @@ export const MAINTENANCE_STATUSES: MaintenanceStatus[] = [
   "ملغي",
 ];
 export const INSPECTION_RESULTS: InspectionResult[] = ["ناجح", "يحتاج صيانة", "غير صالح"];
+
+export const ROOM_TYPES: RoomType[] = ["غرفة نوم", "مكتب", "قاعة تدريس", "مرفق"];
+export const ROOM_STATUSES: RoomStatus[] = ["جاهزة", "صيانة"];
 
 export const RATING_MIN = 0;
 export const RATING_MAX = 5;
