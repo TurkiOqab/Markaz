@@ -233,9 +233,7 @@ def update_building_maintenance(
 ) -> dict:
     m = db.get(BuildingMaintenance, maintenance_id)
     if m is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="سجل الصيانة غير موجود"
-        )
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="سجل الصيانة غير موجود")
     for field, value in payload.model_dump(exclude_unset=True).items():
         setattr(m, field, value)
     db.commit()
@@ -251,9 +249,7 @@ def delete_building_maintenance(
 ) -> Response:
     m = db.get(BuildingMaintenance, maintenance_id)
     if m is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="سجل الصيانة غير موجود"
-        )
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="سجل الصيانة غير موجود")
     db.delete(m)
     db.commit()
     return Response(status_code=status.HTTP_204_NO_CONTENT)
@@ -267,11 +263,7 @@ def list_reports(
     db: Session = Depends(get_db),
     _chief=Depends(get_current_chief),
 ) -> dict:
-    rows = (
-        db.execute(select(BuildingReport).order_by(BuildingReport.date.desc()))
-        .scalars()
-        .all()
-    )
+    rows = db.execute(select(BuildingReport).order_by(BuildingReport.date.desc())).scalars().all()
     items = [BuildingReportOut.model_validate(r) for r in rows]
     return {
         "data": ListResponse[BuildingReportOut](
