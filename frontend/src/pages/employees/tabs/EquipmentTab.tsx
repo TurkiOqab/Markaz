@@ -9,6 +9,7 @@ import {
   updateEmployeeEquipment,
 } from "../../../api/employees";
 import type { EquipmentInput } from "../../../api/employees";
+import { Badge, conditionTone } from "../../../components/Badge";
 import { Button } from "../../../components/Button";
 import { EmptyState } from "../../../components/EmptyState";
 import { Modal } from "../../../components/Modal";
@@ -85,7 +86,9 @@ export function EquipmentTab({ employeeId }: { employeeId: number }) {
                 <td className="px-4 py-3 font-medium text-slate-900">{eq.item_name}</td>
                 <td className="px-4 py-3 text-slate-700">{eq.serial_number ?? "—"}</td>
                 <td className="px-4 py-3 text-slate-700">{eq.assigned_date}</td>
-                <td className="px-4 py-3 text-slate-700">{eq.condition}</td>
+                <td className="px-4 py-3">
+                  <Badge tone={conditionTone(eq.condition)}>{eq.condition}</Badge>
+                </td>
                 <td className="px-4 py-3 text-end">
                   <div className="flex justify-end gap-2">
                     <Button variant="secondary" onClick={() => setEditing(eq)}>

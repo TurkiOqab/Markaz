@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import { ApiRequestError } from "../../api/client";
 import { listEmployees } from "../../api/employees";
 import { listVehicles } from "../../api/vehicles";
+import { Badge, vehicleStatusTone } from "../../components/Badge";
 import { Button } from "../../components/Button";
 import { EmptyState } from "../../components/EmptyState";
 import { SelectField } from "../../components/SelectField";
@@ -141,7 +142,9 @@ export function VehiclesListPage() {
                     </Link>
                   </td>
                   <td className="px-4 py-3 text-slate-700">{v.type}</td>
-                  <td className="px-4 py-3 text-slate-700">{v.status}</td>
+                  <td className="px-4 py-3">
+                    <Badge tone={vehicleStatusTone(v.status)}>{v.status}</Badge>
+                  </td>
                   <td className="px-4 py-3 text-slate-700">
                     {v.driver_id ? driverById.get(v.driver_id) ?? "—" : "—"}
                   </td>

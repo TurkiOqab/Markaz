@@ -9,6 +9,7 @@ import {
   updateInspection,
 } from "../../../api/vehicles";
 import type { InspectionInput } from "../../../api/vehicles";
+import { Badge, inspectionResultTone } from "../../../components/Badge";
 import { Button } from "../../../components/Button";
 import { EmptyState } from "../../../components/EmptyState";
 import { Modal } from "../../../components/Modal";
@@ -84,7 +85,9 @@ export function InspectionsTab({ vehicleId }: { vehicleId: number }) {
               <tr key={i.id} className="border-b border-slate-100 last:border-b-0">
                 <td className="px-4 py-3 text-slate-700">{i.inspection_date}</td>
                 <td className="px-4 py-3 font-medium text-slate-900">{i.inspector_name}</td>
-                <td className="px-4 py-3 text-slate-700">{i.result}</td>
+                <td className="px-4 py-3">
+                  <Badge tone={inspectionResultTone(i.result)}>{i.result}</Badge>
+                </td>
                 <td className="px-4 py-3 text-slate-600">{i.notes ?? "—"}</td>
                 <td className="px-4 py-3 text-end">
                   <div className="flex justify-end gap-2">

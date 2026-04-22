@@ -9,6 +9,7 @@ import {
   updateMaintenance,
 } from "../../../api/vehicles";
 import type { MaintenanceInput } from "../../../api/vehicles";
+import { Badge, maintenanceStatusTone } from "../../../components/Badge";
 import { Button } from "../../../components/Button";
 import { EmptyState } from "../../../components/EmptyState";
 import { Modal } from "../../../components/Modal";
@@ -88,7 +89,9 @@ export function MaintenanceTab({ vehicleId }: { vehicleId: number }) {
                 <td className="px-4 py-3 font-medium text-slate-900">{m.description}</td>
                 <td className="px-4 py-3 text-slate-700">{m.cost}</td>
                 <td className="px-4 py-3 text-slate-700">{m.contractor}</td>
-                <td className="px-4 py-3 text-slate-700">{m.status}</td>
+                <td className="px-4 py-3">
+                  <Badge tone={maintenanceStatusTone(m.status)}>{m.status}</Badge>
+                </td>
                 <td className="px-4 py-3 text-end">
                   <div className="flex justify-end gap-2">
                     <Button variant="secondary" onClick={() => setEditing(m)}>

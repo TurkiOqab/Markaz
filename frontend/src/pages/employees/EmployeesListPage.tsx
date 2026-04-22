@@ -5,6 +5,8 @@ import { listEmployees } from "../../api/employees";
 import { listTeams } from "../../api/teams";
 import { ApiRequestError } from "../../api/client";
 import { SHIFTS } from "../../constants/enums";
+import { Avatar } from "../../components/Avatar";
+import { Badge } from "../../components/Badge";
 import { Button } from "../../components/Button";
 import { EmptyState } from "../../components/EmptyState";
 import { SelectField } from "../../components/SelectField";
@@ -121,6 +123,7 @@ export function EmployeesListPage() {
           <table className="w-full text-sm">
             <thead className="border-b border-slate-200 bg-slate-50 text-slate-600">
               <tr>
+                <th className="w-12 px-4 py-3"></th>
                 <th className="px-4 py-3 text-start font-medium">الاسم</th>
                 <th className="px-4 py-3 text-start font-medium">الرتبة</th>
                 <th className="px-4 py-3 text-start font-medium">التخصص</th>
@@ -136,6 +139,9 @@ export function EmployeesListPage() {
                   className="border-b border-slate-100 last:border-b-0 hover:bg-slate-50"
                 >
                   <td className="px-4 py-3">
+                    <Avatar name={emp.name} src={emp.photo_path} size="sm" />
+                  </td>
+                  <td className="px-4 py-3">
                     <Link
                       to={`/employees/${emp.id}`}
                       className="font-medium text-slate-900 hover:underline"
@@ -146,7 +152,9 @@ export function EmployeesListPage() {
                   <td className="px-4 py-3 text-slate-700">{emp.rank}</td>
                   <td className="px-4 py-3 text-slate-700">{emp.specialty}</td>
                   <td className="px-4 py-3 text-slate-700">{teamById.get(emp.team_id) ?? "—"}</td>
-                  <td className="px-4 py-3 text-slate-700">{emp.shift}</td>
+                  <td className="px-4 py-3">
+                    <Badge tone="info">{emp.shift}</Badge>
+                  </td>
                   <td className="px-4 py-3 text-slate-500">{emp.national_id}</td>
                 </tr>
               ))}

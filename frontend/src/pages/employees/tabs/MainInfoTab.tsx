@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { ApiRequestError } from "../../../api/client";
 import { deleteEmployee, updateEmployee, uploadEmployeePhoto } from "../../../api/employees";
 import { listTeams } from "../../../api/teams";
+import { Avatar } from "../../../components/Avatar";
 import { Button } from "../../../components/Button";
 import { SelectField } from "../../../components/SelectField";
 import { TextField } from "../../../components/TextField";
@@ -96,19 +97,7 @@ export function MainInfoTab({ employee, onUpdated }: Props) {
       <section className="rounded-lg border border-slate-200 bg-white p-6">
         <h2 className="mb-4 text-sm font-semibold text-slate-700">الصورة</h2>
         <div className="flex items-center gap-6">
-          <div className="h-24 w-24 overflow-hidden rounded-full border border-slate-200 bg-slate-100">
-            {employee.photo_path ? (
-              <img
-                src={employee.photo_path}
-                alt={employee.name}
-                className="h-full w-full object-cover"
-              />
-            ) : (
-              <div className="flex h-full w-full items-center justify-center text-2xl text-slate-400">
-                ؟
-              </div>
-            )}
-          </div>
+          <Avatar name={employee.name} src={employee.photo_path} size="lg" />
           <div className="flex flex-col gap-2">
             <input
               ref={fileRef}

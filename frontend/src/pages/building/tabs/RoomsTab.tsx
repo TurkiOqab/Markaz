@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import { ApiRequestError } from "../../../api/client";
 import { createRoom, deleteRoom, listRooms, updateRoom } from "../../../api/building";
 import type { RoomInput } from "../../../api/building";
+import { Badge, roomStatusTone } from "../../../components/Badge";
 import { Button } from "../../../components/Button";
 import { EmptyState } from "../../../components/EmptyState";
 import { Modal } from "../../../components/Modal";
@@ -80,7 +81,9 @@ export function RoomsTab() {
                 <td className="px-4 py-3 font-medium text-slate-900">{r.name}</td>
                 <td className="px-4 py-3 text-slate-700">{r.type}</td>
                 <td className="px-4 py-3 text-slate-700">{r.capacity}</td>
-                <td className="px-4 py-3 text-slate-700">{r.status}</td>
+                <td className="px-4 py-3">
+                  <Badge tone={roomStatusTone(r.status)}>{r.status}</Badge>
+                </td>
                 <td className="px-4 py-3 text-end">
                   <div className="flex justify-end gap-2">
                     <Button variant="secondary" onClick={() => setEditing(r)}>
