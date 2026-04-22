@@ -33,8 +33,11 @@ export function InventoryTab() {
   const [editing, setEditing] = useState<InventoryItem | null>(null);
   const [creating, setCreating] = useState(false);
 
-  const [sortKey, setSortKey] = useState<SortKey>("item_name");
-  const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
+  const DEFAULT_SORT_KEY: SortKey = "item_name";
+  const DEFAULT_SORT_DIR: "asc" | "desc" = "asc";
+  const [sortKey, setSortKey] = useState<SortKey>(DEFAULT_SORT_KEY);
+  const [sortDir, setSortDir] = useState<"asc" | "desc">(DEFAULT_SORT_DIR);
+  const isDefaultSort = sortKey === DEFAULT_SORT_KEY && sortDir === DEFAULT_SORT_DIR;
 
   function toggleSort(key: SortKey) {
     if (sortKey === key) {
@@ -43,6 +46,11 @@ export function InventoryTab() {
       setSortKey(key);
       setSortDir("asc");
     }
+  }
+
+  function resetSort() {
+    setSortKey(DEFAULT_SORT_KEY);
+    setSortDir(DEFAULT_SORT_DIR);
   }
 
   const visible = useMemo(() => {
@@ -84,7 +92,14 @@ export function InventoryTab() {
 
   return (
     <div className="space-y-4">
-      <div className="flex justify-end">
+      <div className="flex items-center justify-between">
+        {!isDefaultSort ? (
+          <Button variant="secondary" onClick={resetSort}>
+            الترتيب الافتراضي
+          </Button>
+        ) : (
+          <span />
+        )}
         <Button onClick={() => setCreating(true)}>إضافة صنف</Button>
       </div>
 

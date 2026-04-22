@@ -1,4 +1,4 @@
-import { ArrowDown, ArrowUp, ArrowUpDown } from "lucide-react";
+import { ArrowDown, ArrowUp } from "lucide-react";
 
 interface Props<K extends string> {
   label: string;
@@ -16,7 +16,6 @@ export function SortHeader<K extends string>({
   onSort,
 }: Props<K>) {
   const isActive = active === columnKey;
-  const Icon = !isActive ? ArrowUpDown : direction === "asc" ? ArrowUp : ArrowDown;
   return (
     <button
       type="button"
@@ -26,7 +25,13 @@ export function SortHeader<K extends string>({
       }`}
     >
       <span>{label}</span>
-      <Icon size={14} className={isActive ? "text-slate-900" : "text-slate-400"} />
+      {isActive ? (
+        direction === "asc" ? (
+          <ArrowUp size={14} className="text-slate-900" />
+        ) : (
+          <ArrowDown size={14} className="text-slate-900" />
+        )
+      ) : null}
     </button>
   );
 }
