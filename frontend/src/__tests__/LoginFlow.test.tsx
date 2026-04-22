@@ -32,6 +32,20 @@ describe("Login flow", () => {
     fetchMock.mockResolvedValueOnce(
       json({ data: { setup_complete: true, authenticated: true } }),
     );
+    // Dashboard stats call after auth
+    fetchMock.mockResolvedValue(
+      json({
+        data: {
+          employees: { total: 0, by_shift: {} },
+          vehicles: { total: 0, by_status: {} },
+          rooms: { total: 0, by_status: {} },
+          inventory: { total: 0, low_stock: [] },
+          maintenance: { open_count: 0, monthly_costs: [] },
+          ratings: { monthly_average: [] },
+          attention: { vehicles_out: [], expiring_certs: [], low_stock: [] },
+        },
+      }),
+    );
 
     render(<App />);
 
@@ -44,7 +58,7 @@ describe("Login flow", () => {
     await userEvent.click(screen.getByRole("button", { name: "تسجيل الدخول" }));
 
     await waitFor(() =>
-      expect(screen.getByRole("heading", { name: "أهلاً وسهلاً" })).toBeInTheDocument(),
+      expect(screen.getByRole("heading", { name: "لوحة التحكم" })).toBeInTheDocument(),
     );
   });
 
