@@ -12,17 +12,11 @@ import type { InventoryInput } from "../../../api/building";
 import { Button } from "../../../components/Button";
 import { EmptyState } from "../../../components/EmptyState";
 import { Modal } from "../../../components/Modal";
-import { SelectField } from "../../../components/SelectField";
+import { SortHeader } from "../../../components/SortHeader";
 import { TextField } from "../../../components/TextField";
 import type { InventoryItem } from "../../../types/models";
 
-type SortKey = "name" | "qty_desc" | "qty_asc";
-
-const SORT_OPTIONS: Array<{ value: SortKey; label: string }> = [
-  { value: "name", label: "حسب الاسم" },
-  { value: "qty_desc", label: "الكمية (من الأعلى)" },
-  { value: "qty_asc", label: "الكمية (من الأقل)" },
-];
+type SortKey = "item_name" | "category" | "quantity" | "min_threshold" | "location";
 
 const EMPTY: InventoryInput = {
   item_name: "",
@@ -39,35 +33,27 @@ export function InventoryTab() {
   const [editing, setEditing] = useState<InventoryItem | null>(null);
   const [creating, setCreating] = useState(false);
 
-  const [sort, setSort] = useState<SortKey>("name");
-  const [category, setCategory] = useState("");
-  const [lowOnly, setLowOnly] = useState(false);
-  const [q, setQ] = useState("");
+  const [sortKey, setSortKey] = useState<SortKey>("item_name");
+  const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
 
-  const categories = useMemo(
-    () => Array.from(new Set(items.map((i) => i.category))).sort(),
-    [items],
-  );
+  function toggleSort(key: SortKey) {
+    if (sortKey === key) {
+      setSortDir((d) => (d === "asc" ? "desc" : "asc"));
+    } else {
+      setSortKey(key);
+      setSortDir("asc");
+    }
+  }
 
   const visible = useMemo(() => {
-    let result = items;
-    if (q) {
-      const needle = q.toLowerCase();
-      result = result.filter((i) => i.item_name.toLowerCase().includes(needle));
-    }
-    if (category) {
-      result = result.filter((i) => i.category === category);
-    }
-    if (lowOnly) {
-      result = result.filter((i) => i.quantity < i.min_threshold);
-    }
-    result = [...result].sort((a, b) => {
-      if (sort === "qty_desc") return b.quantity - a.quantity;
-      if (sort === "qty_asc") return a.quantity - b.quantity;
-      return a.item_name.localeCompare(b.item_name, "ar");
+    const sorted = [...items].sort((a, b) => {
+      const av = a[sortKey];
+      const bv = b[sortKey];
+      if (typeof av === "number" && typeof bv === "number") return av - bv;
+      return String(av).localeCompare(String(bv), "ar");
     });
-    return result;
-  }, [items, q, category, lowOnly, sort]);
+    return sortDir === "desc" ? sorted.reverse() : sorted;
+  }, [items, sortKey, sortDir]);
 
   async function reload() {
     setLoading(true);
@@ -98,64 +84,64 @@ export function InventoryTab() {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between gap-4">
-        <div className="flex items-center gap-4">
-          <label className="flex items-center gap-2 text-sm">
-            <input
-              type="checkbox"
-              checked={lowOnly}
-              onChange={(e) => setLowOnly(e.target.checked)}
-              className="h-4 w-4 rounded border-slate-300 text-brand-700 focus:ring-brand-500"
-            />
-            <span className="text-slate-700">أصناف منخفضة فقط</span>
-          </label>
-        </div>
+      <div className="flex justify-end">
         <Button onClick={() => setCreating(true)}>إضافة صنف</Button>
       </div>
 
-      <section className="rounded-lg border border-slate-200 bg-white p-4">
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-          <TextField
-            label="بحث بالاسم"
-            value={q}
-            onChange={(e) => setQ(e.target.value)}
-            placeholder="..."
-          />
-          <SelectField
-            label="التصنيف"
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            placeholder="كل التصنيفات"
-            options={categories.map((c) => ({ value: c, label: c }))}
-          />
-          <SelectField
-            label="الترتيب"
-            value={sort}
-            onChange={(e) => setSort(e.target.value as SortKey)}
-            options={SORT_OPTIONS.map((o) => ({ value: o.value, label: o.label }))}
-          />
-        </div>
-      </section>
-
       {loading ? (
         <p className="text-slate-500">جارِ التحميل...</p>
-      ) : visible.length === 0 ? (
-        <EmptyState
-          title={items.length === 0 ? "لا توجد أصناف" : "لا توجد نتائج"}
-          description={
-            items.length === 0 ? "أضف صنفاً للبدء" : "حاول تغيير الفلاتر أو البحث"
-          }
-        />
+      ) : items.length === 0 ? (
+        <EmptyState title="لا توجد أصناف" description="أضف صنفاً للبدء" />
       ) : (
         <table className="w-full rounded-lg border border-slate-200 bg-white text-sm">
-          <thead className="border-b border-slate-200 bg-slate-50 text-slate-600">
+          <thead className="border-b border-slate-200 bg-slate-50">
             <tr>
-              <th className="px-4 py-3 text-start font-medium">الصنف</th>
-              <th className="px-4 py-3 text-start font-medium">التصنيف</th>
-              <th className="px-4 py-3 text-start font-medium">الكمية</th>
-              <th className="px-4 py-3 text-start font-medium">الحد الأدنى</th>
-              <th className="px-4 py-3 text-start font-medium">الموقع</th>
-              <th className="px-4 py-3 text-end font-medium">الإجراءات</th>
+              <th className="px-4 py-3 text-start">
+                <SortHeader
+                  label="الصنف"
+                  columnKey="item_name"
+                  active={sortKey}
+                  direction={sortDir}
+                  onSort={toggleSort}
+                />
+              </th>
+              <th className="px-4 py-3 text-start">
+                <SortHeader
+                  label="التصنيف"
+                  columnKey="category"
+                  active={sortKey}
+                  direction={sortDir}
+                  onSort={toggleSort}
+                />
+              </th>
+              <th className="px-4 py-3 text-start">
+                <SortHeader
+                  label="الكمية"
+                  columnKey="quantity"
+                  active={sortKey}
+                  direction={sortDir}
+                  onSort={toggleSort}
+                />
+              </th>
+              <th className="px-4 py-3 text-start">
+                <SortHeader
+                  label="الحد الأدنى"
+                  columnKey="min_threshold"
+                  active={sortKey}
+                  direction={sortDir}
+                  onSort={toggleSort}
+                />
+              </th>
+              <th className="px-4 py-3 text-start">
+                <SortHeader
+                  label="الموقع"
+                  columnKey="location"
+                  active={sortKey}
+                  direction={sortDir}
+                  onSort={toggleSort}
+                />
+              </th>
+              <th className="px-4 py-3 text-end font-medium text-slate-600">الإجراءات</th>
             </tr>
           </thead>
           <tbody>

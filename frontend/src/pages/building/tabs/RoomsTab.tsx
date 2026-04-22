@@ -9,9 +9,12 @@ import { Button } from "../../../components/Button";
 import { EmptyState } from "../../../components/EmptyState";
 import { Modal } from "../../../components/Modal";
 import { SelectField } from "../../../components/SelectField";
+import { SortHeader } from "../../../components/SortHeader";
 import { TextField } from "../../../components/TextField";
 import { ROOM_STATUSES, ROOM_TYPES } from "../../../constants/enums";
 import type { Room } from "../../../types/models";
+
+type SortKey = "name" | "type" | "capacity" | "status";
 
 const EMPTY: RoomInput = {
   type: "غرفة نوم",
@@ -26,20 +29,28 @@ export function RoomsTab() {
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState<Room | null>(null);
   const [creating, setCreating] = useState(false);
-  const [typeFilter, setTypeFilter] = useState("");
-  const [statusFilter, setStatusFilter] = useState("");
-  const [q, setQ] = useState("");
+
+  const [sortKey, setSortKey] = useState<SortKey>("name");
+  const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
+
+  function toggleSort(key: SortKey) {
+    if (sortKey === key) {
+      setSortDir((d) => (d === "asc" ? "desc" : "asc"));
+    } else {
+      setSortKey(key);
+      setSortDir("asc");
+    }
+  }
 
   const visible = useMemo(() => {
-    let result = items;
-    if (q) {
-      const needle = q.toLowerCase();
-      result = result.filter((r) => r.name.toLowerCase().includes(needle));
-    }
-    if (typeFilter) result = result.filter((r) => r.type === typeFilter);
-    if (statusFilter) result = result.filter((r) => r.status === statusFilter);
-    return result;
-  }, [items, q, typeFilter, statusFilter]);
+    const sorted = [...items].sort((a, b) => {
+      const av = a[sortKey];
+      const bv = b[sortKey];
+      if (typeof av === "number" && typeof bv === "number") return av - bv;
+      return String(av).localeCompare(String(bv), "ar");
+    });
+    return sortDir === "desc" ? sorted.reverse() : sorted;
+  }, [items, sortKey, sortDir]);
 
   async function reload() {
     setLoading(true);
@@ -74,47 +85,51 @@ export function RoomsTab() {
         <Button onClick={() => setCreating(true)}>إضافة غرفة</Button>
       </div>
 
-      <section className="rounded-lg border border-slate-200 bg-white p-4">
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-          <TextField
-            label="بحث بالاسم"
-            value={q}
-            onChange={(e) => setQ(e.target.value)}
-            placeholder="..."
-          />
-          <SelectField
-            label="النوع"
-            value={typeFilter}
-            onChange={(e) => setTypeFilter(e.target.value)}
-            placeholder="كل الأنواع"
-            options={ROOM_TYPES.map((t) => ({ value: t, label: t }))}
-          />
-          <SelectField
-            label="الحالة"
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
-            placeholder="كل الحالات"
-            options={ROOM_STATUSES.map((s) => ({ value: s, label: s }))}
-          />
-        </div>
-      </section>
-
       {loading ? (
         <p className="text-slate-500">جارِ التحميل...</p>
-      ) : visible.length === 0 ? (
-        <EmptyState
-          title={items.length === 0 ? "لا توجد غرف" : "لا توجد نتائج"}
-          description={items.length === 0 ? "أضف غرفة للبدء" : "حاول تغيير الفلاتر"}
-        />
+      ) : items.length === 0 ? (
+        <EmptyState title="لا توجد غرف" description="أضف غرفة للبدء" />
       ) : (
         <table className="w-full rounded-lg border border-slate-200 bg-white text-sm">
-          <thead className="border-b border-slate-200 bg-slate-50 text-slate-600">
+          <thead className="border-b border-slate-200 bg-slate-50">
             <tr>
-              <th className="px-4 py-3 text-start font-medium">الاسم</th>
-              <th className="px-4 py-3 text-start font-medium">النوع</th>
-              <th className="px-4 py-3 text-start font-medium">السعة</th>
-              <th className="px-4 py-3 text-start font-medium">الحالة</th>
-              <th className="px-4 py-3 text-end font-medium">الإجراءات</th>
+              <th className="px-4 py-3 text-start">
+                <SortHeader
+                  label="الاسم"
+                  columnKey="name"
+                  active={sortKey}
+                  direction={sortDir}
+                  onSort={toggleSort}
+                />
+              </th>
+              <th className="px-4 py-3 text-start">
+                <SortHeader
+                  label="النوع"
+                  columnKey="type"
+                  active={sortKey}
+                  direction={sortDir}
+                  onSort={toggleSort}
+                />
+              </th>
+              <th className="px-4 py-3 text-start">
+                <SortHeader
+                  label="السعة"
+                  columnKey="capacity"
+                  active={sortKey}
+                  direction={sortDir}
+                  onSort={toggleSort}
+                />
+              </th>
+              <th className="px-4 py-3 text-start">
+                <SortHeader
+                  label="الحالة"
+                  columnKey="status"
+                  active={sortKey}
+                  direction={sortDir}
+                  onSort={toggleSort}
+                />
+              </th>
+              <th className="px-4 py-3 text-end font-medium text-slate-600">الإجراءات</th>
             </tr>
           </thead>
           <tbody>

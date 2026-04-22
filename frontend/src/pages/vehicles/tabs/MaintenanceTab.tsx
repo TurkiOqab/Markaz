@@ -14,8 +14,11 @@ import { Button } from "../../../components/Button";
 import { EmptyState } from "../../../components/EmptyState";
 import { Modal } from "../../../components/Modal";
 import { SelectField } from "../../../components/SelectField";
+import { SortHeader } from "../../../components/SortHeader";
 import { TextField } from "../../../components/TextField";
 import { MAINTENANCE_STATUSES } from "../../../constants/enums";
+
+type SortKey = "date" | "description" | "cost" | "contractor" | "status";
 import type { VehicleMaintenance } from "../../../types/models";
 
 const EMPTY: MaintenanceInput = {
@@ -31,18 +34,28 @@ export function MaintenanceTab({ vehicleId }: { vehicleId: number }) {
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState<VehicleMaintenance | null>(null);
   const [creating, setCreating] = useState(false);
-  const [statusFilter, setStatusFilter] = useState("");
-  const [sortAsc, setSortAsc] = useState(false);
+
+  const [sortKey, setSortKey] = useState<SortKey>("date");
+  const [sortDir, setSortDir] = useState<"asc" | "desc">("desc");
+
+  function toggleSort(key: SortKey) {
+    if (sortKey === key) {
+      setSortDir((d) => (d === "asc" ? "desc" : "asc"));
+    } else {
+      setSortKey(key);
+      setSortDir("asc");
+    }
+  }
 
   const visible = useMemo(() => {
-    let result = items;
-    if (statusFilter) result = result.filter((m) => m.status === statusFilter);
-    result = [...result].sort((a, b) => {
-      const diff = a.date.localeCompare(b.date);
-      return sortAsc ? diff : -diff;
+    const sorted = [...items].sort((a, b) => {
+      const av = a[sortKey];
+      const bv = b[sortKey];
+      if (typeof av === "number" && typeof bv === "number") return av - bv;
+      return String(av).localeCompare(String(bv), "ar");
     });
-    return result;
-  }, [items, statusFilter, sortAsc]);
+    return sortDir === "desc" ? sorted.reverse() : sorted;
+  }, [items, sortKey, sortDir]);
 
   async function reload() {
     setLoading(true);
@@ -78,44 +91,30 @@ export function MaintenanceTab({ vehicleId }: { vehicleId: number }) {
         <Button onClick={() => setCreating(true)}>إضافة صيانة</Button>
       </div>
 
-      <section className="rounded-lg border border-slate-200 bg-white p-4">
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-          <SelectField
-            label="الحالة"
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
-            placeholder="كل الحالات"
-            options={MAINTENANCE_STATUSES.map((s) => ({ value: s, label: s }))}
-          />
-          <SelectField
-            label="الترتيب حسب التاريخ"
-            value={sortAsc ? "asc" : "desc"}
-            onChange={(e) => setSortAsc(e.target.value === "asc")}
-            options={[
-              { value: "desc", label: "الأحدث أولاً" },
-              { value: "asc", label: "الأقدم أولاً" },
-            ]}
-          />
-        </div>
-      </section>
-
       {loading ? (
         <p className="text-slate-500">جارِ التحميل...</p>
-      ) : visible.length === 0 ? (
-        <EmptyState
-          title={items.length === 0 ? "لا توجد سجلات صيانة" : "لا توجد نتائج"}
-          description={items.length === 0 ? "أضف سجل صيانة للبدء" : "حاول تغيير الفلاتر"}
-        />
+      ) : items.length === 0 ? (
+        <EmptyState title="لا توجد سجلات صيانة" description="أضف سجل صيانة للبدء" />
       ) : (
         <table className="w-full rounded-lg border border-slate-200 bg-white text-sm">
-          <thead className="border-b border-slate-200 bg-slate-50 text-slate-600">
+          <thead className="border-b border-slate-200 bg-slate-50">
             <tr>
-              <th className="px-4 py-3 text-start font-medium">التاريخ</th>
-              <th className="px-4 py-3 text-start font-medium">الوصف</th>
-              <th className="px-4 py-3 text-start font-medium">التكلفة</th>
-              <th className="px-4 py-3 text-start font-medium">المقاول</th>
-              <th className="px-4 py-3 text-start font-medium">الحالة</th>
-              <th className="px-4 py-3 text-end font-medium">الإجراءات</th>
+              <th className="px-4 py-3 text-start">
+                <SortHeader label="التاريخ" columnKey="date" active={sortKey} direction={sortDir} onSort={toggleSort} />
+              </th>
+              <th className="px-4 py-3 text-start">
+                <SortHeader label="الوصف" columnKey="description" active={sortKey} direction={sortDir} onSort={toggleSort} />
+              </th>
+              <th className="px-4 py-3 text-start">
+                <SortHeader label="التكلفة" columnKey="cost" active={sortKey} direction={sortDir} onSort={toggleSort} />
+              </th>
+              <th className="px-4 py-3 text-start">
+                <SortHeader label="المقاول" columnKey="contractor" active={sortKey} direction={sortDir} onSort={toggleSort} />
+              </th>
+              <th className="px-4 py-3 text-start">
+                <SortHeader label="الحالة" columnKey="status" active={sortKey} direction={sortDir} onSort={toggleSort} />
+              </th>
+              <th className="px-4 py-3 text-end font-medium text-slate-600">الإجراءات</th>
             </tr>
           </thead>
           <tbody>
