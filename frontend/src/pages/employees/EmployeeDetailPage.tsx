@@ -9,9 +9,9 @@ import { EquipmentTab } from "./tabs/EquipmentTab";
 import { MainInfoTab } from "./tabs/MainInfoTab";
 import { RatingsTab } from "./tabs/RatingsTab";
 
-type TabKey = "main" | "certs" | "equipment" | "ratings";
+export type EmployeeTabKey = "main" | "certs" | "equipment" | "ratings";
 
-const TABS: Array<{ key: TabKey; label: string }> = [
+const TABS: Array<{ key: EmployeeTabKey; label: string }> = [
   { key: "main", label: "المعلومات الأساسية" },
   { key: "certs", label: "الشهادات" },
   { key: "equipment", label: "التجهيزات" },
@@ -24,7 +24,7 @@ export function EmployeeDetailPage() {
   const [employee, setEmployee] = useState<Employee | null>(null);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
-  const [tab, setTab] = useState<TabKey>("main");
+  const [tab, setTab] = useState<EmployeeTabKey>("main");
 
   useEffect(() => {
     if (Number.isNaN(employeeId)) {
@@ -90,7 +90,7 @@ export function EmployeeDetailPage() {
       </nav>
 
       {tab === "main" ? (
-        <MainInfoTab employee={employee} onUpdated={setEmployee} />
+        <MainInfoTab employee={employee} onUpdated={setEmployee} onNavigate={setTab} />
       ) : tab === "certs" ? (
         <CertificationsTab employeeId={employee.id} />
       ) : tab === "equipment" ? (

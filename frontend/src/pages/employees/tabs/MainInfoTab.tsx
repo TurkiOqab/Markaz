@@ -1,9 +1,17 @@
-import { useEffect, useRef, useState } from "react";
-import type { ChangeEvent, FormEvent } from "react";
+import { Award, Briefcase, Pencil, Star } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import type { ChangeEvent, ComponentType, FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { ApiRequestError } from "../../../api/client";
-import { deleteEmployee, updateEmployee, uploadEmployeePhoto } from "../../../api/employees";
+import {
+  deleteEmployee,
+  listCertifications,
+  listEmployeeEquipment,
+  listRatings,
+  updateEmployee,
+  uploadEmployeePhoto,
+} from "../../../api/employees";
 import { listTeams } from "../../../api/teams";
 import { Avatar } from "../../../components/Avatar";
 import { Button } from "../../../components/Button";
@@ -11,17 +19,27 @@ import { SelectField } from "../../../components/SelectField";
 import { TextField } from "../../../components/TextField";
 import { MARITAL_STATUSES, PHYSICAL_ABILITIES, SHIFTS } from "../../../constants/enums";
 import type { Employee, Team } from "../../../types/models";
+import type { EmployeeTabKey } from "../EmployeeDetailPage";
 
 interface Props {
   employee: Employee;
   onUpdated: (updated: Employee) => void;
+  onNavigate: (tab: EmployeeTabKey) => void;
 }
 
-export function MainInfoTab({ employee, onUpdated }: Props) {
+interface Counts {
+  certs: number;
+  equipment: number;
+  ratings: number;
+}
+
+export function MainInfoTab({ employee, onUpdated, onNavigate }: Props) {
   const [form, setForm] = useState<Employee>(employee);
   const [teams, setTeams] = useState<Team[]>([]);
+  const [counts, setCounts] = useState<Counts | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [editing, setEditing] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
 
@@ -35,8 +53,41 @@ export function MainInfoTab({ employee, onUpdated }: Props) {
     setForm(employee);
   }, [employee]);
 
+  useEffect(() => {
+    Promise.all([
+      listCertifications(employee.id),
+      listEmployeeEquipment(employee.id),
+      listRatings(employee.id),
+    ])
+      .then(([certs, eq, ratings]) => {
+        setCounts({
+          certs: certs.total,
+          equipment: eq.total,
+          ratings: ratings.total,
+        });
+      })
+      .catch(() => {
+        // Silent — the hero still works without summary counts.
+      });
+  }, [employee.id]);
+
+  const teamName = useMemo(
+    () => teams.find((t) => t.id === employee.team_id)?.name ?? "—",
+    [teams, employee.team_id],
+  );
+
   function update<K extends keyof Employee>(key: K, value: Employee[K]) {
     setForm((f) => ({ ...f, [key]: value }));
+  }
+
+  function startEditing() {
+    setForm(employee);
+    setEditing(true);
+  }
+
+  function cancelEditing() {
+    setForm(employee);
+    setEditing(false);
   }
 
   async function handleSubmit(e: FormEvent) {
@@ -58,6 +109,7 @@ export function MainInfoTab({ employee, onUpdated }: Props) {
       });
       toast.success("تم الحفظ");
       onUpdated(updated);
+      setEditing(false);
     } catch (err) {
       toast.error(err instanceof ApiRequestError ? err.message : "فشل الحفظ");
     } finally {
@@ -94,11 +146,11 @@ export function MainInfoTab({ employee, onUpdated }: Props) {
 
   return (
     <div className="space-y-6">
+      {/* Hero band */}
       <section className="rounded-lg border border-slate-200 bg-white p-6">
-        <h2 className="mb-4 text-sm font-semibold text-slate-700">الصورة</h2>
-        <div className="flex items-center gap-6">
-          <Avatar name={employee.name} src={employee.photo_path} size="lg" />
-          <div className="flex flex-col gap-2">
+        <div className="flex items-start gap-5">
+          <div className="flex flex-col items-center gap-2">
+            <Avatar name={employee.name} src={employee.photo_path} size="lg" />
             <input
               ref={fileRef}
               type="file"
@@ -106,102 +158,203 @@ export function MainInfoTab({ employee, onUpdated }: Props) {
               onChange={handlePhotoSelect}
               className="hidden"
             />
-            <Button
-              variant="secondary"
+            <button
               type="button"
               onClick={() => fileRef.current?.click()}
-              loading={uploading}
+              disabled={uploading}
+              className="text-xs text-slate-500 hover:text-brand-700 disabled:opacity-50"
             >
-              {employee.photo_path ? "تغيير الصورة" : "رفع صورة"}
-            </Button>
-            <p className="text-xs text-slate-500">JPG, PNG, WebP — الحد الأقصى 5 ميجابايت</p>
+              {uploading
+                ? "جارِ الرفع..."
+                : employee.photo_path
+                  ? "تغيير الصورة"
+                  : "رفع صورة"}
+            </button>
           </div>
+          <div className="min-w-0 flex-1">
+            <h2 className="truncate text-xl font-bold text-slate-900">{employee.name}</h2>
+            <p className="mt-1 truncate text-sm text-slate-600">
+              {employee.rank} · {employee.specialty}
+            </p>
+            <dl className="mt-4 grid grid-cols-1 gap-x-6 gap-y-2 text-sm sm:grid-cols-2">
+              <InfoRow label="الرقم الوطني" value={employee.national_id} />
+              <InfoRow label="تاريخ الميلاد" value={employee.date_of_birth} />
+              <InfoRow label="الهاتف" value={employee.phone} />
+              <InfoRow label="البريد الإلكتروني" value={employee.email ?? "—"} />
+              <InfoRow label="الحالة الاجتماعية" value={employee.marital_status} />
+              <InfoRow label="القدرة البدنية" value={employee.physical_ability} />
+              <InfoRow label="الفريق" value={teamName} />
+              <InfoRow label="الوردية" value={employee.shift} />
+            </dl>
+          </div>
+          {!editing ? (
+            <Button variant="secondary" onClick={startEditing}>
+              <Pencil size={16} />
+              تعديل
+            </Button>
+          ) : null}
         </div>
       </section>
 
-      <form
-        onSubmit={handleSubmit}
-        className="grid grid-cols-1 gap-4 rounded-lg border border-slate-200 bg-white p-6 md:grid-cols-2"
-      >
-        <TextField
-          label="الاسم"
-          value={form.name}
-          onChange={(e) => update("name", e.target.value)}
-          required
+      {/* Summary cards */}
+      <section className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+        <SummaryCard
+          label="الشهادات"
+          value={counts?.certs}
+          icon={Award}
+          onClick={() => onNavigate("certs")}
         />
-        <TextField
-          label="الرتبة"
-          value={form.rank}
-          onChange={(e) => update("rank", e.target.value)}
-          required
+        <SummaryCard
+          label="التجهيزات"
+          value={counts?.equipment}
+          icon={Briefcase}
+          onClick={() => onNavigate("equipment")}
         />
-        <TextField
-          label="التخصص"
-          value={form.specialty}
-          onChange={(e) => update("specialty", e.target.value)}
-          required
+        <SummaryCard
+          label="التقييمات الشهرية"
+          value={counts?.ratings}
+          icon={Star}
+          onClick={() => onNavigate("ratings")}
         />
-        <TextField
-          label="الرقم الوطني"
-          value={form.national_id}
-          onChange={(e) => update("national_id", e.target.value)}
-          required
-        />
-        <TextField
-          label="تاريخ الميلاد"
-          type="date"
-          value={form.date_of_birth}
-          onChange={(e) => update("date_of_birth", e.target.value)}
-          required
-        />
-        <TextField
-          label="الهاتف"
-          value={form.phone}
-          onChange={(e) => update("phone", e.target.value)}
-          required
-        />
-        <TextField
-          label="البريد الإلكتروني"
-          type="email"
-          value={form.email ?? ""}
-          onChange={(e) => update("email", e.target.value || null)}
-        />
-        <SelectField
-          label="الحالة الاجتماعية"
-          value={form.marital_status}
-          onChange={(e) => update("marital_status", e.target.value as typeof form.marital_status)}
-          options={MARITAL_STATUSES.map((s) => ({ value: s, label: s }))}
-        />
-        <SelectField
-          label="القدرة البدنية"
-          value={form.physical_ability}
-          onChange={(e) =>
-            update("physical_ability", e.target.value as typeof form.physical_ability)
-          }
-          options={PHYSICAL_ABILITIES.map((s) => ({ value: s, label: s }))}
-        />
-        <SelectField
-          label="الفريق"
-          value={String(form.team_id)}
-          onChange={(e) => update("team_id", Number(e.target.value))}
-          options={teams.map((t) => ({ value: t.id, label: t.name }))}
-        />
-        <SelectField
-          label="الوردية"
-          value={form.shift}
-          onChange={(e) => update("shift", e.target.value as typeof form.shift)}
-          options={SHIFTS.map((s) => ({ value: s, label: s }))}
-        />
+      </section>
 
-        <div className="flex justify-between gap-2 md:col-span-2">
-          <Button variant="danger" type="button" onClick={handleDelete}>
-            حذف الموظف
-          </Button>
-          <Button type="submit" loading={submitting}>
-            حفظ التعديلات
-          </Button>
-        </div>
-      </form>
+      {/* Edit form — only shown when editing */}
+      {editing ? (
+        <section className="rounded-lg border border-slate-200 bg-white">
+          <header className="border-b border-slate-200 px-6 py-4">
+            <h3 className="text-sm font-semibold text-slate-700">تعديل المعلومات</h3>
+          </header>
+          <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-4 p-6 md:grid-cols-2">
+            <TextField
+              label="الاسم"
+              value={form.name}
+              onChange={(e) => update("name", e.target.value)}
+              required
+            />
+            <TextField
+              label="الرتبة"
+              value={form.rank}
+              onChange={(e) => update("rank", e.target.value)}
+              required
+            />
+            <TextField
+              label="التخصص"
+              value={form.specialty}
+              onChange={(e) => update("specialty", e.target.value)}
+              required
+            />
+            <TextField
+              label="الرقم الوطني"
+              value={form.national_id}
+              onChange={(e) => update("national_id", e.target.value)}
+              required
+            />
+            <TextField
+              label="تاريخ الميلاد"
+              type="date"
+              value={form.date_of_birth}
+              onChange={(e) => update("date_of_birth", e.target.value)}
+              required
+            />
+            <TextField
+              label="الهاتف"
+              value={form.phone}
+              onChange={(e) => update("phone", e.target.value)}
+              required
+            />
+            <TextField
+              label="البريد الإلكتروني"
+              type="email"
+              value={form.email ?? ""}
+              onChange={(e) => update("email", e.target.value || null)}
+            />
+            <SelectField
+              label="الحالة الاجتماعية"
+              value={form.marital_status}
+              onChange={(e) =>
+                update("marital_status", e.target.value as typeof form.marital_status)
+              }
+              options={MARITAL_STATUSES.map((s) => ({ value: s, label: s }))}
+            />
+            <SelectField
+              label="القدرة البدنية"
+              value={form.physical_ability}
+              onChange={(e) =>
+                update("physical_ability", e.target.value as typeof form.physical_ability)
+              }
+              options={PHYSICAL_ABILITIES.map((s) => ({ value: s, label: s }))}
+            />
+            <SelectField
+              label="الفريق"
+              value={String(form.team_id)}
+              onChange={(e) => update("team_id", Number(e.target.value))}
+              options={teams.map((t) => ({ value: t.id, label: t.name }))}
+            />
+            <SelectField
+              label="الوردية"
+              value={form.shift}
+              onChange={(e) => update("shift", e.target.value as typeof form.shift)}
+              options={SHIFTS.map((s) => ({ value: s, label: s }))}
+            />
+
+            <div className="flex justify-between gap-2 md:col-span-2">
+              <Button variant="danger" type="button" onClick={handleDelete} disabled={submitting}>
+                حذف الموظف
+              </Button>
+              <div className="flex gap-2">
+                <Button
+                  variant="secondary"
+                  type="button"
+                  onClick={cancelEditing}
+                  disabled={submitting}
+                >
+                  إلغاء
+                </Button>
+                <Button type="submit" loading={submitting}>
+                  حفظ التعديلات
+                </Button>
+              </div>
+            </div>
+          </form>
+        </section>
+      ) : null}
     </div>
+  );
+}
+
+function InfoRow({ label, value }: { label: string; value: string | null }) {
+  return (
+    <div className="flex gap-2">
+      <dt className="shrink-0 text-slate-500">{label}:</dt>
+      <dd className="min-w-0 truncate font-medium text-slate-800">{value || "—"}</dd>
+    </div>
+  );
+}
+
+function SummaryCard({
+  label,
+  value,
+  icon: Icon,
+  onClick,
+}: {
+  label: string;
+  value: number | undefined;
+  icon: ComponentType<{ size?: number }>;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="group flex items-center gap-4 rounded-lg border border-slate-200 bg-white p-4 text-start transition hover:border-brand-400 hover:shadow-sm"
+    >
+      <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-slate-100 text-slate-600 group-hover:bg-brand-50 group-hover:text-brand-700">
+        <Icon size={20} />
+      </div>
+      <div>
+        <p className="text-xs text-slate-500">{label}</p>
+        <p className="text-xl font-bold text-slate-900">{value ?? "—"}</p>
+      </div>
+    </button>
   );
 }

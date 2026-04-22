@@ -26,31 +26,50 @@ describe("Vehicles list page", () => {
   });
 
   it("renders seeded vehicles", async () => {
-    fetchMock.mockResolvedValueOnce(
-      json({ data: { setup_complete: true, authenticated: true } }),
-    );
-    fetchMock.mockResolvedValueOnce(
-      json({ data: { items: [], total: 0, page: 1, page_size: 200 } }),
-    );
-    fetchMock.mockResolvedValueOnce(
-      json({
-        data: {
-          items: [
-            {
-              id: 1,
-              type: "إطفاء",
-              plate_number: "أ ب ج 1234",
-              status: "في الخدمة",
-              driver_id: null,
-              photo_path: null,
+    fetchMock.mockImplementation((input: string | URL | Request) => {
+      const url = typeof input === "string" ? input : input.toString();
+      if (url.includes("/api/auth/status")) {
+        return Promise.resolve(
+          json({ data: { setup_complete: true, authenticated: true } }),
+        );
+      }
+      if (url.includes("/api/dashboard/stats")) {
+        return Promise.resolve(
+          json({
+            data: {
+              vehicles: { total: 1, by_status: { "في الخدمة": 1 } },
             },
-          ],
-          total: 1,
-          page: 1,
-          page_size: 20,
-        },
-      }),
-    );
+          }),
+        );
+      }
+      if (url.includes("/api/employees")) {
+        return Promise.resolve(
+          json({ data: { items: [], total: 0, page: 1, page_size: 200 } }),
+        );
+      }
+      if (url.includes("/api/vehicles")) {
+        return Promise.resolve(
+          json({
+            data: {
+              items: [
+                {
+                  id: 1,
+                  type: "إطفاء",
+                  plate_number: "أ ب ج 1234",
+                  status: "في الخدمة",
+                  driver_id: null,
+                  photo_path: null,
+                },
+              ],
+              total: 1,
+              page: 1,
+              page_size: 20,
+            },
+          }),
+        );
+      }
+      return Promise.resolve(json({ data: null }));
+    });
 
     render(<App />);
 
@@ -59,11 +78,11 @@ describe("Vehicles list page", () => {
     });
 
     await waitFor(() => {
-      expect(screen.getByRole("link", { name: "أ ب ج 1234" })).toBeInTheDocument();
+      expect(screen.getByRole("link", { name: /أ ب ج 1234/ })).toBeInTheDocument();
     });
-    // The type + status appear in both filter dropdowns and table cells; scope to the row.
-    const row = screen.getByRole("link", { name: "أ ب ج 1234" }).closest("tr")!;
-    expect(row).toHaveTextContent("إطفاء");
-    expect(row).toHaveTextContent("في الخدمة");
+    // Type + status appear in both filter dropdowns and cards; scope to the card.
+    const card = screen.getByRole("link", { name: /أ ب ج 1234/ });
+    expect(card).toHaveTextContent("إطفاء");
+    expect(card).toHaveTextContent("في الخدمة");
   });
 });
