@@ -4,6 +4,7 @@ from fastapi.staticfiles import StaticFiles
 from app.auth.routes import router as auth_router
 from app.config import BACKEND_DIR
 from app.routes.building import router as building_router
+from app.routes.dashboard import router as dashboard_router
 from app.routes.employees import router as employees_router
 from app.routes.teams import router as teams_router
 from app.routes.vehicles import router as vehicles_router
@@ -14,6 +15,7 @@ app.include_router(teams_router)
 app.include_router(employees_router)
 app.include_router(vehicles_router)
 app.include_router(building_router)
+app.include_router(dashboard_router)
 
 (BACKEND_DIR / "uploads").mkdir(exist_ok=True)
 app.mount("/uploads", StaticFiles(directory=BACKEND_DIR / "uploads"), name="uploads")
