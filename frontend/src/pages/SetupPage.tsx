@@ -47,14 +47,17 @@ export function SetupPage() {
   }
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-slate-50 p-4">
+    <main className="min-h-screen flex items-center justify-center bg-gradient-to-b from-slate-50 to-slate-100 p-4">
       <form
         onSubmit={handleSubmit}
         className="w-full max-w-md rounded-lg bg-white p-8 shadow-sm border border-slate-200 space-y-5"
       >
-        <header>
+        <header className="flex flex-col items-center text-center">
+          <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-brand-700 text-2xl font-bold text-white">
+            م
+          </div>
           <h1 className="text-2xl font-bold text-slate-900">مرحباً بك في مركز</h1>
-          <p className="mt-2 text-sm text-slate-600">قم بإنشاء حساب القائد لأول مرة</p>
+          <p className="mt-1 text-sm text-slate-600">قم بإنشاء حساب القائد لأول مرة</p>
         </header>
 
         <TextField
