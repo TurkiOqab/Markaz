@@ -156,12 +156,9 @@ export function DashboardPage() {
   }));
 
   return (
-    <div className="space-y-6">
-      <header className="flex items-start justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-slate-900">لوحة التحكم</h1>
-          <p className="mt-1 text-sm text-slate-600">نظرة سريعة على حالة المركز</p>
-        </div>
+    <div className="space-y-5">
+      <header className="flex items-center justify-between">
+        <h1 className="text-2xl font-bold text-slate-900">لوحة التحكم</h1>
         <DashboardSettings
           groups={WIDGET_GROUPS}
           visible={visible}
@@ -207,99 +204,6 @@ export function DashboardPage() {
               icon={Package}
               tone={stats.inventory.low_stock.length > 0 ? "danger" : "neutral"}
             />
-          ) : null}
-        </section>
-      ) : null}
-
-      {chartsVisible ? (
-        <section className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-          {visible["chart.vehicles"] ? (
-            <ChartCard title="حالة المركبات">
-              <ResponsiveContainer width="100%" height={240}>
-                <PieChart>
-                  <Pie
-                    data={vehicleData}
-                    dataKey="value"
-                    nameKey="name"
-                    innerRadius={60}
-                    outerRadius={90}
-                    paddingAngle={2}
-                  >
-                    {vehicleData.map((entry) => (
-                      <Cell key={entry.name} fill={STATUS_COLORS[entry.name] ?? "#94a3b8"} />
-                    ))}
-                  </Pie>
-                  <Tooltip />
-                  <Legend verticalAlign="bottom" />
-                </PieChart>
-              </ResponsiveContainer>
-            </ChartCard>
-          ) : null}
-
-          {visible["chart.shifts"] ? (
-            <ChartCard title="الموظفون حسب الوردية">
-              <ResponsiveContainer width="100%" height={240}>
-                <BarChart data={shiftData} layout="vertical" margin={{ left: 30 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-                  <XAxis type="number" />
-                  <YAxis type="category" dataKey="name" />
-                  <Tooltip />
-                  <Bar dataKey="value" fill="#b91c1c" radius={[0, 4, 4, 0]} />
-                </BarChart>
-              </ResponsiveContainer>
-            </ChartCard>
-          ) : null}
-
-          {visible["chart.ratings"] ? (
-            <ChartCard title="متوسط التقييمات الشهري">
-              {monthlyAvg.length === 0 ? (
-                <EmptyChart message="لا توجد تقييمات بعد" />
-              ) : (
-                <ResponsiveContainer width="100%" height={240}>
-                  <LineChart data={monthlyAvg}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-                    <XAxis dataKey="period" />
-                    <YAxis domain={[0, 5]} />
-                    <Tooltip />
-                    <Line type="monotone" dataKey="average" stroke="#b91c1c" strokeWidth={2} />
-                  </LineChart>
-                </ResponsiveContainer>
-              )}
-            </ChartCard>
-          ) : null}
-
-          {visible["chart.costs"] ? (
-            <ChartCard title="تكاليف الصيانة (6 أشهر)">
-              {monthlyCosts.length === 0 ? (
-                <EmptyChart message="لا توجد بيانات صيانة" />
-              ) : (
-                <ResponsiveContainer width="100%" height={240}>
-                  <AreaChart data={monthlyCosts}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-                    <XAxis dataKey="period" />
-                    <YAxis />
-                    <Tooltip />
-                    <Legend />
-                    <Area
-                      type="monotone"
-                      dataKey="مركبات"
-                      stackId="1"
-                      stroke="#b91c1c"
-                      fill="#b91c1c"
-                      fillOpacity={0.4}
-                    />
-                    <Area
-                      type="monotone"
-                      dataKey="مبنى"
-                      stackId="1"
-                      stroke="#f59e0b"
-                      fill="#f59e0b"
-                      fillOpacity={0.4}
-                    />
-                  </AreaChart>
-                </ResponsiveContainer>
-              )}
-            </ChartCard>
           ) : null}
         </section>
       ) : null}
@@ -365,6 +269,105 @@ export function DashboardPage() {
           ) : null}
         </section>
       ) : null}
+
+      {chartsVisible ? (
+        <section className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+          {visible["chart.vehicles"] ? (
+            <ChartCard title="حالة المركبات">
+              <div className="relative">
+                <ResponsiveContainer width="100%" height={200}>
+                  <PieChart>
+                    <Pie
+                      data={vehicleData}
+                      dataKey="value"
+                      nameKey="name"
+                      innerRadius={55}
+                      outerRadius={85}
+                      paddingAngle={2}
+                    >
+                      {vehicleData.map((entry) => (
+                        <Cell key={entry.name} fill={STATUS_COLORS[entry.name] ?? "#94a3b8"} />
+                      ))}
+                    </Pie>
+                    <Tooltip />
+                    <Legend verticalAlign="bottom" height={24} />
+                  </PieChart>
+                </ResponsiveContainer>
+                <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center -mt-3">
+                  <div className="text-2xl font-bold text-slate-900">{stats.vehicles.total}</div>
+                  <div className="text-xs text-slate-500">مركبة</div>
+                </div>
+              </div>
+            </ChartCard>
+          ) : null}
+
+          {visible["chart.shifts"] ? (
+            <ChartCard title="الموظفون حسب الوردية">
+              <ResponsiveContainer width="100%" height={200}>
+                <BarChart data={shiftData} layout="vertical" margin={{ left: 30 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                  <XAxis type="number" />
+                  <YAxis type="category" dataKey="name" />
+                  <Tooltip />
+                  <Bar dataKey="value" fill="#b91c1c" radius={[0, 4, 4, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            </ChartCard>
+          ) : null}
+
+          {visible["chart.ratings"] ? (
+            <ChartCard title="متوسط التقييمات الشهري">
+              {monthlyAvg.length === 0 ? (
+                <EmptyChart message="لا توجد تقييمات بعد" />
+              ) : (
+                <ResponsiveContainer width="100%" height={200}>
+                  <LineChart data={monthlyAvg}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                    <XAxis dataKey="period" />
+                    <YAxis domain={["auto", "auto"]} allowDecimals />
+                    <Tooltip />
+                    <Line type="monotone" dataKey="average" stroke="#b91c1c" strokeWidth={2} />
+                  </LineChart>
+                </ResponsiveContainer>
+              )}
+            </ChartCard>
+          ) : null}
+
+          {visible["chart.costs"] ? (
+            <ChartCard title="تكاليف الصيانة (6 أشهر)">
+              {monthlyCosts.length === 0 ? (
+                <EmptyChart message="لا توجد بيانات صيانة" />
+              ) : (
+                <ResponsiveContainer width="100%" height={200}>
+                  <AreaChart data={monthlyCosts}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                    <XAxis dataKey="period" />
+                    <YAxis />
+                    <Tooltip />
+                    <Legend />
+                    <Area
+                      type="monotone"
+                      dataKey="مركبات"
+                      stackId="1"
+                      stroke="#b91c1c"
+                      fill="#b91c1c"
+                      fillOpacity={0.4}
+                    />
+                    <Area
+                      type="monotone"
+                      dataKey="مبنى"
+                      stackId="1"
+                      stroke="#f59e0b"
+                      fill="#f59e0b"
+                      fillOpacity={0.4}
+                    />
+                  </AreaChart>
+                </ResponsiveContainer>
+              )}
+            </ChartCard>
+          ) : null}
+        </section>
+      ) : null}
     </div>
   );
 }
@@ -380,7 +383,7 @@ function ChartCard({ title, children }: { title: string; children: ReactNode }) 
 
 function EmptyChart({ message }: { message: string }) {
   return (
-    <div className="flex h-[240px] items-center justify-center text-sm text-slate-500">
+    <div className="flex h-[200px] items-center justify-center text-sm text-slate-500">
       {message}
     </div>
   );
