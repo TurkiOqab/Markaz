@@ -1,3 +1,4 @@
+import { LogOut } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { useAuth } from "../auth/useAuth";
@@ -19,8 +20,9 @@ export function Header() {
 
   return (
     <header className="flex h-14 items-center justify-between border-b border-slate-200 bg-white px-6">
-      <h2 className="text-sm text-slate-600">لوحة تحكم القائد</h2>
+      <span className="text-sm text-slate-500">مركز الدفاع المدني</span>
       <Button variant="secondary" onClick={handleLogout}>
+        <LogOut size={16} />
         تسجيل الخروج
       </Button>
     </header>
