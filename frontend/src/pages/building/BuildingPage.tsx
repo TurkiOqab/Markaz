@@ -9,9 +9,9 @@ import { MaintenanceTab } from "./tabs/MaintenanceTab";
 import { ReportsTab } from "./tabs/ReportsTab";
 import { RoomsTab } from "./tabs/RoomsTab";
 
-type TabKey = "main" | "rooms" | "inventory" | "maintenance" | "reports";
+export type BuildingTabKey = "main" | "rooms" | "inventory" | "maintenance" | "reports";
 
-const TABS: Array<{ key: TabKey; label: string }> = [
+const TABS: Array<{ key: BuildingTabKey; label: string }> = [
   { key: "main", label: "المعلومات الأساسية" },
   { key: "rooms", label: "الغرف" },
   { key: "inventory", label: "المخزون" },
@@ -22,7 +22,7 @@ const TABS: Array<{ key: TabKey; label: string }> = [
 export function BuildingPage() {
   const [building, setBuilding] = useState<Building | null>(null);
   const [loading, setLoading] = useState(true);
-  const [tab, setTab] = useState<TabKey>("main");
+  const [tab, setTab] = useState<BuildingTabKey>("main");
 
   useEffect(() => {
     getBuilding()
@@ -43,9 +43,7 @@ export function BuildingPage() {
     <div className="space-y-6">
       <header>
         <h1 className="text-2xl font-bold text-slate-900">المبنى</h1>
-        <p className="mt-1 text-sm text-slate-600">
-          {building.name || "—"} {building.address ? `· ${building.address}` : null}
-        </p>
+        <p className="mt-1 text-sm text-slate-600">إدارة معلومات المبنى ومرافقه</p>
       </header>
 
       <nav className="border-b border-slate-200">
@@ -69,7 +67,11 @@ export function BuildingPage() {
       </nav>
 
       {tab === "main" ? (
-        <MainInfoTab building={building} onUpdated={setBuilding} />
+        <MainInfoTab
+          building={building}
+          onUpdated={setBuilding}
+          onNavigate={setTab}
+        />
       ) : tab === "rooms" ? (
         <RoomsTab />
       ) : tab === "inventory" ? (
