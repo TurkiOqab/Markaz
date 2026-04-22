@@ -57,7 +57,6 @@ const WIDGET_GROUPS: WidgetGroup[] = [
     title: "التنبيهات",
     widgets: [
       { key: "attn.vehicles", label: "مركبات خارج الخدمة" },
-      { key: "attn.certs", label: "شهادات تنتهي قريباً" },
       { key: "attn.stock", label: "مخزون منخفض" },
     ],
   },
@@ -125,7 +124,7 @@ export function DashboardPage() {
     [visible],
   );
   const attnVisible = useMemo(
-    () => ["attn.vehicles", "attn.certs", "attn.stock"].some((k) => visible[k]),
+    () => ["attn.vehicles", "attn.stock"].some((k) => visible[k]),
     [visible],
   );
 
@@ -209,7 +208,7 @@ export function DashboardPage() {
       ) : null}
 
       {attnVisible ? (
-        <section className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+        <section className="grid grid-cols-1 gap-4 lg:grid-cols-2">
           {visible["attn.vehicles"] ? (
             <AttentionCard
               title="مركبات خارج الخدمة"
@@ -223,29 +222,6 @@ export function DashboardPage() {
                     {v.plate_number}
                   </Link>
                   <Badge tone={vehicleStatusTone(v.status)}>{v.status}</Badge>
-                </li>
-              ))}
-            />
-          ) : null}
-
-          {visible["attn.certs"] ? (
-            <AttentionCard
-              title="شهادات تنتهي قريباً"
-              empty="لا شهادات تنتهي خلال 60 يوماً"
-              items={stats.attention.expiring_certs.slice(0, 5).map((c, i) => (
-                <li key={i} className="flex items-center justify-between gap-3 py-2">
-                  <div className="min-w-0 flex-1">
-                    <Link
-                      to={`/employees/${c.employee_id}`}
-                      className="block truncate font-medium text-slate-900 hover:underline"
-                    >
-                      {c.employee_name}
-                    </Link>
-                    <p className="truncate text-xs text-slate-500">{c.cert_name}</p>
-                  </div>
-                  <Badge tone={c.days_until <= 15 ? "danger" : "warning"}>
-                    {c.days_until} يوم
-                  </Badge>
                 </li>
               ))}
             />
@@ -321,12 +297,26 @@ export function DashboardPage() {
                 <EmptyChart message="لا توجد تقييمات بعد" />
               ) : (
                 <ResponsiveContainer width="100%" height={200}>
-                  <LineChart data={monthlyAvg}>
+                  <LineChart
+                    data={monthlyAvg}
+                    margin={{ top: 10, right: 24, left: 8, bottom: 0 }}
+                  >
                     <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
                     <XAxis dataKey="period" />
-                    <YAxis domain={["auto", "auto"]} allowDecimals />
+                    <YAxis
+                      domain={["auto", "auto"]}
+                      allowDecimals
+                      width={36}
+                      tickFormatter={(v: number) => v.toFixed(1)}
+                    />
                     <Tooltip />
-                    <Line type="monotone" dataKey="average" stroke="#b91c1c" strokeWidth={2} />
+                    <Line
+                      type="monotone"
+                      dataKey="average"
+                      stroke="#b91c1c"
+                      strokeWidth={2}
+                      dot={{ r: 3 }}
+                    />
                   </LineChart>
                 </ResponsiveContainer>
               )}
