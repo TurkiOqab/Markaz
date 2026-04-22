@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { FormEvent } from "react";
 import { toast } from "sonner";
 import { ApiRequestError } from "../../../api/client";
@@ -26,6 +26,20 @@ export function RoomsTab() {
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState<Room | null>(null);
   const [creating, setCreating] = useState(false);
+  const [typeFilter, setTypeFilter] = useState("");
+  const [statusFilter, setStatusFilter] = useState("");
+  const [q, setQ] = useState("");
+
+  const visible = useMemo(() => {
+    let result = items;
+    if (q) {
+      const needle = q.toLowerCase();
+      result = result.filter((r) => r.name.toLowerCase().includes(needle));
+    }
+    if (typeFilter) result = result.filter((r) => r.type === typeFilter);
+    if (statusFilter) result = result.filter((r) => r.status === statusFilter);
+    return result;
+  }, [items, q, typeFilter, statusFilter]);
 
   async function reload() {
     setLoading(true);
@@ -60,10 +74,38 @@ export function RoomsTab() {
         <Button onClick={() => setCreating(true)}>إضافة غرفة</Button>
       </div>
 
+      <section className="rounded-lg border border-slate-200 bg-white p-4">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+          <TextField
+            label="بحث بالاسم"
+            value={q}
+            onChange={(e) => setQ(e.target.value)}
+            placeholder="..."
+          />
+          <SelectField
+            label="النوع"
+            value={typeFilter}
+            onChange={(e) => setTypeFilter(e.target.value)}
+            placeholder="كل الأنواع"
+            options={ROOM_TYPES.map((t) => ({ value: t, label: t }))}
+          />
+          <SelectField
+            label="الحالة"
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+            placeholder="كل الحالات"
+            options={ROOM_STATUSES.map((s) => ({ value: s, label: s }))}
+          />
+        </div>
+      </section>
+
       {loading ? (
         <p className="text-slate-500">جارِ التحميل...</p>
-      ) : items.length === 0 ? (
-        <EmptyState title="لا توجد غرف" description="أضف غرفة للبدء" />
+      ) : visible.length === 0 ? (
+        <EmptyState
+          title={items.length === 0 ? "لا توجد غرف" : "لا توجد نتائج"}
+          description={items.length === 0 ? "أضف غرفة للبدء" : "حاول تغيير الفلاتر"}
+        />
       ) : (
         <table className="w-full rounded-lg border border-slate-200 bg-white text-sm">
           <thead className="border-b border-slate-200 bg-slate-50 text-slate-600">
@@ -76,7 +118,7 @@ export function RoomsTab() {
             </tr>
           </thead>
           <tbody>
-            {items.map((r) => (
+            {visible.map((r) => (
               <tr key={r.id} className="border-b border-slate-100 last:border-b-0">
                 <td className="px-4 py-3 font-medium text-slate-900">{r.name}</td>
                 <td className="px-4 py-3 text-slate-700">{r.type}</td>

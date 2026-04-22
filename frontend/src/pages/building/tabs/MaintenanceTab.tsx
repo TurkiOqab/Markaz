@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { FormEvent } from "react";
 import { toast } from "sonner";
 import { ApiRequestError } from "../../../api/client";
@@ -31,6 +31,18 @@ export function MaintenanceTab() {
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState<BuildingMaintenance | null>(null);
   const [creating, setCreating] = useState(false);
+  const [statusFilter, setStatusFilter] = useState("");
+  const [sortAsc, setSortAsc] = useState(false);
+
+  const visible = useMemo(() => {
+    let result = items;
+    if (statusFilter) result = result.filter((m) => m.status === statusFilter);
+    result = [...result].sort((a, b) => {
+      const diff = a.date.localeCompare(b.date);
+      return sortAsc ? diff : -diff;
+    });
+    return result;
+  }, [items, statusFilter, sortAsc]);
 
   async function reload() {
     setLoading(true);
@@ -65,10 +77,34 @@ export function MaintenanceTab() {
         <Button onClick={() => setCreating(true)}>إضافة صيانة</Button>
       </div>
 
+      <section className="rounded-lg border border-slate-200 bg-white p-4">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <SelectField
+            label="الحالة"
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+            placeholder="كل الحالات"
+            options={MAINTENANCE_STATUSES.map((s) => ({ value: s, label: s }))}
+          />
+          <SelectField
+            label="الترتيب حسب التاريخ"
+            value={sortAsc ? "asc" : "desc"}
+            onChange={(e) => setSortAsc(e.target.value === "asc")}
+            options={[
+              { value: "desc", label: "الأحدث أولاً" },
+              { value: "asc", label: "الأقدم أولاً" },
+            ]}
+          />
+        </div>
+      </section>
+
       {loading ? (
         <p className="text-slate-500">جارِ التحميل...</p>
-      ) : items.length === 0 ? (
-        <EmptyState title="لا توجد سجلات صيانة" description="أضف سجل صيانة للبدء" />
+      ) : visible.length === 0 ? (
+        <EmptyState
+          title={items.length === 0 ? "لا توجد سجلات صيانة" : "لا توجد نتائج"}
+          description={items.length === 0 ? "أضف سجل صيانة للبدء" : "حاول تغيير الفلاتر"}
+        />
       ) : (
         <table className="w-full rounded-lg border border-slate-200 bg-white text-sm">
           <thead className="border-b border-slate-200 bg-slate-50 text-slate-600">
@@ -82,7 +118,7 @@ export function MaintenanceTab() {
             </tr>
           </thead>
           <tbody>
-            {items.map((m) => (
+            {visible.map((m) => (
               <tr key={m.id} className="border-b border-slate-100 last:border-b-0">
                 <td className="px-4 py-3 text-slate-700">{m.date}</td>
                 <td className="px-4 py-3 font-medium text-slate-900">{m.description}</td>

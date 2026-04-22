@@ -1,4 +1,4 @@
-import { Building2, ClipboardList, FileText, Package, Wrench } from "lucide-react";
+import { Building2, ClipboardList, FileText, Package, Pencil, Wrench } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { ComponentType, FormEvent } from "react";
 import { toast } from "sonner";
@@ -32,6 +32,7 @@ export function MainInfoTab({ building, onUpdated, onNavigate }: Props) {
   const [form, setForm] = useState<Building>(building);
   const [counts, setCounts] = useState<Counts | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [editing, setEditing] = useState(false);
 
   useEffect(() => {
     setForm(building);
@@ -57,6 +58,16 @@ export function MainInfoTab({ building, onUpdated, onNavigate }: Props) {
       });
   }, []);
 
+  function startEditing() {
+    setForm(building);
+    setEditing(true);
+  }
+
+  function cancelEditing() {
+    setForm(building);
+    setEditing(false);
+  }
+
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     setSubmitting(true);
@@ -68,6 +79,7 @@ export function MainInfoTab({ building, onUpdated, onNavigate }: Props) {
       });
       toast.success("تم الحفظ");
       onUpdated(updated);
+      setEditing(false);
     } catch (err) {
       toast.error(err instanceof ApiRequestError ? err.message : "فشل الحفظ");
     } finally {
@@ -94,6 +106,12 @@ export function MainInfoTab({ building, onUpdated, onNavigate }: Props) {
               <p className="mt-2 whitespace-pre-line text-sm text-slate-500">{building.notes}</p>
             ) : null}
           </div>
+          {!editing ? (
+            <Button variant="secondary" onClick={startEditing}>
+              <Pencil size={16} />
+              تعديل
+            </Button>
+          ) : null}
         </div>
       </section>
 
@@ -125,39 +143,44 @@ export function MainInfoTab({ building, onUpdated, onNavigate }: Props) {
         />
       </section>
 
-      {/* Edit form */}
-      <section className="rounded-lg border border-slate-200 bg-white">
-        <header className="border-b border-slate-200 px-6 py-4">
-          <h3 className="text-sm font-semibold text-slate-700">تعديل المعلومات</h3>
-        </header>
-        <form onSubmit={handleSubmit} className="space-y-4 p-6">
-          <TextField
-            label="اسم المبنى"
-            value={form.name}
-            onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
-            required
-          />
-          <TextField
-            label="العنوان"
-            value={form.address}
-            onChange={(e) => setForm((f) => ({ ...f, address: e.target.value }))}
-            required
-          />
-          <label className="flex flex-col gap-1">
-            <span className="text-sm font-medium text-slate-700">ملاحظات</span>
-            <textarea
-              className="min-h-28 rounded-md border border-slate-300 bg-white px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-slate-500"
-              value={form.notes ?? ""}
-              onChange={(e) => setForm((f) => ({ ...f, notes: e.target.value || null }))}
+      {/* Edit form — only shown when editing */}
+      {editing ? (
+        <section className="rounded-lg border border-slate-200 bg-white">
+          <header className="border-b border-slate-200 px-6 py-4">
+            <h3 className="text-sm font-semibold text-slate-700">تعديل المعلومات</h3>
+          </header>
+          <form onSubmit={handleSubmit} className="space-y-4 p-6">
+            <TextField
+              label="اسم المبنى"
+              value={form.name}
+              onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
+              required
             />
-          </label>
-          <div className="flex justify-end">
-            <Button type="submit" loading={submitting}>
-              حفظ التعديلات
-            </Button>
-          </div>
-        </form>
-      </section>
+            <TextField
+              label="العنوان"
+              value={form.address}
+              onChange={(e) => setForm((f) => ({ ...f, address: e.target.value }))}
+              required
+            />
+            <label className="flex flex-col gap-1">
+              <span className="text-sm font-medium text-slate-700">ملاحظات</span>
+              <textarea
+                className="min-h-28 rounded-md border border-slate-300 bg-white px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-slate-500"
+                value={form.notes ?? ""}
+                onChange={(e) => setForm((f) => ({ ...f, notes: e.target.value || null }))}
+              />
+            </label>
+            <div className="flex justify-end gap-2">
+              <Button variant="secondary" type="button" onClick={cancelEditing} disabled={submitting}>
+                إلغاء
+              </Button>
+              <Button type="submit" loading={submitting}>
+                حفظ التعديلات
+              </Button>
+            </div>
+          </form>
+        </section>
+      ) : null}
     </div>
   );
 }

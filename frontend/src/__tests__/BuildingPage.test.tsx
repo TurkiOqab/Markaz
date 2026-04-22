@@ -25,7 +25,7 @@ describe("Building page", () => {
     window.history.pushState({}, "", "/");
   });
 
-  it("loads the building and shows the main info tab", async () => {
+  it("loads the building and shows the main info hero band", async () => {
     fetchMock.mockResolvedValueOnce(
       json({ data: { setup_complete: true, authenticated: true } }),
     );
@@ -41,6 +41,11 @@ describe("Building page", () => {
         },
       }),
     );
+    // MainInfoTab now also fetches rooms/inventory/maintenance/reports counts.
+    const emptyPage = json({
+      data: { items: [], total: 0, page: 1, page_size: 1 },
+    });
+    fetchMock.mockResolvedValue(emptyPage);
 
     render(<App />);
 
@@ -48,8 +53,11 @@ describe("Building page", () => {
       expect(screen.getByRole("heading", { name: "المبنى" })).toBeInTheDocument();
     });
 
+    // Hero band shows the building name as an H2.
     await waitFor(() => {
-      expect(screen.getByLabelText("اسم المبنى")).toHaveValue("مركز الدفاع المدني الرئيسي");
+      expect(
+        screen.getByRole("heading", { name: "مركز الدفاع المدني الرئيسي" }),
+      ).toBeInTheDocument();
     });
   });
 });

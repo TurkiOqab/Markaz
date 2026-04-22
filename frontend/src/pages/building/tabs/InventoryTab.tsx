@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { FormEvent } from "react";
 import { toast } from "sonner";
 import { ApiRequestError } from "../../../api/client";
@@ -12,8 +12,17 @@ import type { InventoryInput } from "../../../api/building";
 import { Button } from "../../../components/Button";
 import { EmptyState } from "../../../components/EmptyState";
 import { Modal } from "../../../components/Modal";
+import { SelectField } from "../../../components/SelectField";
 import { TextField } from "../../../components/TextField";
 import type { InventoryItem } from "../../../types/models";
+
+type SortKey = "name" | "qty_desc" | "qty_asc";
+
+const SORT_OPTIONS: Array<{ value: SortKey; label: string }> = [
+  { value: "name", label: "حسب الاسم" },
+  { value: "qty_desc", label: "الكمية (من الأعلى)" },
+  { value: "qty_asc", label: "الكمية (من الأقل)" },
+];
 
 const EMPTY: InventoryInput = {
   item_name: "",
@@ -29,6 +38,36 @@ export function InventoryTab() {
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState<InventoryItem | null>(null);
   const [creating, setCreating] = useState(false);
+
+  const [sort, setSort] = useState<SortKey>("name");
+  const [category, setCategory] = useState("");
+  const [lowOnly, setLowOnly] = useState(false);
+  const [q, setQ] = useState("");
+
+  const categories = useMemo(
+    () => Array.from(new Set(items.map((i) => i.category))).sort(),
+    [items],
+  );
+
+  const visible = useMemo(() => {
+    let result = items;
+    if (q) {
+      const needle = q.toLowerCase();
+      result = result.filter((i) => i.item_name.toLowerCase().includes(needle));
+    }
+    if (category) {
+      result = result.filter((i) => i.category === category);
+    }
+    if (lowOnly) {
+      result = result.filter((i) => i.quantity < i.min_threshold);
+    }
+    result = [...result].sort((a, b) => {
+      if (sort === "qty_desc") return b.quantity - a.quantity;
+      if (sort === "qty_asc") return a.quantity - b.quantity;
+      return a.item_name.localeCompare(b.item_name, "ar");
+    });
+    return result;
+  }, [items, q, category, lowOnly, sort]);
 
   async function reload() {
     setLoading(true);
@@ -59,14 +98,54 @@ export function InventoryTab() {
 
   return (
     <div className="space-y-4">
-      <div className="flex justify-end">
+      <div className="flex items-center justify-between gap-4">
+        <div className="flex items-center gap-4">
+          <label className="flex items-center gap-2 text-sm">
+            <input
+              type="checkbox"
+              checked={lowOnly}
+              onChange={(e) => setLowOnly(e.target.checked)}
+              className="h-4 w-4 rounded border-slate-300 text-brand-700 focus:ring-brand-500"
+            />
+            <span className="text-slate-700">أصناف منخفضة فقط</span>
+          </label>
+        </div>
         <Button onClick={() => setCreating(true)}>إضافة صنف</Button>
       </div>
 
+      <section className="rounded-lg border border-slate-200 bg-white p-4">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+          <TextField
+            label="بحث بالاسم"
+            value={q}
+            onChange={(e) => setQ(e.target.value)}
+            placeholder="..."
+          />
+          <SelectField
+            label="التصنيف"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            placeholder="كل التصنيفات"
+            options={categories.map((c) => ({ value: c, label: c }))}
+          />
+          <SelectField
+            label="الترتيب"
+            value={sort}
+            onChange={(e) => setSort(e.target.value as SortKey)}
+            options={SORT_OPTIONS.map((o) => ({ value: o.value, label: o.label }))}
+          />
+        </div>
+      </section>
+
       {loading ? (
         <p className="text-slate-500">جارِ التحميل...</p>
-      ) : items.length === 0 ? (
-        <EmptyState title="لا توجد أصناف" description="أضف صنفاً للبدء" />
+      ) : visible.length === 0 ? (
+        <EmptyState
+          title={items.length === 0 ? "لا توجد أصناف" : "لا توجد نتائج"}
+          description={
+            items.length === 0 ? "أضف صنفاً للبدء" : "حاول تغيير الفلاتر أو البحث"
+          }
+        />
       ) : (
         <table className="w-full rounded-lg border border-slate-200 bg-white text-sm">
           <thead className="border-b border-slate-200 bg-slate-50 text-slate-600">
@@ -80,7 +159,7 @@ export function InventoryTab() {
             </tr>
           </thead>
           <tbody>
-            {items.map((i) => {
+            {visible.map((i) => {
               const lowStock = i.quantity < i.min_threshold;
               return (
                 <tr key={i.id} className="border-b border-slate-100 last:border-b-0">
