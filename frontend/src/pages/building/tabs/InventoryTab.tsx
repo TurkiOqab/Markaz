@@ -12,11 +12,24 @@ import type { InventoryInput } from "../../../api/building";
 import { Button } from "../../../components/Button";
 import { EmptyState } from "../../../components/EmptyState";
 import { Modal } from "../../../components/Modal";
-import { SortHeader } from "../../../components/SortHeader";
+import { SortSelect } from "../../../components/SortSelect";
 import { TextField } from "../../../components/TextField";
 import type { InventoryItem } from "../../../types/models";
 
-type SortKey = "item_name" | "category" | "quantity" | "min_threshold" | "location";
+type SortOption =
+  | "name_asc"
+  | "name_desc"
+  | "qty_desc"
+  | "qty_asc"
+  | "category_asc";
+
+const SORT_OPTIONS: Array<{ value: SortOption; label: string }> = [
+  { value: "name_asc", label: "الاسم (أ-ي)" },
+  { value: "name_desc", label: "الاسم (ي-أ)" },
+  { value: "qty_desc", label: "الكمية (من الأعلى)" },
+  { value: "qty_asc", label: "الكمية (من الأقل)" },
+  { value: "category_asc", label: "التصنيف" },
+];
 
 const EMPTY: InventoryInput = {
   item_name: "",
@@ -33,35 +46,29 @@ export function InventoryTab() {
   const [editing, setEditing] = useState<InventoryItem | null>(null);
   const [creating, setCreating] = useState(false);
 
-  const DEFAULT_SORT_KEY: SortKey = "item_name";
-  const DEFAULT_SORT_DIR: "asc" | "desc" = "asc";
-  const [sortKey, setSortKey] = useState<SortKey>(DEFAULT_SORT_KEY);
-  const [sortDir, setSortDir] = useState<"asc" | "desc">(DEFAULT_SORT_DIR);
-  const isDefaultSort = sortKey === DEFAULT_SORT_KEY && sortDir === DEFAULT_SORT_DIR;
-
-  function toggleSort(key: SortKey) {
-    if (sortKey === key) {
-      setSortDir((d) => (d === "asc" ? "desc" : "asc"));
-    } else {
-      setSortKey(key);
-      setSortDir("asc");
-    }
-  }
-
-  function resetSort() {
-    setSortKey(DEFAULT_SORT_KEY);
-    setSortDir(DEFAULT_SORT_DIR);
-  }
+  const [sort, setSort] = useState<SortOption>("name_asc");
 
   const visible = useMemo(() => {
-    const sorted = [...items].sort((a, b) => {
-      const av = a[sortKey];
-      const bv = b[sortKey];
-      if (typeof av === "number" && typeof bv === "number") return av - bv;
-      return String(av).localeCompare(String(bv), "ar");
-    });
-    return sortDir === "desc" ? sorted.reverse() : sorted;
-  }, [items, sortKey, sortDir]);
+    const sorted = [...items];
+    switch (sort) {
+      case "name_asc":
+        sorted.sort((a, b) => a.item_name.localeCompare(b.item_name, "ar"));
+        break;
+      case "name_desc":
+        sorted.sort((a, b) => b.item_name.localeCompare(a.item_name, "ar"));
+        break;
+      case "qty_desc":
+        sorted.sort((a, b) => b.quantity - a.quantity);
+        break;
+      case "qty_asc":
+        sorted.sort((a, b) => a.quantity - b.quantity);
+        break;
+      case "category_asc":
+        sorted.sort((a, b) => a.category.localeCompare(b.category, "ar"));
+        break;
+    }
+    return sorted;
+  }, [items, sort]);
 
   async function reload() {
     setLoading(true);
@@ -92,14 +99,12 @@ export function InventoryTab() {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        {!isDefaultSort ? (
-          <Button variant="secondary" onClick={resetSort}>
-            الترتيب الافتراضي
-          </Button>
-        ) : (
-          <span />
-        )}
+      <div className="flex items-center justify-end gap-3">
+        <SortSelect
+          value={sort}
+          onChange={(v) => setSort(v as SortOption)}
+          options={SORT_OPTIONS}
+        />
         <Button onClick={() => setCreating(true)}>إضافة صنف</Button>
       </div>
 
@@ -109,54 +114,14 @@ export function InventoryTab() {
         <EmptyState title="لا توجد أصناف" description="أضف صنفاً للبدء" />
       ) : (
         <table className="w-full rounded-lg border border-slate-200 bg-white text-sm">
-          <thead className="border-b border-slate-200 bg-slate-50">
+          <thead className="border-b border-slate-200 bg-slate-50 text-slate-600">
             <tr>
-              <th className="px-4 py-3 text-start">
-                <SortHeader
-                  label="الصنف"
-                  columnKey="item_name"
-                  active={sortKey}
-                  direction={sortDir}
-                  onSort={toggleSort}
-                />
-              </th>
-              <th className="px-4 py-3 text-start">
-                <SortHeader
-                  label="التصنيف"
-                  columnKey="category"
-                  active={sortKey}
-                  direction={sortDir}
-                  onSort={toggleSort}
-                />
-              </th>
-              <th className="px-4 py-3 text-start">
-                <SortHeader
-                  label="الكمية"
-                  columnKey="quantity"
-                  active={sortKey}
-                  direction={sortDir}
-                  onSort={toggleSort}
-                />
-              </th>
-              <th className="px-4 py-3 text-start">
-                <SortHeader
-                  label="الحد الأدنى"
-                  columnKey="min_threshold"
-                  active={sortKey}
-                  direction={sortDir}
-                  onSort={toggleSort}
-                />
-              </th>
-              <th className="px-4 py-3 text-start">
-                <SortHeader
-                  label="الموقع"
-                  columnKey="location"
-                  active={sortKey}
-                  direction={sortDir}
-                  onSort={toggleSort}
-                />
-              </th>
-              <th className="px-4 py-3 text-end font-medium text-slate-600">الإجراءات</th>
+              <th className="px-4 py-3 text-start font-medium">الصنف</th>
+              <th className="px-4 py-3 text-start font-medium">التصنيف</th>
+              <th className="px-4 py-3 text-start font-medium">الكمية</th>
+              <th className="px-4 py-3 text-start font-medium">الحد الأدنى</th>
+              <th className="px-4 py-3 text-start font-medium">الموقع</th>
+              <th className="px-4 py-3 text-end font-medium">الإجراءات</th>
             </tr>
           </thead>
           <tbody>

@@ -14,12 +14,20 @@ import { Button } from "../../../components/Button";
 import { EmptyState } from "../../../components/EmptyState";
 import { Modal } from "../../../components/Modal";
 import { SelectField } from "../../../components/SelectField";
-import { SortHeader } from "../../../components/SortHeader";
+import { SortSelect } from "../../../components/SortSelect";
 import { TextField } from "../../../components/TextField";
 import { MAINTENANCE_STATUSES } from "../../../constants/enums";
 import type { BuildingMaintenance } from "../../../types/models";
 
-type SortKey = "date" | "description" | "cost" | "contractor" | "status";
+type SortOption = "date_desc" | "date_asc" | "cost_desc" | "cost_asc" | "status_asc";
+
+const SORT_OPTIONS: Array<{ value: SortOption; label: string }> = [
+  { value: "date_desc", label: "التاريخ (الأحدث)" },
+  { value: "date_asc", label: "التاريخ (الأقدم)" },
+  { value: "cost_desc", label: "التكلفة (من الأعلى)" },
+  { value: "cost_asc", label: "التكلفة (من الأقل)" },
+  { value: "status_asc", label: "حسب الحالة" },
+];
 
 const EMPTY: BuildingMaintenanceInput = {
   date: "",
@@ -35,35 +43,29 @@ export function MaintenanceTab() {
   const [editing, setEditing] = useState<BuildingMaintenance | null>(null);
   const [creating, setCreating] = useState(false);
 
-  const DEFAULT_SORT_KEY: SortKey = "date";
-  const DEFAULT_SORT_DIR: "asc" | "desc" = "desc";
-  const [sortKey, setSortKey] = useState<SortKey>(DEFAULT_SORT_KEY);
-  const [sortDir, setSortDir] = useState<"asc" | "desc">(DEFAULT_SORT_DIR);
-  const isDefaultSort = sortKey === DEFAULT_SORT_KEY && sortDir === DEFAULT_SORT_DIR;
-
-  function toggleSort(key: SortKey) {
-    if (sortKey === key) {
-      setSortDir((d) => (d === "asc" ? "desc" : "asc"));
-    } else {
-      setSortKey(key);
-      setSortDir("asc");
-    }
-  }
-
-  function resetSort() {
-    setSortKey(DEFAULT_SORT_KEY);
-    setSortDir(DEFAULT_SORT_DIR);
-  }
+  const [sort, setSort] = useState<SortOption>("date_desc");
 
   const visible = useMemo(() => {
-    const sorted = [...items].sort((a, b) => {
-      const av = a[sortKey];
-      const bv = b[sortKey];
-      if (typeof av === "number" && typeof bv === "number") return av - bv;
-      return String(av).localeCompare(String(bv), "ar");
-    });
-    return sortDir === "desc" ? sorted.reverse() : sorted;
-  }, [items, sortKey, sortDir]);
+    const sorted = [...items];
+    switch (sort) {
+      case "date_desc":
+        sorted.sort((a, b) => b.date.localeCompare(a.date));
+        break;
+      case "date_asc":
+        sorted.sort((a, b) => a.date.localeCompare(b.date));
+        break;
+      case "cost_desc":
+        sorted.sort((a, b) => b.cost - a.cost);
+        break;
+      case "cost_asc":
+        sorted.sort((a, b) => a.cost - b.cost);
+        break;
+      case "status_asc":
+        sorted.sort((a, b) => a.status.localeCompare(b.status, "ar"));
+        break;
+    }
+    return sorted;
+  }, [items, sort]);
 
   async function reload() {
     setLoading(true);
@@ -94,14 +96,12 @@ export function MaintenanceTab() {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        {!isDefaultSort ? (
-          <Button variant="secondary" onClick={resetSort}>
-            الترتيب الافتراضي
-          </Button>
-        ) : (
-          <span />
-        )}
+      <div className="flex items-center justify-end gap-3">
+        <SortSelect
+          value={sort}
+          onChange={(v) => setSort(v as SortOption)}
+          options={SORT_OPTIONS}
+        />
         <Button onClick={() => setCreating(true)}>إضافة صيانة</Button>
       </div>
 
@@ -111,54 +111,14 @@ export function MaintenanceTab() {
         <EmptyState title="لا توجد سجلات صيانة" description="أضف سجل صيانة للبدء" />
       ) : (
         <table className="w-full rounded-lg border border-slate-200 bg-white text-sm">
-          <thead className="border-b border-slate-200 bg-slate-50">
+          <thead className="border-b border-slate-200 bg-slate-50 text-slate-600">
             <tr>
-              <th className="px-4 py-3 text-start">
-                <SortHeader
-                  label="التاريخ"
-                  columnKey="date"
-                  active={sortKey}
-                  direction={sortDir}
-                  onSort={toggleSort}
-                />
-              </th>
-              <th className="px-4 py-3 text-start">
-                <SortHeader
-                  label="الوصف"
-                  columnKey="description"
-                  active={sortKey}
-                  direction={sortDir}
-                  onSort={toggleSort}
-                />
-              </th>
-              <th className="px-4 py-3 text-start">
-                <SortHeader
-                  label="التكلفة"
-                  columnKey="cost"
-                  active={sortKey}
-                  direction={sortDir}
-                  onSort={toggleSort}
-                />
-              </th>
-              <th className="px-4 py-3 text-start">
-                <SortHeader
-                  label="المقاول"
-                  columnKey="contractor"
-                  active={sortKey}
-                  direction={sortDir}
-                  onSort={toggleSort}
-                />
-              </th>
-              <th className="px-4 py-3 text-start">
-                <SortHeader
-                  label="الحالة"
-                  columnKey="status"
-                  active={sortKey}
-                  direction={sortDir}
-                  onSort={toggleSort}
-                />
-              </th>
-              <th className="px-4 py-3 text-end font-medium text-slate-600">الإجراءات</th>
+              <th className="px-4 py-3 text-start font-medium">التاريخ</th>
+              <th className="px-4 py-3 text-start font-medium">الوصف</th>
+              <th className="px-4 py-3 text-start font-medium">التكلفة</th>
+              <th className="px-4 py-3 text-start font-medium">المقاول</th>
+              <th className="px-4 py-3 text-start font-medium">الحالة</th>
+              <th className="px-4 py-3 text-end font-medium">الإجراءات</th>
             </tr>
           </thead>
           <tbody>
