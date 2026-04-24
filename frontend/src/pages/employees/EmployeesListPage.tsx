@@ -146,6 +146,7 @@ export function EmployeesListPage() {
       ) : employees.length === 0 ? (
         <div className="rounded-lg border border-slate-200 bg-white">
           <EmptyState
+            icon={Users}
             title="لا يوجد موظفون"
             description="لم يتم العثور على نتائج مطابقة، أو لم يتم إضافة أي موظف بعد."
             action={

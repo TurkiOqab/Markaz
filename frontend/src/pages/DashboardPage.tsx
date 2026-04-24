@@ -10,8 +10,6 @@ import {
   CartesianGrid,
   Cell,
   Legend,
-  Line,
-  LineChart,
   Pie,
   PieChart,
   ResponsiveContainer,
@@ -287,11 +285,17 @@ export function DashboardPage() {
             <ChartCard title="الموظفون حسب الوردية">
               <ResponsiveContainer width="100%" height={200}>
                 <BarChart data={shiftData} layout="vertical" margin={{ left: 30 }}>
+                  <defs>
+                    <linearGradient id="barBrand" x1="0" y1="0" x2="1" y2="0">
+                      <stop offset="0%" stopColor="#b91c1c" stopOpacity={0.55} />
+                      <stop offset="100%" stopColor="#b91c1c" stopOpacity={1} />
+                    </linearGradient>
+                  </defs>
                   <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
                   <XAxis type="number" />
                   <YAxis type="category" dataKey="name" />
                   <Tooltip />
-                  <Bar dataKey="value" fill="#b91c1c" radius={[0, 4, 4, 0]} />
+                  <Bar dataKey="value" fill="url(#barBrand)" radius={[0, 4, 4, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </ChartCard>
@@ -303,10 +307,16 @@ export function DashboardPage() {
                 <EmptyChart message="لا توجد تقييمات بعد" />
               ) : (
                 <ResponsiveContainer width="100%" height={200}>
-                  <LineChart
+                  <AreaChart
                     data={monthlyAvg}
                     margin={{ top: 10, right: 24, left: 8, bottom: 0 }}
                   >
+                    <defs>
+                      <linearGradient id="areaRatings" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor="#b91c1c" stopOpacity={0.25} />
+                        <stop offset="100%" stopColor="#b91c1c" stopOpacity={0} />
+                      </linearGradient>
+                    </defs>
                     <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
                     <XAxis dataKey="period" />
                     <YAxis
@@ -316,14 +326,15 @@ export function DashboardPage() {
                       tickFormatter={(v: number) => v.toFixed(1)}
                     />
                     <Tooltip />
-                    <Line
+                    <Area
                       type="monotone"
                       dataKey="average"
                       stroke="#b91c1c"
                       strokeWidth={2}
-                      dot={{ r: 3 }}
+                      fill="url(#areaRatings)"
+                      dot={{ r: 3, fill: "#b91c1c" }}
                     />
-                  </LineChart>
+                  </AreaChart>
                 </ResponsiveContainer>
               )}
             </ChartCard>
@@ -336,6 +347,16 @@ export function DashboardPage() {
               ) : (
                 <ResponsiveContainer width="100%" height={200}>
                   <AreaChart data={monthlyCosts}>
+                    <defs>
+                      <linearGradient id="areaVehicles" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor="#b91c1c" stopOpacity={0.55} />
+                        <stop offset="100%" stopColor="#b91c1c" stopOpacity={0.05} />
+                      </linearGradient>
+                      <linearGradient id="areaBuilding" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor="#f59e0b" stopOpacity={0.55} />
+                        <stop offset="100%" stopColor="#f59e0b" stopOpacity={0.05} />
+                      </linearGradient>
+                    </defs>
                     <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
                     <XAxis dataKey="period" />
                     <YAxis />
@@ -346,16 +367,16 @@ export function DashboardPage() {
                       dataKey="مركبات"
                       stackId="1"
                       stroke="#b91c1c"
-                      fill="#b91c1c"
-                      fillOpacity={0.4}
+                      strokeWidth={2}
+                      fill="url(#areaVehicles)"
                     />
                     <Area
                       type="monotone"
                       dataKey="مبنى"
                       stackId="1"
                       stroke="#f59e0b"
-                      fill="#f59e0b"
-                      fillOpacity={0.4}
+                      strokeWidth={2}
+                      fill="url(#areaBuilding)"
                     />
                   </AreaChart>
                 </ResponsiveContainer>

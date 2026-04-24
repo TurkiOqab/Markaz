@@ -1,3 +1,4 @@
+import { Star } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { FormEvent } from "react";
 import { toast } from "sonner";
@@ -74,7 +75,11 @@ export function RatingsTab({ employeeId }: { employeeId: number }) {
       {loading ? (
         <p className="text-slate-500">جارِ التحميل...</p>
       ) : items.length === 0 ? (
-        <EmptyState title="لا توجد تقييمات" description="أضف تقييماً شهرياً للبدء" />
+        <EmptyState
+          icon={Star}
+          title="لا توجد تقييمات"
+          description="أضف تقييماً شهرياً للبدء"
+        />
       ) : (
         <table className="w-full rounded-lg border border-slate-200 bg-white text-sm">
           <thead className="border-b border-slate-200 bg-slate-50 text-slate-600">

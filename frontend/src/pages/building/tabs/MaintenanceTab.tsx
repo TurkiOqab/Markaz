@@ -1,3 +1,4 @@
+import { Wrench } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import type { FormEvent } from "react";
 import { toast } from "sonner";
@@ -108,7 +109,11 @@ export function MaintenanceTab() {
       {loading ? (
         <p className="text-slate-500">جارِ التحميل...</p>
       ) : items.length === 0 ? (
-        <EmptyState title="لا توجد سجلات صيانة" description="أضف سجل صيانة للبدء" />
+        <EmptyState
+          icon={Wrench}
+          title="لا توجد سجلات صيانة"
+          description="أضف سجل صيانة للبدء"
+        />
       ) : (
         <table className="w-full rounded-lg border border-slate-200 bg-white text-sm">
           <thead className="border-b border-slate-200 bg-slate-50 text-slate-600">

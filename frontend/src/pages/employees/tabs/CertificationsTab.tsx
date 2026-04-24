@@ -1,3 +1,4 @@
+import { Award } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { FormEvent } from "react";
 import { toast } from "sonner";
@@ -65,7 +66,11 @@ export function CertificationsTab({ employeeId }: { employeeId: number }) {
       {loading ? (
         <p className="text-slate-500">جارِ التحميل...</p>
       ) : items.length === 0 ? (
-        <EmptyState title="لا توجد شهادات" description="أضف شهادة جديدة للبدء" />
+        <EmptyState
+          icon={Award}
+          title="لا توجد شهادات"
+          description="أضف شهادة جديدة للبدء"
+        />
       ) : (
         <table className="w-full rounded-lg border border-slate-200 bg-white text-sm">
           <thead className="border-b border-slate-200 bg-slate-50 text-slate-600">

@@ -1,3 +1,4 @@
+import { FileText } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { FormEvent } from "react";
 import { toast } from "sonner";
@@ -64,7 +65,11 @@ export function ReportsTab() {
       {loading ? (
         <p className="text-slate-500">جارِ التحميل...</p>
       ) : items.length === 0 ? (
-        <EmptyState title="لا توجد تقارير" description="أضف تقريراً للبدء" />
+        <EmptyState
+          icon={FileText}
+          title="لا توجد تقارير"
+          description="أضف تقريراً للبدء"
+        />
       ) : (
         <div className="space-y-3">
           {items.map((r) => (

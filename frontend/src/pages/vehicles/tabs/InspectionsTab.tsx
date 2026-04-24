@@ -1,3 +1,4 @@
+import { ClipboardCheck } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { FormEvent } from "react";
 import { toast } from "sonner";
@@ -68,7 +69,11 @@ export function InspectionsTab({ vehicleId }: { vehicleId: number }) {
       {loading ? (
         <p className="text-slate-500">جارِ التحميل...</p>
       ) : items.length === 0 ? (
-        <EmptyState title="لا توجد فحوصات" description="أضف فحصاً للبدء" />
+        <EmptyState
+          icon={ClipboardCheck}
+          title="لا توجد فحوصات"
+          description="أضف فحصاً للبدء"
+        />
       ) : (
         <table className="w-full rounded-lg border border-slate-200 bg-white text-sm">
           <thead className="border-b border-slate-200 bg-slate-50 text-slate-600">

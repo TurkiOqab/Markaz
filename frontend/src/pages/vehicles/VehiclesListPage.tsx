@@ -155,6 +155,7 @@ export function VehiclesListPage() {
       ) : vehicles.length === 0 ? (
         <div className="rounded-lg border border-slate-200 bg-white">
           <EmptyState
+            icon={Truck}
             title="لا توجد مركبات"
             description="لم يتم العثور على نتائج، أو لم يتم إضافة مركبة بعد."
             action={

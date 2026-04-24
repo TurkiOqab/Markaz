@@ -1,3 +1,4 @@
+import { ClipboardList } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import type { FormEvent } from "react";
 import { toast } from "sonner";
@@ -103,7 +104,11 @@ export function RoomsTab() {
       {loading ? (
         <p className="text-slate-500">جارِ التحميل...</p>
       ) : items.length === 0 ? (
-        <EmptyState title="لا توجد غرف" description="أضف غرفة للبدء" />
+        <EmptyState
+          icon={ClipboardList}
+          title="لا توجد غرف"
+          description="أضف غرفة للبدء"
+        />
       ) : (
         <table className="w-full rounded-lg border border-slate-200 bg-white text-sm">
           <thead className="border-b border-slate-200 bg-slate-50 text-slate-600">
