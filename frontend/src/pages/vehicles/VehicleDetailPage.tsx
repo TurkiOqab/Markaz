@@ -4,6 +4,7 @@ import { Navigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
 import { ApiRequestError } from "../../api/client";
 import { getVehicle } from "../../api/vehicles";
+import { Loader } from "../../components/Loader";
 import { PageHeader } from "../../components/PageHeader";
 import type { Vehicle } from "../../types/models";
 import { EquipmentTab } from "./tabs/EquipmentTab";
@@ -49,7 +50,7 @@ export function VehicleDetailPage() {
       });
   }, [vehicleId]);
 
-  if (loading) return <p className="text-slate-500">جارِ التحميل...</p>;
+  if (loading) return <Loader />;
   if (notFound) return <Navigate to="/vehicles" replace />;
   if (!vehicle) return null;
 

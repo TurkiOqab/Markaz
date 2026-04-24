@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { ApiRequestError } from "../api/client";
 import { useAuth } from "../auth/useAuth";
 import { Button } from "../components/Button";
+import { Loader } from "../components/Loader";
 import { TextField } from "../components/TextField";
 
 export function LoginPage() {
@@ -16,11 +17,7 @@ export function LoginPage() {
   const [submitting, setSubmitting] = useState(false);
 
   if (loading) {
-    return (
-      <main className="min-h-screen flex items-center justify-center">
-        <p className="text-slate-500">جارِ التحميل...</p>
-      </main>
-    );
+    return <Loader fullPage />;
   }
   if (!setupComplete) {
     return <Navigate to="/setup" replace />;

@@ -8,6 +8,7 @@ import type { RoomInput } from "../../../api/building";
 import { Badge, roomStatusTone } from "../../../components/Badge";
 import { Button } from "../../../components/Button";
 import { EmptyState } from "../../../components/EmptyState";
+import { Loader } from "../../../components/Loader";
 import { Modal } from "../../../components/Modal";
 import { SelectField } from "../../../components/SelectField";
 import { SortSelect } from "../../../components/SortSelect";
@@ -102,7 +103,7 @@ export function RoomsTab() {
       </div>
 
       {loading ? (
-        <p className="text-slate-500">جارِ التحميل...</p>
+        <Loader />
       ) : items.length === 0 ? (
         <EmptyState
           icon={ClipboardList}

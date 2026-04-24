@@ -12,6 +12,7 @@ import {
 import type { RatingInput } from "../../../api/employees";
 import { Button } from "../../../components/Button";
 import { EmptyState } from "../../../components/EmptyState";
+import { Loader } from "../../../components/Loader";
 import { Modal } from "../../../components/Modal";
 import { TextField } from "../../../components/TextField";
 import { RATING_MAX, RATING_MIN } from "../../../constants/enums";
@@ -73,7 +74,7 @@ export function RatingsTab({ employeeId }: { employeeId: number }) {
       </div>
 
       {loading ? (
-        <p className="text-slate-500">جارِ التحميل...</p>
+        <Loader />
       ) : items.length === 0 ? (
         <EmptyState
           icon={Star}

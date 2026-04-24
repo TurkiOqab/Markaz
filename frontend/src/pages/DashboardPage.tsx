@@ -127,7 +127,28 @@ export function DashboardPage() {
     [visible],
   );
 
-  if (loading) return <p className="text-slate-500">جارِ التحميل...</p>;
+  if (loading) {
+    return (
+      <div className="space-y-5">
+        <PageHeader
+          title="لوحة التحكم"
+          subtitle="نظرة شاملة على المركز والإحصائيات"
+          icon={LayoutDashboard}
+          iconTone="brand"
+        />
+        <section className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
+          {[0, 1, 2, 3].map((i) => (
+            <StatSkeleton key={i} />
+          ))}
+        </section>
+        <section className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+          {[0, 1, 2, 3].map((i) => (
+            <ChartSkeleton key={i} />
+          ))}
+        </section>
+      </div>
+    );
+  }
   if (!stats) return null;
 
   const inServiceCount = stats.vehicles.by_status["في الخدمة"] ?? 0;
@@ -402,6 +423,30 @@ function EmptyChart({ message }: { message: string }) {
   return (
     <div className="flex h-[200px] items-center justify-center text-sm text-slate-500">
       {message}
+    </div>
+  );
+}
+
+function StatSkeleton() {
+  return (
+    <div className="relative overflow-hidden rounded-lg border border-slate-200 bg-white p-5">
+      <div className="absolute inset-x-0 top-0 h-1 bg-slate-200" />
+      <div className="animate-pulse space-y-3">
+        <div className="h-3 w-20 rounded bg-slate-200" />
+        <div className="h-10 w-24 rounded bg-slate-200" />
+        <div className="h-3 w-32 rounded bg-slate-100" />
+      </div>
+    </div>
+  );
+}
+
+function ChartSkeleton() {
+  return (
+    <div className="rounded-lg border border-slate-200 bg-white p-5">
+      <div className="animate-pulse space-y-4">
+        <div className="h-3 w-40 rounded bg-slate-200" />
+        <div className="h-[200px] w-full rounded bg-slate-100" />
+      </div>
     </div>
   );
 }

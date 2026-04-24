@@ -12,6 +12,7 @@ import {
 import type { BuildingReportInput } from "../../../api/building";
 import { Button } from "../../../components/Button";
 import { EmptyState } from "../../../components/EmptyState";
+import { Loader } from "../../../components/Loader";
 import { Modal } from "../../../components/Modal";
 import { TextField } from "../../../components/TextField";
 import type { BuildingReport } from "../../../types/models";
@@ -63,7 +64,7 @@ export function ReportsTab() {
       </div>
 
       {loading ? (
-        <p className="text-slate-500">جارِ التحميل...</p>
+        <Loader />
       ) : items.length === 0 ? (
         <EmptyState
           icon={FileText}

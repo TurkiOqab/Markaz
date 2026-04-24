@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { ApiRequestError } from "../../api/client";
 import { getBuilding } from "../../api/building";
+import { Loader } from "../../components/Loader";
 import { PageHeader } from "../../components/PageHeader";
 import type { Building } from "../../types/models";
 import { InventoryTab } from "./tabs/InventoryTab";
@@ -38,7 +39,7 @@ export function BuildingPage() {
       });
   }, []);
 
-  if (loading) return <p className="text-slate-500">جارِ التحميل...</p>;
+  if (loading) return <Loader />;
   if (!building) return null;
 
   return (

@@ -10,6 +10,7 @@ import { Avatar } from "../../components/Avatar";
 import { Badge } from "../../components/Badge";
 import { Button } from "../../components/Button";
 import { EmptyState } from "../../components/EmptyState";
+import { Loader } from "../../components/Loader";
 import { PageHeader } from "../../components/PageHeader";
 import { SelectField } from "../../components/SelectField";
 import { StatCard } from "../../components/StatCard";
@@ -140,9 +141,7 @@ export function EmployeesListPage() {
       </section>
 
       {loading ? (
-        <div className="rounded-lg border border-slate-200 bg-white p-8 text-center text-slate-500">
-          جارِ التحميل...
-        </div>
+        <Loader />
       ) : employees.length === 0 ? (
         <div className="rounded-lg border border-slate-200 bg-white">
           <EmptyState

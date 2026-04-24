@@ -12,6 +12,7 @@ import {
 import type { CertificationInput } from "../../../api/employees";
 import { Button } from "../../../components/Button";
 import { EmptyState } from "../../../components/EmptyState";
+import { Loader } from "../../../components/Loader";
 import { Modal } from "../../../components/Modal";
 import { TextField } from "../../../components/TextField";
 import type { Certification } from "../../../types/models";
@@ -64,7 +65,7 @@ export function CertificationsTab({ employeeId }: { employeeId: number }) {
       </div>
 
       {loading ? (
-        <p className="text-slate-500">جارِ التحميل...</p>
+        <Loader />
       ) : items.length === 0 ? (
         <EmptyState
           icon={Award}

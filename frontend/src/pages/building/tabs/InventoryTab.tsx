@@ -12,6 +12,7 @@ import {
 import type { InventoryInput } from "../../../api/building";
 import { Button } from "../../../components/Button";
 import { EmptyState } from "../../../components/EmptyState";
+import { Loader } from "../../../components/Loader";
 import { Modal } from "../../../components/Modal";
 import { SortSelect } from "../../../components/SortSelect";
 import { TextField } from "../../../components/TextField";
@@ -110,7 +111,7 @@ export function InventoryTab() {
       </div>
 
       {loading ? (
-        <p className="text-slate-500">جارِ التحميل...</p>
+        <Loader />
       ) : items.length === 0 ? (
         <EmptyState
           icon={Package}
