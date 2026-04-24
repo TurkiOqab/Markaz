@@ -7,6 +7,7 @@ import { listEmployees } from "../../api/employees";
 import { createVehicle } from "../../api/vehicles";
 import type { VehicleCreateInput } from "../../api/vehicles";
 import { Button } from "../../components/Button";
+import { PageHeader } from "../../components/PageHeader";
 import { SelectField } from "../../components/SelectField";
 import { TextField } from "../../components/TextField";
 import { VEHICLE_STATUSES, VEHICLE_TYPES } from "../../constants/enums";
@@ -51,9 +52,10 @@ export function NewVehiclePage() {
 
   return (
     <div className="mx-auto max-w-3xl space-y-6">
-      <header>
-        <h1 className="text-2xl font-bold text-slate-900">إضافة مركبة</h1>
-      </header>
+      <PageHeader
+        title="إضافة مركبة"
+        backLink={{ to: "/vehicles", label: "الرجوع إلى القائمة" }}
+      />
 
       <form
         onSubmit={handleSubmit}

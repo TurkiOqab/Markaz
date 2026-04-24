@@ -1,4 +1,4 @@
-import { AlertTriangle, Package, Truck, Users, Wrench } from "lucide-react";
+import { AlertTriangle, LayoutDashboard, Package, Truck, Users, Wrench } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
@@ -25,6 +25,7 @@ import { fetchDashboardStats } from "../api/dashboard";
 import { Badge, vehicleStatusTone } from "../components/Badge";
 import { DashboardSettings } from "../components/DashboardSettings";
 import type { WidgetGroup } from "../components/DashboardSettings";
+import { PageHeader } from "../components/PageHeader";
 import { StatCard } from "../components/StatCard";
 import type { DashboardStats } from "../types/dashboard";
 
@@ -156,15 +157,20 @@ export function DashboardPage() {
 
   return (
     <div className="space-y-5">
-      <header className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-slate-900">لوحة التحكم</h1>
-        <DashboardSettings
-          groups={WIDGET_GROUPS}
-          visible={visible}
-          onToggle={toggle}
-          onReset={reset}
-        />
-      </header>
+      <PageHeader
+        title="لوحة التحكم"
+        subtitle="نظرة شاملة على المركز والإحصائيات"
+        icon={LayoutDashboard}
+        iconTone="brand"
+        actions={
+          <DashboardSettings
+            groups={WIDGET_GROUPS}
+            visible={visible}
+            onToggle={toggle}
+            onReset={reset}
+          />
+        }
+      />
 
       {statVisible ? (
         <section className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">

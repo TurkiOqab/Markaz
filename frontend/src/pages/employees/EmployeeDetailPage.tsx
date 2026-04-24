@@ -1,8 +1,10 @@
+import { Users } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Link, Navigate, useParams } from "react-router-dom";
+import { Navigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
 import { ApiRequestError } from "../../api/client";
 import { getEmployee } from "../../api/employees";
+import { PageHeader } from "../../components/PageHeader";
 import type { Employee } from "../../types/models";
 import { CertificationsTab } from "./tabs/CertificationsTab";
 import { EquipmentTab } from "./tabs/EquipmentTab";
@@ -57,17 +59,13 @@ export function EmployeeDetailPage() {
 
   return (
     <div className="space-y-6">
-      <header className="flex items-center justify-between">
-        <div>
-          <Link to="/employees" className="text-sm text-slate-600 hover:underline">
-            ← الرجوع إلى القائمة
-          </Link>
-          <h1 className="mt-1 text-2xl font-bold text-slate-900">{employee.name}</h1>
-          <p className="text-sm text-slate-600">
-            {employee.rank} · {employee.specialty}
-          </p>
-        </div>
-      </header>
+      <PageHeader
+        title={employee.name}
+        subtitle={`${employee.rank} · ${employee.specialty}`}
+        icon={Users}
+        iconTone="blue"
+        backLink={{ to: "/employees", label: "الرجوع إلى القائمة" }}
+      />
 
       <nav className="border-b border-slate-200">
         <ul className="flex gap-6">

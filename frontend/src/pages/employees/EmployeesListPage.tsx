@@ -10,6 +10,7 @@ import { Avatar } from "../../components/Avatar";
 import { Badge } from "../../components/Badge";
 import { Button } from "../../components/Button";
 import { EmptyState } from "../../components/EmptyState";
+import { PageHeader } from "../../components/PageHeader";
 import { SelectField } from "../../components/SelectField";
 import { StatCard } from "../../components/StatCard";
 import { TextField } from "../../components/TextField";
@@ -82,15 +83,17 @@ export function EmployeesListPage() {
 
   return (
     <div className="space-y-6">
-      <header className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-slate-900">الموظفون</h1>
-          <p className="mt-1 text-sm text-slate-600">إدارة الموظفين والشهادات والتجهيزات</p>
-        </div>
-        <Link to="/employees/new">
-          <Button>إضافة موظف</Button>
-        </Link>
-      </header>
+      <PageHeader
+        title="الموظفون"
+        subtitle="إدارة الموظفين والشهادات والتجهيزات"
+        icon={Users}
+        iconTone="blue"
+        actions={
+          <Link to="/employees/new">
+            <Button>إضافة موظف</Button>
+          </Link>
+        }
+      />
 
       <section className="grid grid-cols-2 gap-4 lg:grid-cols-4">
         <StatCard

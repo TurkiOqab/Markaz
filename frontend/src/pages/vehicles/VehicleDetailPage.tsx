@@ -1,8 +1,10 @@
+import { Truck } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Link, Navigate, useParams } from "react-router-dom";
+import { Navigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
 import { ApiRequestError } from "../../api/client";
 import { getVehicle } from "../../api/vehicles";
+import { PageHeader } from "../../components/PageHeader";
 import type { Vehicle } from "../../types/models";
 import { EquipmentTab } from "./tabs/EquipmentTab";
 import { InspectionsTab } from "./tabs/InspectionsTab";
@@ -53,15 +55,13 @@ export function VehicleDetailPage() {
 
   return (
     <div className="space-y-6">
-      <header>
-        <Link to="/vehicles" className="text-sm text-slate-600 hover:underline">
-          ← الرجوع إلى القائمة
-        </Link>
-        <h1 className="mt-1 text-2xl font-bold text-slate-900">{vehicle.plate_number}</h1>
-        <p className="text-sm text-slate-600">
-          {vehicle.type} · {vehicle.status}
-        </p>
-      </header>
+      <PageHeader
+        title={vehicle.plate_number}
+        subtitle={`${vehicle.type} · ${vehicle.status}`}
+        icon={Truck}
+        iconTone="amber"
+        backLink={{ to: "/vehicles", label: "الرجوع إلى القائمة" }}
+      />
 
       <nav className="border-b border-slate-200">
         <ul className="flex gap-6">

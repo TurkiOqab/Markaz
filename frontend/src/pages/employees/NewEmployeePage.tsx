@@ -7,6 +7,7 @@ import { createEmployee } from "../../api/employees";
 import type { EmployeeCreateInput } from "../../api/employees";
 import { listTeams } from "../../api/teams";
 import { Button } from "../../components/Button";
+import { PageHeader } from "../../components/PageHeader";
 import { SelectField } from "../../components/SelectField";
 import { TextField } from "../../components/TextField";
 import { MARITAL_STATUSES, PHYSICAL_ABILITIES, SHIFTS } from "../../constants/enums";
@@ -66,9 +67,10 @@ export function NewEmployeePage() {
 
   return (
     <div className="mx-auto max-w-3xl space-y-6">
-      <header>
-        <h1 className="text-2xl font-bold text-slate-900">إضافة موظف</h1>
-      </header>
+      <PageHeader
+        title="إضافة موظف"
+        backLink={{ to: "/employees", label: "الرجوع إلى القائمة" }}
+      />
 
       <form
         onSubmit={handleSubmit}

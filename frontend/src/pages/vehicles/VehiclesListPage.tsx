@@ -9,6 +9,7 @@ import { listVehicles } from "../../api/vehicles";
 import { Badge, vehicleStatusTone } from "../../components/Badge";
 import { Button } from "../../components/Button";
 import { EmptyState } from "../../components/EmptyState";
+import { PageHeader } from "../../components/PageHeader";
 import { SelectField } from "../../components/SelectField";
 import { StatCard } from "../../components/StatCard";
 import { TextField } from "../../components/TextField";
@@ -91,15 +92,17 @@ export function VehiclesListPage() {
 
   return (
     <div className="space-y-6">
-      <header className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-slate-900">المركبات</h1>
-          <p className="mt-1 text-sm text-slate-600">إدارة المركبات والصيانة والفحوصات</p>
-        </div>
-        <Link to="/vehicles/new">
-          <Button>إضافة مركبة</Button>
-        </Link>
-      </header>
+      <PageHeader
+        title="المركبات"
+        subtitle="إدارة المركبات والصيانة والفحوصات"
+        icon={Truck}
+        iconTone="amber"
+        actions={
+          <Link to="/vehicles/new">
+            <Button>إضافة مركبة</Button>
+          </Link>
+        }
+      />
 
       <section className="grid grid-cols-2 gap-4 lg:grid-cols-4">
         <StatCard

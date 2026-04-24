@@ -7,6 +7,7 @@ import { DashboardPage } from "./pages/DashboardPage";
 import { EmployeeDetailPage } from "./pages/employees/EmployeeDetailPage";
 import { EmployeesListPage } from "./pages/employees/EmployeesListPage";
 import { NewEmployeePage } from "./pages/employees/NewEmployeePage";
+import { HomePage } from "./pages/HomePage";
 import { LoginPage } from "./pages/LoginPage";
 import { SetupPage } from "./pages/SetupPage";
 import { NewVehiclePage } from "./pages/vehicles/NewVehiclePage";
@@ -21,13 +22,21 @@ export default function App() {
           <Route path="/setup" element={<SetupPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <HomePage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
             element={
               <ProtectedRoute>
                 <AppLayout />
               </ProtectedRoute>
             }
           >
-            <Route index element={<DashboardPage />} />
+            <Route path="/control-panel" element={<DashboardPage />} />
             <Route path="/employees" element={<EmployeesListPage />} />
             <Route path="/employees/new" element={<NewEmployeePage />} />
             <Route path="/employees/:id" element={<EmployeeDetailPage />} />

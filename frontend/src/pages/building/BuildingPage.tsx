@@ -1,7 +1,9 @@
+import { Building2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { ApiRequestError } from "../../api/client";
 import { getBuilding } from "../../api/building";
+import { PageHeader } from "../../components/PageHeader";
 import type { Building } from "../../types/models";
 import { InventoryTab } from "./tabs/InventoryTab";
 import { MainInfoTab } from "./tabs/MainInfoTab";
@@ -41,10 +43,12 @@ export function BuildingPage() {
 
   return (
     <div className="space-y-6">
-      <header>
-        <h1 className="text-2xl font-bold text-slate-900">المبنى</h1>
-        <p className="mt-1 text-sm text-slate-600">إدارة معلومات المبنى ومرافقه</p>
-      </header>
+      <PageHeader
+        title="المبنى"
+        subtitle="إدارة معلومات المبنى ومرافقه"
+        icon={Building2}
+        iconTone="emerald"
+      />
 
       <nav className="border-b border-slate-200">
         <ul className="flex gap-6">

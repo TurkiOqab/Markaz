@@ -24,27 +24,13 @@ describe("Login flow", () => {
     vi.unstubAllGlobals();
   });
 
-  it("shows the login form when setup is complete and user is not authed, then navigates to dashboard on success", async () => {
+  it("shows the login form when setup is complete and user is not authed, then navigates to the home menu on success", async () => {
     fetchMock.mockResolvedValueOnce(
       json({ data: { setup_complete: true, authenticated: false } }),
     );
     fetchMock.mockResolvedValueOnce(json({ data: { ok: true } }));
-    fetchMock.mockResolvedValueOnce(
-      json({ data: { setup_complete: true, authenticated: true } }),
-    );
-    // Dashboard stats call after auth
     fetchMock.mockResolvedValue(
-      json({
-        data: {
-          employees: { total: 0, by_shift: {} },
-          vehicles: { total: 0, by_status: {} },
-          rooms: { total: 0, by_status: {} },
-          inventory: { total: 0, low_stock: [] },
-          maintenance: { open_count: 0, monthly_costs: [] },
-          ratings: { monthly_average: [] },
-          attention: { vehicles_out: [], expiring_certs: [], low_stock: [] },
-        },
-      }),
+      json({ data: { setup_complete: true, authenticated: true } }),
     );
 
     render(<App />);
