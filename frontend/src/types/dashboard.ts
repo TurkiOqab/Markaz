@@ -33,7 +33,7 @@ export interface MonthlyAverage {
 }
 
 export interface DashboardStats {
-  employees: { total: number; by_shift: Record<string, number> };
+  employees: { total: number; by_shift?: Record<string, number> };
   vehicles: { total: number; by_status: Record<string, number> };
   rooms: { total: number; by_status: Record<string, number> };
   inventory: { total: number; low_stock: LowStockItem[] };

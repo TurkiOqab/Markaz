@@ -1,5 +1,5 @@
 [
-  { "id": 1, "name": "الفريق أ", "description": "فريق الوردية الأولى" },
-  { "id": 2, "name": "الفريق ب", "description": "فريق الوردية الثانية" },
-  { "id": 3, "name": "الفريق ج", "description": "فريق الوردية الثالثة" }
+  { "id": 1, "name": "أ", "description": "الفرقة أ" },
+  { "id": 2, "name": "ب", "description": "الفرقة ب" },
+  { "id": 3, "name": "ج", "description": "الفرقة ج" }
 ]

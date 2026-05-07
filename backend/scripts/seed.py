@@ -84,6 +84,15 @@ def seed(session: Session) -> None:
             e["assigned_date"] = _parse_date(e["assigned_date"])
             employee.equipment.append(Equipment(**e))
         for r in ratings:
+            # Backwards compat for old seed JSON: split a single 0-5 `rating`
+            # into four equal 0-25 sub-scores. Newer JSON may already provide
+            # specialty/discipline/fitness/appearance directly.
+            if "rating" in r and "specialty_score" not in r:
+                sub = max(0, min(25, round(float(r.pop("rating")) * 5)))
+                r["specialty_score"] = sub
+                r["discipline_score"] = sub
+                r["fitness_score"] = sub
+                r["appearance_score"] = sub
             employee.monthly_ratings.append(MonthlyRating(**r))
         session.add(employee)
 

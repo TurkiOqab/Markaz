@@ -6,9 +6,9 @@ import { ApiRequestError } from "../../../api/client";
 import { listEmployees } from "../../../api/employees";
 import { deleteVehicle, updateVehicle, uploadVehiclePhoto } from "../../../api/vehicles";
 import { Button } from "../../../components/Button";
+import { PlateInput } from "../../../components/PlateInput";
 import { SelectField } from "../../../components/SelectField";
-import { TextField } from "../../../components/TextField";
-import { VEHICLE_STATUSES, VEHICLE_TYPES } from "../../../constants/enums";
+import { VEHICLE_LINES, VEHICLE_STATUSES, VEHICLE_TYPES } from "../../../constants/enums";
 import type { EmployeeSummary, Vehicle } from "../../../types/models";
 
 interface Props {
@@ -42,6 +42,7 @@ export function MainInfoTab({ vehicle, onUpdated }: Props) {
         type: form.type,
         plate_number: form.plate_number,
         status: form.status,
+        line: form.line,
         driver_id: form.driver_id,
       });
       toast.success("تم الحفظ");
@@ -82,10 +83,10 @@ export function MainInfoTab({ vehicle, onUpdated }: Props) {
 
   return (
     <div className="space-y-6">
-      <section className="rounded-lg border border-slate-200 bg-white p-6">
-        <h2 className="mb-4 text-sm font-semibold text-slate-700">الصورة</h2>
+      <section className="rounded-lg border border-surface-300 bg-white p-6">
+        <h2 className="mb-4 text-sm font-semibold text-surface-900">الصورة</h2>
         <div className="flex items-center gap-6">
-          <div className="h-24 w-32 overflow-hidden rounded-md border border-slate-200 bg-slate-100">
+          <div className="h-24 w-32 overflow-hidden rounded-md border border-surface-300 bg-surface-100">
             {vehicle.photo_path ? (
               <img
                 src={vehicle.photo_path}
@@ -93,7 +94,7 @@ export function MainInfoTab({ vehicle, onUpdated }: Props) {
                 className="h-full w-full object-cover"
               />
             ) : (
-              <div className="flex h-full w-full items-center justify-center text-2xl text-slate-400">
+              <div className="flex h-full w-full items-center justify-center text-2xl text-surface-500">
                 🚒
               </div>
             )}
@@ -114,14 +115,14 @@ export function MainInfoTab({ vehicle, onUpdated }: Props) {
             >
               {vehicle.photo_path ? "تغيير الصورة" : "رفع صورة"}
             </Button>
-            <p className="text-xs text-slate-500">JPG, PNG, WebP — الحد الأقصى 5 ميجابايت</p>
+            <p className="text-xs text-surface-500">JPG, PNG, WebP — الحد الأقصى 5 ميجابايت</p>
           </div>
         </div>
       </section>
 
       <form
         onSubmit={handleSubmit}
-        className="grid grid-cols-1 gap-4 rounded-lg border border-slate-200 bg-white p-6 md:grid-cols-2"
+        className="grid grid-cols-1 gap-4 rounded-lg border border-surface-300 bg-white p-6 md:grid-cols-2"
       >
         <SelectField
           label="النوع"
@@ -129,17 +130,26 @@ export function MainInfoTab({ vehicle, onUpdated }: Props) {
           onChange={(e) => setForm((f) => ({ ...f, type: e.target.value as typeof f.type }))}
           options={VEHICLE_TYPES.map((t) => ({ value: t, label: t }))}
         />
-        <TextField
-          label="رقم اللوحة"
-          value={form.plate_number}
-          onChange={(e) => setForm((f) => ({ ...f, plate_number: e.target.value }))}
-          required
-        />
+        <label className="flex flex-col gap-1.5">
+          <span className="text-sm font-medium text-surface-900">رقم اللوحة</span>
+          <PlateInput
+            value={form.plate_number}
+            onChange={(v) => setForm((f) => ({ ...f, plate_number: v }))}
+            required
+          />
+          <span className="text-[10px] text-surface-500">٣ حروف و٤ أرقام</span>
+        </label>
         <SelectField
           label="الحالة"
           value={form.status}
           onChange={(e) => setForm((f) => ({ ...f, status: e.target.value as typeof f.status }))}
           options={VEHICLE_STATUSES.map((s) => ({ value: s, label: s }))}
+        />
+        <SelectField
+          label="الخط"
+          value={form.line}
+          onChange={(e) => setForm((f) => ({ ...f, line: e.target.value as typeof f.line }))}
+          options={VEHICLE_LINES.map((l) => ({ value: l, label: `الخط ${l}` }))}
         />
         <SelectField
           label="السائق"

@@ -2,14 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
-@font-face {
-  font-family: 'Cairo';
-  src: url('/fonts/Cairo-Variable.ttf') format('truetype-variations');
-  font-weight: 200 1000;
-  font-display: swap;
+html,
+body,
+#root {
+  font-family: 'IBM Plex Sans Arabic', system-ui, sans-serif;
+  min-height: 100%;
 }
 
-html,
 body {
-  font-family: 'Cairo', system-ui, sans-serif;
+  color: #1a2e1a;
+  background:
+    linear-gradient(135deg, #eef5ee 0%, #f5faf5 50%, #e8f3ec 100%);
+  background-attachment: fixed;
 }

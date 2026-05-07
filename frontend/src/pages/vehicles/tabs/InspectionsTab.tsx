@@ -76,8 +76,8 @@ export function InspectionsTab({ vehicleId }: { vehicleId: number }) {
           description="أضف فحصاً للبدء"
         />
       ) : (
-        <table className="w-full rounded-lg border border-slate-200 bg-white text-sm">
-          <thead className="border-b border-slate-200 bg-slate-50 text-slate-600">
+        <table className="w-full rounded-lg border border-surface-300 bg-white text-sm">
+          <thead className="border-b border-surface-300 bg-surface-100 text-surface-500">
             <tr>
               <th className="px-4 py-3 text-start font-medium">التاريخ</th>
               <th className="px-4 py-3 text-start font-medium">المفتش</th>
@@ -88,13 +88,13 @@ export function InspectionsTab({ vehicleId }: { vehicleId: number }) {
           </thead>
           <tbody>
             {items.map((i) => (
-              <tr key={i.id} className="border-b border-slate-100 last:border-b-0">
-                <td className="px-4 py-3 text-slate-700">{i.inspection_date}</td>
-                <td className="px-4 py-3 font-medium text-slate-900">{i.inspector_name}</td>
+              <tr key={i.id} className="border-b border-surface-100 last:border-b-0">
+                <td className="px-4 py-3 text-surface-900">{i.inspection_date}</td>
+                <td className="px-4 py-3 font-medium text-surface-900">{i.inspector_name}</td>
                 <td className="px-4 py-3">
                   <Badge tone={inspectionResultTone(i.result)}>{i.result}</Badge>
                 </td>
-                <td className="px-4 py-3 text-slate-600">{i.notes ?? "—"}</td>
+                <td className="px-4 py-3 text-surface-500">{i.notes ?? "—"}</td>
                 <td className="px-4 py-3 text-end">
                   <div className="flex justify-end gap-2">
                     <Button variant="secondary" onClick={() => setEditing(i)}>

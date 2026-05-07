@@ -119,8 +119,8 @@ export function InventoryTab() {
           description="أضف صنفاً للبدء"
         />
       ) : (
-        <table className="w-full rounded-lg border border-slate-200 bg-white text-sm">
-          <thead className="border-b border-slate-200 bg-slate-50 text-slate-600">
+        <table className="w-full rounded-lg border border-surface-300 bg-white text-sm">
+          <thead className="border-b border-surface-300 bg-surface-100 text-surface-500">
             <tr>
               <th className="px-4 py-3 text-start font-medium">الصنف</th>
               <th className="px-4 py-3 text-start font-medium">التصنيف</th>
@@ -134,16 +134,16 @@ export function InventoryTab() {
             {visible.map((i) => {
               const lowStock = i.quantity < i.min_threshold;
               return (
-                <tr key={i.id} className="border-b border-slate-100 last:border-b-0">
-                  <td className="px-4 py-3 font-medium text-slate-900">{i.item_name}</td>
-                  <td className="px-4 py-3 text-slate-700">{i.category}</td>
+                <tr key={i.id} className="border-b border-surface-100 last:border-b-0">
+                  <td className="px-4 py-3 font-medium text-surface-900">{i.item_name}</td>
+                  <td className="px-4 py-3 text-surface-900">{i.category}</td>
                   <td
-                    className={`px-4 py-3 ${lowStock ? "font-semibold text-red-600" : "text-slate-700"}`}
+                    className={`px-4 py-3 ${lowStock ? "font-semibold text-red-600" : "text-surface-900"}`}
                   >
                     {i.quantity}
                   </td>
-                  <td className="px-4 py-3 text-slate-500">{i.min_threshold}</td>
-                  <td className="px-4 py-3 text-slate-700">{i.location}</td>
+                  <td className="px-4 py-3 text-surface-500">{i.min_threshold}</td>
+                  <td className="px-4 py-3 text-surface-900">{i.location}</td>
                   <td className="px-4 py-3 text-end">
                     <div className="flex justify-end gap-2">
                       <Button variant="secondary" onClick={() => setEditing(i)}>

@@ -74,11 +74,11 @@ export function ReportsTab() {
       ) : (
         <div className="space-y-3">
           {items.map((r) => (
-            <article key={r.id} className="rounded-lg border border-slate-200 bg-white p-5">
+            <article key={r.id} className="rounded-lg border border-surface-300 bg-white p-5">
               <header className="mb-2 flex items-start justify-between gap-4">
                 <div>
-                  <h3 className="text-lg font-semibold text-slate-900">{r.title}</h3>
-                  <p className="text-xs text-slate-500">{r.date}</p>
+                  <h3 className="text-lg font-semibold text-surface-900">{r.title}</h3>
+                  <p className="text-xs text-surface-500">{r.date}</p>
                 </div>
                 <div className="flex gap-2">
                   <Button variant="secondary" onClick={() => setEditing(r)}>
@@ -89,7 +89,7 @@ export function ReportsTab() {
                   </Button>
                 </div>
               </header>
-              <p className="whitespace-pre-line text-sm text-slate-700">{r.summary}</p>
+              <p className="whitespace-pre-line text-sm text-surface-900">{r.summary}</p>
             </article>
           ))}
         </div>
@@ -188,9 +188,9 @@ function ReportFormModal({
           required
         />
         <label className="flex flex-col gap-1">
-          <span className="text-sm font-medium text-slate-700">الملخص</span>
+          <span className="text-sm font-medium text-surface-900">الملخص</span>
           <textarea
-            className="min-h-28 rounded-md border border-slate-300 bg-white px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-slate-500"
+            className="min-h-28 rounded-md border border-surface-300 bg-white px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-surface-500"
             value={form.summary}
             onChange={(e) => setForm((f) => ({ ...f, summary: e.target.value }))}
             required

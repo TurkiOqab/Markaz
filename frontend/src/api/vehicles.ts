@@ -37,7 +37,19 @@ export function getVehicle(id: number) {
   return api.get<Vehicle>(`/api/vehicles/${id}`);
 }
 
-export type VehicleCreateInput = Pick<Vehicle, "type" | "plate_number" | "status" | "driver_id">;
+export type VehicleCreateInput = Pick<
+  Vehicle,
+  "type" | "plate_number" | "status" | "line" | "driver_id"
+>;
+
+export interface VehicleYardPosition {
+  yard_x?: number | null;
+  yard_y?: number | null;
+}
+
+export function updateVehicleYard(id: number, pos: VehicleYardPosition) {
+  return api.patch<Vehicle>(`/api/vehicles/${id}`, pos);
+}
 
 export function createVehicle(input: VehicleCreateInput) {
   return api.post<Vehicle>("/api/vehicles", input);

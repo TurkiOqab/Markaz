@@ -78,7 +78,10 @@ def dashboard_stats(
     ratings = db.execute(select(MonthlyRating)).scalars().all()
     rating_bucket: dict[tuple[int, int], list[float]] = defaultdict(list)
     for r in ratings:
-        rating_bucket[(r.year, r.month)].append(float(r.rating))
+        total = (
+            r.specialty_score + r.discipline_score + r.fitness_score + r.appearance_score
+        )
+        rating_bucket[(r.year, r.month)].append(float(total))
     monthly_avg = [
         {"year": y, "month": m, "average": round(sum(vs) / len(vs), 2)}
         for (y, m), vs in sorted(rating_bucket.items())

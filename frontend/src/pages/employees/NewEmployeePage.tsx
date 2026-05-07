@@ -10,7 +10,7 @@ import { Button } from "../../components/Button";
 import { PageHeader } from "../../components/PageHeader";
 import { SelectField } from "../../components/SelectField";
 import { TextField } from "../../components/TextField";
-import { MARITAL_STATUSES, PHYSICAL_ABILITIES, SHIFTS } from "../../constants/enums";
+import { MARITAL_STATUSES, PHYSICAL_ABILITIES } from "../../constants/enums";
 import type { Team } from "../../types/models";
 
 const EMPTY: EmployeeCreateInput = {
@@ -74,7 +74,7 @@ export function NewEmployeePage() {
 
       <form
         onSubmit={handleSubmit}
-        className="grid grid-cols-1 gap-4 rounded-lg border border-slate-200 bg-white p-6 md:grid-cols-2"
+        className="grid grid-cols-1 gap-4 rounded-lg border border-surface-300 bg-white p-6 md:grid-cols-2"
       >
         <TextField
           label="الاسم"
@@ -134,16 +134,10 @@ export function NewEmployeePage() {
           options={PHYSICAL_ABILITIES.map((s) => ({ value: s, label: s }))}
         />
         <SelectField
-          label="الفريق"
+          label="الفرقة"
           value={String(form.team_id)}
           onChange={(e) => update("team_id", Number(e.target.value))}
           options={teams.map((t) => ({ value: t.id, label: t.name }))}
-        />
-        <SelectField
-          label="الوردية"
-          value={form.shift}
-          onChange={(e) => update("shift", e.target.value as typeof form.shift)}
-          options={SHIFTS.map((s) => ({ value: s, label: s }))}
         />
 
         <div className="flex justify-end gap-2 md:col-span-2">

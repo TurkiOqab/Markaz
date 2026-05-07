@@ -90,20 +90,20 @@ export function MainInfoTab({ building, onUpdated, onNavigate }: Props) {
   return (
     <div className="space-y-6">
       {/* Hero band */}
-      <section className="rounded-lg border border-slate-200 bg-white p-6">
+      <section className="rounded-lg border border-surface-300 bg-white p-6">
         <div className="flex items-start gap-4">
           <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-brand-50 text-brand-700">
             <Building2 size={28} />
           </div>
           <div className="min-w-0 flex-1">
-            <h2 className="truncate text-xl font-bold text-slate-900">
+            <h2 className="truncate text-xl font-bold text-surface-900">
               {building.name || "مبنى بدون اسم"}
             </h2>
-            <p className="mt-1 truncate text-sm text-slate-600">
+            <p className="mt-1 truncate text-sm text-surface-500">
               {building.address || "لم يُحدد العنوان بعد"}
             </p>
             {building.notes ? (
-              <p className="mt-2 whitespace-pre-line text-sm text-slate-500">{building.notes}</p>
+              <p className="mt-2 whitespace-pre-line text-sm text-surface-500">{building.notes}</p>
             ) : null}
           </div>
           {!editing ? (
@@ -145,9 +145,9 @@ export function MainInfoTab({ building, onUpdated, onNavigate }: Props) {
 
       {/* Edit form — only shown when editing */}
       {editing ? (
-        <section className="rounded-lg border border-slate-200 bg-white">
-          <header className="border-b border-slate-200 px-6 py-4">
-            <h3 className="text-sm font-semibold text-slate-700">تعديل المعلومات</h3>
+        <section className="rounded-lg border border-surface-300 bg-white">
+          <header className="border-b border-surface-300 px-6 py-4">
+            <h3 className="text-sm font-semibold text-surface-900">تعديل المعلومات</h3>
           </header>
           <form onSubmit={handleSubmit} className="space-y-4 p-6">
             <TextField
@@ -163,9 +163,9 @@ export function MainInfoTab({ building, onUpdated, onNavigate }: Props) {
               required
             />
             <label className="flex flex-col gap-1">
-              <span className="text-sm font-medium text-slate-700">ملاحظات</span>
+              <span className="text-sm font-medium text-surface-900">ملاحظات</span>
               <textarea
-                className="min-h-28 rounded-md border border-slate-300 bg-white px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-slate-500"
+                className="min-h-28 rounded-md border border-surface-300 bg-white px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-surface-500"
                 value={form.notes ?? ""}
                 onChange={(e) => setForm((f) => ({ ...f, notes: e.target.value || null }))}
               />
@@ -200,14 +200,14 @@ function SummaryCard({
     <button
       type="button"
       onClick={onClick}
-      className="group flex items-center gap-4 rounded-lg border border-slate-200 bg-white p-4 text-start transition hover:border-brand-400 hover:shadow-sm"
+      className="group flex items-center gap-4 rounded-lg border border-surface-300 bg-white p-4 text-start transition hover:border-brand-400 hover:shadow-sm"
     >
-      <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-slate-100 text-slate-600 group-hover:bg-brand-50 group-hover:text-brand-700">
+      <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-surface-100 text-surface-500 group-hover:bg-brand-50 group-hover:text-brand-700">
         <Icon size={20} />
       </div>
       <div>
-        <p className="text-xs text-slate-500">{label}</p>
-        <p className="text-xl font-bold text-slate-900">{value ?? "—"}</p>
+        <p className="text-xs text-surface-500">{label}</p>
+        <p className="text-xl font-bold text-surface-900">{value ?? "—"}</p>
       </div>
     </button>
   );

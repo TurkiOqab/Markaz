@@ -75,8 +75,8 @@ export function EquipmentTab({ vehicleId }: { vehicleId: number }) {
           description="أضف تجهيزاً للبدء"
         />
       ) : (
-        <table className="w-full rounded-lg border border-slate-200 bg-white text-sm">
-          <thead className="border-b border-slate-200 bg-slate-50 text-slate-600">
+        <table className="w-full rounded-lg border border-surface-300 bg-white text-sm">
+          <thead className="border-b border-surface-300 bg-surface-100 text-surface-500">
             <tr>
               <th className="px-4 py-3 text-start font-medium">الاسم</th>
               <th className="px-4 py-3 text-start font-medium">الكمية</th>
@@ -86,9 +86,9 @@ export function EquipmentTab({ vehicleId }: { vehicleId: number }) {
           </thead>
           <tbody>
             {items.map((eq) => (
-              <tr key={eq.id} className="border-b border-slate-100 last:border-b-0">
-                <td className="px-4 py-3 font-medium text-slate-900">{eq.item_name}</td>
-                <td className="px-4 py-3 text-slate-700">{eq.quantity}</td>
+              <tr key={eq.id} className="border-b border-surface-100 last:border-b-0">
+                <td className="px-4 py-3 font-medium text-surface-900">{eq.item_name}</td>
+                <td className="px-4 py-3 text-surface-900">{eq.quantity}</td>
                 <td className="px-4 py-3">
                   <Badge tone={conditionTone(eq.condition)}>{eq.condition}</Badge>
                 </td>

@@ -1,12 +1,10 @@
-import { AlertTriangle, LayoutDashboard, Package, Truck, Users, Wrench } from "lucide-react";
+import { AlertTriangle, LayoutDashboard, Package, Truck, Wrench } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
 import {
   Area,
   AreaChart,
-  Bar,
-  BarChart,
   CartesianGrid,
   Cell,
   Legend,
@@ -23,7 +21,11 @@ import { fetchDashboardStats } from "../api/dashboard";
 import { Badge, vehicleStatusTone } from "../components/Badge";
 import { DashboardSettings } from "../components/DashboardSettings";
 import type { WidgetGroup } from "../components/DashboardSettings";
+import { DrillsCard } from "../components/DrillsCard";
+import { NextDrillCard } from "../components/NextDrillCard";
+import { YardLayoutCard } from "../components/YardLayoutCard";
 import { PageHeader } from "../components/PageHeader";
+import { RollCallCard } from "../components/RollCallCard";
 import { StatCard } from "../components/StatCard";
 import type { DashboardStats } from "../types/dashboard";
 
@@ -37,7 +39,7 @@ const WIDGET_GROUPS: WidgetGroup[] = [
   {
     title: "بطاقات الإحصاءات",
     widgets: [
-      { key: "stat.employees", label: "الموظفون" },
+      { key: "stat.employees", label: "أقرب فرضية / زيارة" },
       { key: "stat.vehicles", label: "المركبات في الخدمة" },
       { key: "stat.maintenance", label: "صيانة مفتوحة" },
       { key: "stat.inventory", label: "أصناف منخفضة" },
@@ -47,7 +49,6 @@ const WIDGET_GROUPS: WidgetGroup[] = [
     title: "الرسوم البيانية",
     widgets: [
       { key: "chart.vehicles", label: "حالة المركبات" },
-      { key: "chart.shifts", label: "الموظفون حسب الوردية" },
       { key: "chart.ratings", label: "متوسط التقييمات" },
       { key: "chart.costs", label: "تكاليف الصيانة" },
     ],
@@ -117,9 +118,7 @@ export function DashboardPage() {
   );
   const chartsVisible = useMemo(
     () =>
-      ["chart.vehicles", "chart.shifts", "chart.ratings", "chart.costs"].some(
-        (k) => visible[k],
-      ),
+      ["chart.vehicles", "chart.ratings", "chart.costs"].some((k) => visible[k]),
     [visible],
   );
   const attnVisible = useMemo(
@@ -131,7 +130,7 @@ export function DashboardPage() {
     return (
       <div className="space-y-5">
         <PageHeader
-          title="لوحة التحكم"
+          title="الرئيسية"
           subtitle="نظرة شاملة على المركز والإحصائيات"
           icon={LayoutDashboard}
           iconTone="brand"
@@ -154,11 +153,6 @@ export function DashboardPage() {
   const inServiceCount = stats.vehicles.by_status["في الخدمة"] ?? 0;
 
   const vehicleData = Object.entries(stats.vehicles.by_status).map(([name, value]) => ({
-    name,
-    value,
-  }));
-
-  const shiftData = Object.entries(stats.employees.by_shift).map(([name, value]) => ({
     name,
     value,
   }));
@@ -191,17 +185,15 @@ export function DashboardPage() {
         }
       />
 
+      <RollCallCard />
+
+      <DrillsCard />
+
+      <YardLayoutCard />
+
       {statVisible ? (
         <section className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
-          {visible["stat.employees"] ? (
-            <StatCard
-              label="الموظفون"
-              value={stats.employees.total}
-              sublabel="إجمالي الموظفين"
-              icon={Users}
-              tone="brand"
-            />
-          ) : null}
+          {visible["stat.employees"] ? <NextDrillCard /> : null}
           {visible["stat.vehicles"] ? (
             <StatCard
               label="المركبات في الخدمة"
@@ -242,7 +234,7 @@ export function DashboardPage() {
                 <li key={v.id} className="flex items-center justify-between py-2">
                   <Link
                     to={`/vehicles/${v.id}`}
-                    className="font-medium text-slate-900 hover:underline"
+                    className="font-medium text-surface-900 hover:underline"
                   >
                     {v.plate_number}
                   </Link>
@@ -258,8 +250,8 @@ export function DashboardPage() {
               empty="كل الأصناف فوق الحد الأدنى"
               items={stats.attention.low_stock.slice(0, 5).map((i) => (
                 <li key={i.id} className="flex items-center justify-between py-2">
-                  <span className="truncate text-sm text-slate-900">{i.item_name}</span>
-                  <span className="text-xs text-slate-500">
+                  <span className="truncate text-sm text-surface-900">{i.item_name}</span>
+                  <span className="text-xs text-surface-500">
                     <span className="font-semibold text-red-600">{i.quantity}</span>
                     {" / "}
                     {i.min_threshold}
@@ -295,30 +287,10 @@ export function DashboardPage() {
                   </PieChart>
                 </ResponsiveContainer>
                 <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center -mt-3">
-                  <div className="text-2xl font-bold text-slate-900">{stats.vehicles.total}</div>
-                  <div className="text-xs text-slate-500">مركبة</div>
+                  <div className="text-2xl font-bold text-surface-900">{stats.vehicles.total}</div>
+                  <div className="text-xs text-surface-500">مركبة</div>
                 </div>
               </div>
-            </ChartCard>
-          ) : null}
-
-          {visible["chart.shifts"] ? (
-            <ChartCard title="الموظفون حسب الوردية">
-              <ResponsiveContainer width="100%" height={200}>
-                <BarChart data={shiftData} layout="vertical" margin={{ left: 30 }}>
-                  <defs>
-                    <linearGradient id="barBrand" x1="0" y1="0" x2="1" y2="0">
-                      <stop offset="0%" stopColor="#b91c1c" stopOpacity={0.55} />
-                      <stop offset="100%" stopColor="#b91c1c" stopOpacity={1} />
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-                  <XAxis type="number" />
-                  <YAxis type="category" dataKey="name" />
-                  <Tooltip />
-                  <Bar dataKey="value" fill="url(#barBrand)" radius={[0, 4, 4, 0]} />
-                </BarChart>
-              </ResponsiveContainer>
             </ChartCard>
           ) : null}
 
@@ -334,26 +306,26 @@ export function DashboardPage() {
                   >
                     <defs>
                       <linearGradient id="areaRatings" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor="#b91c1c" stopOpacity={0.25} />
-                        <stop offset="100%" stopColor="#b91c1c" stopOpacity={0} />
+                        <stop offset="0%" stopColor="#1a7a3a" stopOpacity={0.25} />
+                        <stop offset="100%" stopColor="#1a7a3a" stopOpacity={0} />
                       </linearGradient>
                     </defs>
                     <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
                     <XAxis dataKey="period" />
                     <YAxis
-                      domain={["auto", "auto"]}
+                      domain={[0, 100]}
                       allowDecimals
                       width={36}
-                      tickFormatter={(v: number) => v.toFixed(1)}
+                      tickFormatter={(v: number) => v.toFixed(0)}
                     />
-                    <Tooltip />
+                    <Tooltip formatter={(v: number) => [`${v} / 100`, "المتوسط"]} />
                     <Area
                       type="monotone"
                       dataKey="average"
-                      stroke="#b91c1c"
+                      stroke="#1a7a3a"
                       strokeWidth={2}
                       fill="url(#areaRatings)"
-                      dot={{ r: 3, fill: "#b91c1c" }}
+                      dot={{ r: 3, fill: "#1a7a3a" }}
                     />
                   </AreaChart>
                 </ResponsiveContainer>
@@ -370,8 +342,8 @@ export function DashboardPage() {
                   <AreaChart data={monthlyCosts}>
                     <defs>
                       <linearGradient id="areaVehicles" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor="#b91c1c" stopOpacity={0.55} />
-                        <stop offset="100%" stopColor="#b91c1c" stopOpacity={0.05} />
+                        <stop offset="0%" stopColor="#1a7a3a" stopOpacity={0.55} />
+                        <stop offset="100%" stopColor="#1a7a3a" stopOpacity={0.05} />
                       </linearGradient>
                       <linearGradient id="areaBuilding" x1="0" y1="0" x2="0" y2="1">
                         <stop offset="0%" stopColor="#f59e0b" stopOpacity={0.55} />
@@ -387,7 +359,7 @@ export function DashboardPage() {
                       type="monotone"
                       dataKey="مركبات"
                       stackId="1"
-                      stroke="#b91c1c"
+                      stroke="#1a7a3a"
                       strokeWidth={2}
                       fill="url(#areaVehicles)"
                     />
@@ -412,8 +384,8 @@ export function DashboardPage() {
 
 function ChartCard({ title, children }: { title: string; children: ReactNode }) {
   return (
-    <div className="rounded-lg border border-slate-200 bg-white p-5">
-      <h3 className="mb-3 text-sm font-semibold text-slate-700">{title}</h3>
+    <div className="rounded-2xl border border-surface-300 bg-white p-5 shadow-soft-green transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lift-green hover:border-brand-300">
+      <h3 className="mb-3 text-sm font-semibold text-surface-900">{title}</h3>
       {children}
     </div>
   );
@@ -421,7 +393,7 @@ function ChartCard({ title, children }: { title: string; children: ReactNode }) 
 
 function EmptyChart({ message }: { message: string }) {
   return (
-    <div className="flex h-[200px] items-center justify-center text-sm text-slate-500">
+    <div className="flex h-[200px] items-center justify-center text-sm text-surface-500">
       {message}
     </div>
   );
@@ -429,12 +401,12 @@ function EmptyChart({ message }: { message: string }) {
 
 function StatSkeleton() {
   return (
-    <div className="relative overflow-hidden rounded-lg border border-slate-200 bg-white p-5">
-      <div className="absolute inset-x-0 top-0 h-1 bg-slate-200" />
+    <div className="relative overflow-hidden rounded-2xl border border-surface-300 bg-white p-5 shadow-soft-green transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lift-green hover:border-brand-300">
+      <div className="absolute inset-x-0 top-0 h-[3px] bg-surface-300" />
       <div className="animate-pulse space-y-3">
-        <div className="h-3 w-20 rounded bg-slate-200" />
-        <div className="h-10 w-24 rounded bg-slate-200" />
-        <div className="h-3 w-32 rounded bg-slate-100" />
+        <div className="h-3 w-20 rounded bg-surface-300" />
+        <div className="h-10 w-24 rounded bg-surface-300" />
+        <div className="h-3 w-32 rounded bg-surface-100" />
       </div>
     </div>
   );
@@ -442,10 +414,10 @@ function StatSkeleton() {
 
 function ChartSkeleton() {
   return (
-    <div className="rounded-lg border border-slate-200 bg-white p-5">
+    <div className="rounded-2xl border border-surface-300 bg-white p-5 shadow-soft-green transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lift-green hover:border-brand-300">
       <div className="animate-pulse space-y-4">
-        <div className="h-3 w-40 rounded bg-slate-200" />
-        <div className="h-[200px] w-full rounded bg-slate-100" />
+        <div className="h-3 w-40 rounded bg-surface-300" />
+        <div className="h-[200px] w-full rounded bg-surface-100" />
       </div>
     </div>
   );
@@ -461,15 +433,15 @@ function AttentionCard({
   items: ReactNode[];
 }) {
   return (
-    <div className="rounded-lg border border-slate-200 bg-white p-5">
+    <div className="rounded-2xl border border-surface-300 bg-white p-5 shadow-soft-green transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lift-green hover:border-brand-300">
       <header className="mb-2 flex items-center gap-2">
         <AlertTriangle size={16} className="text-amber-500" />
-        <h3 className="text-sm font-semibold text-slate-700">{title}</h3>
+        <h3 className="text-sm font-semibold text-surface-900">{title}</h3>
       </header>
       {items.length === 0 ? (
-        <p className="py-3 text-sm text-slate-500">{empty}</p>
+        <p className="py-3 text-sm text-surface-500">{empty}</p>
       ) : (
-        <ul className="divide-y divide-slate-100">{items}</ul>
+        <ul className="divide-y divide-surface-100">{items}</ul>
       )}
     </div>
   );

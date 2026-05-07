@@ -4,6 +4,7 @@ import { Navigate, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { ApiRequestError } from "../api/client";
 import { useAuth } from "../auth/useAuth";
+import { BackgroundShape } from "../components/BackgroundShape";
 import { Button } from "../components/Button";
 import { Loader } from "../components/Loader";
 import { TextField } from "../components/TextField";
@@ -48,8 +49,14 @@ export function SetupPage() {
   }
 
   return (
-    <main className="flex min-h-screen border-t-2 border-brand-700">
-      <aside className="relative hidden flex-col items-center justify-center overflow-hidden bg-brand-700 p-12 text-white md:flex md:w-1/2">
+    <main className="flex min-h-screen">
+      <aside className="relative hidden flex-col items-center justify-center overflow-hidden bg-gradient-to-br from-brand-700 via-brand-600 to-brand-800 p-12 text-white md:flex md:w-1/2">
+        <BackgroundShape
+          className="absolute -bottom-56 -right-56 h-[1200px] w-[1200px]"
+          color="#0a2912"
+          opacity={0.55}
+          zIndex={0}
+        />
         <div
           className="absolute inset-0 opacity-40"
           style={{
@@ -59,12 +66,10 @@ export function SetupPage() {
           aria-hidden
         />
         <div className="relative z-10 flex flex-col items-center gap-6 text-center">
-          <div className="flex h-24 w-24 items-center justify-center rounded-3xl border border-white/25 bg-white/10 text-4xl font-bold backdrop-blur-sm">
-            م
-          </div>
+          <img src="/logo.png" alt="إنجاز" className="h-24 w-24 object-contain" />
           <div>
-            <h1 className="text-5xl font-black tracking-tight">مركز</h1>
-            <p className="mt-2 text-base text-white/80">لوحة تحكم القائد</p>
+            <h1 className="text-5xl font-black tracking-tight">إنجاز</h1>
+            <p className="mt-2 text-base text-white/80">لوحة تحكم المركز</p>
           </div>
           <div className="mt-4 h-1 w-16 rounded-full bg-white/40" />
           <p className="max-w-xs text-sm leading-relaxed text-white/75">
@@ -73,22 +78,20 @@ export function SetupPage() {
         </div>
       </aside>
 
-      <section className="flex flex-1 items-center justify-center bg-gradient-to-b from-slate-50 to-slate-100 p-6">
+      <section className="flex flex-1 items-center justify-center p-6">
         <form
           onSubmit={handleSubmit}
-          className="w-full max-w-sm space-y-5 rounded-xl border border-slate-200 bg-white p-8 shadow-sm"
+          className="w-full max-w-sm space-y-5 rounded-2xl border border-surface-300 bg-white p-8 shadow-soft-green transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lift-green hover:border-brand-300"
         >
           <header className="md:hidden">
-            <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-brand-700 text-2xl font-bold text-white">
-              م
-            </div>
+            <img src="/logo.png" alt="إنجاز" className="mx-auto mb-4 h-14 w-14 object-contain" />
           </header>
           <div>
-            <h2 className="text-2xl font-black tracking-tight text-slate-900">
-              مرحباً بك في مركز
+            <h2 className="text-2xl font-black tracking-tight text-surface-900">
+              مرحباً بك في إنجاز
             </h2>
-            <p className="mt-1 text-sm text-slate-500">قم بإنشاء حساب القائد لأول مرة</p>
-            <div className="mt-3 h-1 w-12 rounded-full bg-brand-700" />
+            <p className="mt-1 text-sm text-surface-500">قم بإنشاء حساب القائد لأول مرة</p>
+            <div className="mt-3 h-1 w-12 rounded-full bg-gradient-to-l from-brand-500 to-brand-700" />
           </div>
 
           <TextField

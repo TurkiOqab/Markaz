@@ -1,6 +1,6 @@
 from datetime import date, datetime
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, computed_field
 
 from app.schemas.common import (
     EquipmentCondition,
@@ -74,7 +74,10 @@ class EquipmentOut(OrmBase):
 class MonthlyRatingBase(BaseModel):
     year: int = Field(ge=2000, le=2100)
     month: int = Field(ge=1, le=12)
-    rating: float = Field(ge=0, le=5)
+    specialty_score: int = Field(ge=0, le=25)
+    discipline_score: int = Field(ge=0, le=25)
+    fitness_score: int = Field(ge=0, le=25)
+    appearance_score: int = Field(ge=0, le=25)
     notes: str | None = Field(default=None, max_length=500)
 
 
@@ -83,7 +86,10 @@ class MonthlyRatingCreate(MonthlyRatingBase):
 
 
 class MonthlyRatingUpdate(BaseModel):
-    rating: float | None = Field(default=None, ge=0, le=5)
+    specialty_score: int | None = Field(default=None, ge=0, le=25)
+    discipline_score: int | None = Field(default=None, ge=0, le=25)
+    fitness_score: int | None = Field(default=None, ge=0, le=25)
+    appearance_score: int | None = Field(default=None, ge=0, le=25)
     notes: str | None = Field(default=None, max_length=500)
 
 
@@ -91,8 +97,21 @@ class MonthlyRatingOut(OrmBase):
     id: int
     year: int
     month: int
-    rating: float
+    specialty_score: int
+    discipline_score: int
+    fitness_score: int
+    appearance_score: int
     notes: str | None = None
+
+    @computed_field  # type: ignore[prop-decorator]
+    @property
+    def total(self) -> int:
+        return (
+            self.specialty_score
+            + self.discipline_score
+            + self.fitness_score
+            + self.appearance_score
+        )
 
 
 # ---------- Employees ----------
@@ -141,6 +160,25 @@ class EmployeeSummary(OrmBase):
     photo_path: str | None = None
     team_id: int
     shift: Shift
+    # Average of monthly ratings, scaled to 0-100. None when no ratings exist.
+    rating_score: int | None = None
+    certifications_count: int = 0
+    certification_names: list[str] = []
+    proxy_balance: int = 0
+
+
+class ManagerNoteCreate(BaseModel):
+    text: str = Field(min_length=1, max_length=2000)
+    # Optional follow-up action recorded by the manager.
+    action_taken: str | None = Field(default=None, max_length=2000)
+
+
+class ManagerNoteOut(OrmBase):
+    id: int
+    text: str
+    action_taken: str | None = None
+    created_at: datetime
+    author_chief_id: int | None = None
 
 
 class EmployeeRead(OrmBase):

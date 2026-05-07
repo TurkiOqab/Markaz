@@ -11,9 +11,9 @@ const sizes = {
 
 export function Loader({ message = "جارِ التحميل...", fullPage, size = "md" }: Props) {
   const content = (
-    <div className="flex items-center gap-3 text-slate-500">
+    <div className="flex items-center gap-3 text-surface-500">
       <div
-        className={`${sizes[size]} animate-spin rounded-full border-slate-200 border-t-brand-700`}
+        className={`${sizes[size]} animate-spin rounded-full border-brand-100 border-t-brand-700`}
         aria-hidden
       />
       {message ? <span className="text-sm">{message}</span> : null}
@@ -21,7 +21,7 @@ export function Loader({ message = "جارِ التحميل...", fullPage, size 
   );
   if (fullPage) {
     return (
-      <main className="flex min-h-screen items-center justify-center border-t-2 border-brand-700 bg-gradient-to-b from-slate-50 to-slate-100">
+      <main className="flex min-h-screen items-center justify-center">
         {content}
       </main>
     );

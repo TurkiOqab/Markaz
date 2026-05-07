@@ -6,13 +6,11 @@ import type {
   Equipment,
   MonthlyRating,
   PagedResponse,
-  Shift,
 } from "../types/models";
 
 export interface EmployeeListParams {
   q?: string;
   team_id?: number;
-  shift?: Shift;
   page?: number;
   page_size?: number;
 }
@@ -127,4 +125,36 @@ export function updateRating(employeeId: number, ratingId: number, input: Partia
 }
 export function deleteRating(employeeId: number, ratingId: number) {
   return api.del<void>(`/api/employees/${employeeId}/ratings/${ratingId}`);
+}
+
+// ---------- Manager notes (password-gated) ----------
+
+export interface ManagerNote {
+  id: number;
+  text: string;
+  action_taken: string | null;
+  created_at: string;
+  author_chief_id: number | null;
+}
+
+export function listManagerNotes(employeeId: number, password: string) {
+  return api.post<{ items: ManagerNote[]; total: number }>(
+    `/api/employees/${employeeId}/manager-notes/list`,
+    { password },
+  );
+}
+
+export function createManagerNote(
+  employeeId: number,
+  text: string,
+  actionTaken: string | null,
+) {
+  return api.post<ManagerNote>(`/api/employees/${employeeId}/manager-notes`, {
+    text,
+    action_taken: actionTaken,
+  });
+}
+
+export function deleteManagerNote(employeeId: number, noteId: number) {
+  return api.del<void>(`/api/employees/${employeeId}/manager-notes/${noteId}`);
 }

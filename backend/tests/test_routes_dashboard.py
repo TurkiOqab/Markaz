@@ -150,11 +150,26 @@ def test_dashboard_includes_monthly_rating_trend():
         )
         db.add(emp)
         db.commit()
+        def _rating(year: int, month: int, total: int) -> MonthlyRating:
+            # Spread `total` (0-100) evenly across the four 0-25 axes.
+            base = total // 4
+            extra = total - base * 4  # 0..3 leftover
+            scores = [base + (1 if i < extra else 0) for i in range(4)]
+            return MonthlyRating(
+                employee_id=emp.id,
+                year=year,
+                month=month,
+                specialty_score=scores[0],
+                discipline_score=scores[1],
+                fitness_score=scores[2],
+                appearance_score=scores[3],
+            )
+
         db.add_all(
             [
-                MonthlyRating(employee_id=emp.id, year=2026, month=1, rating=4.0),
-                MonthlyRating(employee_id=emp.id, year=2026, month=2, rating=4.5),
-                MonthlyRating(employee_id=emp.id, year=2026, month=3, rating=5.0),
+                _rating(2026, 1, 80),
+                _rating(2026, 2, 90),
+                _rating(2026, 3, 100),
             ]
         )
         db.commit()
@@ -164,9 +179,9 @@ def test_dashboard_includes_monthly_rating_trend():
     data = client.get("/api/dashboard/stats").json()["data"]
     trend = data["ratings"]["monthly_average"]
     by_month = {(r["year"], r["month"]): r["average"] for r in trend}
-    assert by_month[(2026, 1)] == 4.0
-    assert by_month[(2026, 2)] == 4.5
-    assert by_month[(2026, 3)] == 5.0
+    assert by_month[(2026, 1)] == 80.0
+    assert by_month[(2026, 2)] == 90.0
+    assert by_month[(2026, 3)] == 100.0
 
 
 def test_dashboard_includes_maintenance_costs():

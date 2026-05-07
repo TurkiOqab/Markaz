@@ -55,7 +55,7 @@ describe("Login flow", () => {
     render(<App />);
 
     await waitFor(() =>
-      expect(screen.getByRole("heading", { name: "مرحباً بك في مركز" })).toBeInTheDocument(),
+      expect(screen.getByRole("heading", { name: "مرحباً بك في إنجاز" })).toBeInTheDocument(),
     );
   });
 });

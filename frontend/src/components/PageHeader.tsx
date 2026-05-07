@@ -9,7 +9,7 @@ const toneClass: Record<IconTone, string> = {
   blue: "bg-blue-50 text-blue-700",
   amber: "bg-amber-50 text-amber-700",
   emerald: "bg-emerald-50 text-emerald-700",
-  slate: "bg-slate-100 text-slate-700",
+  slate: "bg-surface-100 text-surface-900",
 };
 
 interface Props {
@@ -34,7 +34,7 @@ export function PageHeader({
       {backLink ? (
         <Link
           to={backLink.to}
-          className="inline-flex items-center gap-1 text-sm text-slate-500 transition-colors hover:text-brand-700"
+          className="inline-flex items-center gap-1 text-sm text-surface-500 transition-colors hover:text-brand-700"
         >
           <ChevronRight size={14} />
           {backLink.label}
@@ -50,17 +50,17 @@ export function PageHeader({
             </div>
           ) : null}
           <div className="min-w-0">
-            <h1 className="truncate text-3xl font-black tracking-tight text-slate-900">
+            <h1 className="truncate text-[26px] font-black tracking-tight text-surface-900">
               {title}
             </h1>
             {subtitle ? (
-              <p className="mt-1 truncate text-sm text-slate-500">{subtitle}</p>
+              <p className="mt-1 truncate text-sm text-surface-500">{subtitle}</p>
             ) : null}
           </div>
         </div>
         {actions ? <div className="shrink-0">{actions}</div> : null}
       </div>
-      <div className="h-1 w-20 rounded-full bg-brand-700" />
+      <div className="h-1 w-20 rounded-full bg-gradient-to-l from-brand-500 to-brand-700" />
     </header>
   );
 }

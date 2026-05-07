@@ -87,11 +87,67 @@ def list_vehicles(
         .scalars()
         .all()
     )
-    items = [VehicleSummary.model_validate(v) for v in rows]
+
+    # Aggregate per-vehicle facts in three single queries (no N+1).
+    veh_ids = [v.id for v in rows]
+    driver_ids = [v.driver_id for v in rows if v.driver_id is not None]
+    equip_count: dict[int, int] = {}
+    open_maint_count: dict[int, int] = {}
+    last_insp: dict[int, VehicleInspection] = {}
+    driver_names: dict[int, str] = {}
+    if veh_ids:
+        for vid, c in db.execute(
+            select(VehicleEquipment.vehicle_id, func.count())
+            .where(VehicleEquipment.vehicle_id.in_(veh_ids))
+            .group_by(VehicleEquipment.vehicle_id)
+        ).all():
+            equip_count[vid] = int(c)
+
+        # "Open" = anything not finished/cancelled.
+        for vid, c in db.execute(
+            select(VehicleMaintenance.vehicle_id, func.count())
+            .where(
+                VehicleMaintenance.vehicle_id.in_(veh_ids),
+                VehicleMaintenance.status.notin_(["مكتمل", "ملغي"]),
+            )
+            .group_by(VehicleMaintenance.vehicle_id)
+        ).all():
+            open_maint_count[vid] = int(c)
+
+        for insp in (
+            db.execute(
+                select(VehicleInspection)
+                .where(VehicleInspection.vehicle_id.in_(veh_ids))
+                .order_by(VehicleInspection.vehicle_id, VehicleInspection.inspection_date.desc())
+            )
+            .scalars()
+            .all()
+        ):
+            # First row per vehicle in this ordering = the most recent inspection.
+            last_insp.setdefault(insp.vehicle_id, insp)
+
+    if driver_ids:
+        for emp_id, name in db.execute(
+            select(Employee.id, Employee.name).where(Employee.id.in_(driver_ids))
+        ).all():
+            driver_names[int(emp_id)] = str(name)
+
+    items: list[VehicleSummary] = []
+    for v in rows:
+        summary = VehicleSummary.model_validate(v)
+        summary.driver_name = driver_names.get(v.driver_id) if v.driver_id else None
+        summary.equipment_count = equip_count.get(v.id, 0)
+        summary.open_maintenance_count = open_maint_count.get(v.id, 0)
+        insp = last_insp.get(v.id)
+        if insp is not None:
+            summary.last_inspection_date = insp.inspection_date
+            summary.last_inspection_result = insp.result  # type: ignore[assignment]
+        items.append(summary)
+
     return {
         "data": ListResponse[VehicleSummary](
             items=items, total=total, page=page, page_size=page_size
-        ).model_dump()
+        ).model_dump(mode="json")
     }
 
 

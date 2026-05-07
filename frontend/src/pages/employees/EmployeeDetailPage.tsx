@@ -68,7 +68,7 @@ export function EmployeeDetailPage() {
         backLink={{ to: "/employees", label: "الرجوع إلى القائمة" }}
       />
 
-      <nav className="border-b border-slate-200">
+      <nav className="border-b border-surface-300">
         <ul className="flex gap-6">
           {TABS.map((t) => (
             <li key={t.key}>
@@ -77,8 +77,8 @@ export function EmployeeDetailPage() {
                 onClick={() => setTab(t.key)}
                 className={`-mb-px border-b-2 px-1 py-3 text-sm font-medium transition-colors ${
                   tab === t.key
-                    ? "border-slate-900 text-slate-900"
-                    : "border-transparent text-slate-500 hover:text-slate-700"
+                    ? "border-surface-900 text-surface-900"
+                    : "border-transparent text-surface-500 hover:text-surface-900"
                 }`}
               >
                 {t.label}

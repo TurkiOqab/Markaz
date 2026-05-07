@@ -21,11 +21,11 @@ export function SelectField({
   const selectId = id ?? generatedId;
   return (
     <label htmlFor={selectId} className="flex flex-col gap-1">
-      <span className="text-sm font-medium text-slate-700">{label}</span>
+      <span className="text-sm font-medium text-surface-900">{label}</span>
       <select
         id={selectId}
-        className={`rounded-md border bg-white px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-slate-500 ${
-          error ? "border-red-400" : "border-slate-300"
+        className={`rounded-md border bg-white px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-surface-500 ${
+          error ? "border-red-400" : "border-surface-300"
         } ${className}`}
         {...rest}
       >

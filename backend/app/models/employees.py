@@ -1,6 +1,6 @@
 from datetime import date
 
-from sqlalchemy import Date, ForeignKey, Numeric, String, UniqueConstraint
+from sqlalchemy import Date, ForeignKey, Integer, String, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.models.base import Base, TimestampMixin
@@ -43,6 +43,9 @@ class Employee(Base, TimestampMixin):
     monthly_ratings: Mapped[list["MonthlyRating"]] = relationship(
         back_populates="employee", cascade="all, delete-orphan"
     )
+    manager_notes: Mapped[list["ManagerNote"]] = relationship(
+        back_populates="employee", cascade="all, delete-orphan"
+    )
 
 
 class Certification(Base, TimestampMixin):
@@ -79,7 +82,32 @@ class MonthlyRating(Base, TimestampMixin):
     employee_id: Mapped[int] = mapped_column(ForeignKey("employees.id"), nullable=False)
     year: Mapped[int] = mapped_column(nullable=False)
     month: Mapped[int] = mapped_column(nullable=False)
-    rating: Mapped[float] = mapped_column(Numeric(3, 2), nullable=False)
+    # Four axes (0-25 each); total = sum of the four (0-100).
+    specialty_score: Mapped[int] = mapped_column(Integer, nullable=False)
+    discipline_score: Mapped[int] = mapped_column(Integer, nullable=False)
+    fitness_score: Mapped[int] = mapped_column(Integer, nullable=False)
+    appearance_score: Mapped[int] = mapped_column(Integer, nullable=False)
     notes: Mapped[str | None] = mapped_column(String(500))
 
     employee: Mapped[Employee] = relationship(back_populates="monthly_ratings")
+
+    @property
+    def total(self) -> int:
+        return (
+            self.specialty_score
+            + self.discipline_score
+            + self.fitness_score
+            + self.appearance_score
+        )
+
+
+class ManagerNote(Base, TimestampMixin):
+    __tablename__ = "manager_notes"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    employee_id: Mapped[int] = mapped_column(ForeignKey("employees.id"), nullable=False)
+    author_chief_id: Mapped[int | None] = mapped_column(ForeignKey("chiefs.id"))
+    text: Mapped[str] = mapped_column(String(2000), nullable=False)
+    action_taken: Mapped[str | None] = mapped_column(String(2000))
+
+    employee: Mapped[Employee] = relationship(back_populates="manager_notes")

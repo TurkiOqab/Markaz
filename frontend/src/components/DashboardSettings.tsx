@@ -45,7 +45,7 @@ export function DashboardSettings({ groups, visible, onToggle, onReset }: Props)
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="flex h-9 w-9 items-center justify-center rounded-md border border-slate-200 bg-white text-slate-600 hover:bg-slate-50"
+        className="flex h-9 w-9 items-center justify-center rounded-md border border-surface-300 bg-white text-surface-500 hover:bg-surface-100"
         aria-label="إعدادات لوحة التحكم"
         title="تخصيص"
       >
@@ -53,9 +53,9 @@ export function DashboardSettings({ groups, visible, onToggle, onReset }: Props)
       </button>
 
       {open ? (
-        <div className="absolute end-0 top-11 z-20 w-72 rounded-lg border border-slate-200 bg-white p-4 shadow-lg">
+        <div className="absolute end-0 top-11 z-20 w-72 rounded-lg border border-surface-300 bg-white p-4 shadow-lg">
           <header className="mb-3 flex items-center justify-between">
-            <h3 className="text-sm font-semibold text-slate-900">تخصيص اللوحة</h3>
+            <h3 className="text-sm font-semibold text-surface-900">تخصيص اللوحة</h3>
             <button
               type="button"
               onClick={onReset}
@@ -67,20 +67,20 @@ export function DashboardSettings({ groups, visible, onToggle, onReset }: Props)
           <div className="space-y-4 max-h-80 overflow-y-auto">
             {groups.map((group) => (
               <section key={group.title}>
-                <h4 className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500">
+                <h4 className="mb-2 text-xs font-semibold uppercase tracking-wide text-surface-500">
                   {group.title}
                 </h4>
                 <ul className="space-y-1">
                   {group.widgets.map((w) => (
                     <li key={w.key}>
-                      <label className="flex cursor-pointer items-center gap-2 rounded px-2 py-1 text-sm hover:bg-slate-50">
+                      <label className="flex cursor-pointer items-center gap-2 rounded px-2 py-1 text-sm hover:bg-surface-100">
                         <input
                           type="checkbox"
                           checked={visible[w.key] ?? true}
                           onChange={(e) => onToggle(w.key, e.target.checked)}
-                          className="h-4 w-4 rounded border-slate-300 text-brand-700 focus:ring-brand-500"
+                          className="h-4 w-4 rounded border-surface-300 text-brand-700 focus:ring-brand-500"
                         />
-                        <span className="text-slate-700">{w.label}</span>
+                        <span className="text-surface-900">{w.label}</span>
                       </label>
                     </li>
                   ))}

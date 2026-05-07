@@ -19,13 +19,13 @@ export function Avatar({ name, src, size = "md" }: Props) {
       <img
         src={src}
         alt={name}
-        className={`${sizes[size]} rounded-full border border-slate-200 object-cover`}
+        className={`${sizes[size]} rounded-full border border-surface-300 object-cover`}
       />
     );
   }
   return (
     <div
-      className={`${sizes[size]} flex items-center justify-center rounded-full bg-slate-200 font-semibold text-slate-600`}
+      className={`${sizes[size]} flex items-center justify-center rounded-full bg-surface-300 font-semibold text-surface-500`}
       aria-label={name}
     >
       {initials(name)}

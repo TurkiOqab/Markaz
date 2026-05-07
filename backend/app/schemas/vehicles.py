@@ -1,3 +1,4 @@
+from datetime import date
 from datetime import date as _date
 from datetime import datetime
 
@@ -8,6 +9,7 @@ from app.schemas.common import (
     InspectionResult,
     MaintenanceStatus,
     OrmBase,
+    VehicleLine,
     VehicleStatus,
     VehicleType,
 )
@@ -106,6 +108,7 @@ class VehicleBase(BaseModel):
     type: VehicleType
     plate_number: str = Field(min_length=1, max_length=30)
     status: VehicleStatus
+    line: VehicleLine = "الأول"
     driver_id: int | None = None
 
 
@@ -117,6 +120,9 @@ class VehicleUpdate(BaseModel):
     type: VehicleType | None = None
     plate_number: str | None = Field(default=None, min_length=1, max_length=30)
     status: VehicleStatus | None = None
+    line: VehicleLine | None = None
+    yard_x: float | None = Field(default=None, ge=0.0, le=1.0)
+    yard_y: float | None = Field(default=None, ge=0.0, le=1.0)
     driver_id: int | None = None
 
 
@@ -125,8 +131,16 @@ class VehicleSummary(OrmBase):
     type: VehicleType
     plate_number: str
     status: VehicleStatus
+    line: VehicleLine = "الأول"
+    yard_x: float | None = None
+    yard_y: float | None = None
     driver_id: int | None = None
+    driver_name: str | None = None
     photo_path: str | None = None
+    equipment_count: int = 0
+    open_maintenance_count: int = 0
+    last_inspection_date: date | None = None
+    last_inspection_result: InspectionResult | None = None
 
 
 class VehicleRead(OrmBase):
@@ -134,6 +148,7 @@ class VehicleRead(OrmBase):
     type: VehicleType
     plate_number: str
     status: VehicleStatus
+    line: VehicleLine = "الأول"
     driver_id: int | None = None
     photo_path: str | None = None
     created_at: datetime

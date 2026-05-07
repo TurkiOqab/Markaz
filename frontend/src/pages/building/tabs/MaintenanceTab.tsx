@@ -116,8 +116,8 @@ export function MaintenanceTab() {
           description="أضف سجل صيانة للبدء"
         />
       ) : (
-        <table className="w-full rounded-lg border border-slate-200 bg-white text-sm">
-          <thead className="border-b border-slate-200 bg-slate-50 text-slate-600">
+        <table className="w-full rounded-lg border border-surface-300 bg-white text-sm">
+          <thead className="border-b border-surface-300 bg-surface-100 text-surface-500">
             <tr>
               <th className="px-4 py-3 text-start font-medium">التاريخ</th>
               <th className="px-4 py-3 text-start font-medium">الوصف</th>
@@ -129,11 +129,11 @@ export function MaintenanceTab() {
           </thead>
           <tbody>
             {visible.map((m) => (
-              <tr key={m.id} className="border-b border-slate-100 last:border-b-0">
-                <td className="px-4 py-3 text-slate-700">{m.date}</td>
-                <td className="px-4 py-3 font-medium text-slate-900">{m.description}</td>
-                <td className="px-4 py-3 text-slate-700">{m.cost}</td>
-                <td className="px-4 py-3 text-slate-700">{m.contractor}</td>
+              <tr key={m.id} className="border-b border-surface-100 last:border-b-0">
+                <td className="px-4 py-3 text-surface-900">{m.date}</td>
+                <td className="px-4 py-3 font-medium text-surface-900">{m.description}</td>
+                <td className="px-4 py-3 text-surface-900">{m.cost}</td>
+                <td className="px-4 py-3 text-surface-900">{m.contractor}</td>
                 <td className="px-4 py-3">
                   <Badge tone={maintenanceStatusTone(m.status)}>{m.status}</Badge>
                 </td>

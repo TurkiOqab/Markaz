@@ -8,15 +8,16 @@ import { createVehicle } from "../../api/vehicles";
 import type { VehicleCreateInput } from "../../api/vehicles";
 import { Button } from "../../components/Button";
 import { PageHeader } from "../../components/PageHeader";
+import { PlateInput } from "../../components/PlateInput";
 import { SelectField } from "../../components/SelectField";
-import { TextField } from "../../components/TextField";
-import { VEHICLE_STATUSES, VEHICLE_TYPES } from "../../constants/enums";
+import { VEHICLE_LINES, VEHICLE_STATUSES, VEHICLE_TYPES } from "../../constants/enums";
 import type { EmployeeSummary } from "../../types/models";
 
 const EMPTY: VehicleCreateInput = {
-  type: "إطفاء",
+  type: "كوماندر(مزدوجة)",
   plate_number: "",
   status: "في الخدمة",
+  line: "الأول",
   driver_id: null,
 };
 
@@ -59,7 +60,7 @@ export function NewVehiclePage() {
 
       <form
         onSubmit={handleSubmit}
-        className="grid grid-cols-1 gap-4 rounded-lg border border-slate-200 bg-white p-6 md:grid-cols-2"
+        className="grid grid-cols-1 gap-4 rounded-lg border border-surface-300 bg-white p-6 md:grid-cols-2"
       >
         <SelectField
           label="النوع"
@@ -67,17 +68,26 @@ export function NewVehiclePage() {
           onChange={(e) => update("type", e.target.value as typeof form.type)}
           options={VEHICLE_TYPES.map((t) => ({ value: t, label: t }))}
         />
-        <TextField
-          label="رقم اللوحة"
-          value={form.plate_number}
-          onChange={(e) => update("plate_number", e.target.value)}
-          required
-        />
+        <label className="flex flex-col gap-1.5">
+          <span className="text-sm font-medium text-surface-900">رقم اللوحة</span>
+          <PlateInput
+            value={form.plate_number}
+            onChange={(v) => update("plate_number", v)}
+            required
+          />
+          <span className="text-[10px] text-surface-500">٣ حروف و٤ أرقام</span>
+        </label>
         <SelectField
           label="الحالة"
           value={form.status}
           onChange={(e) => update("status", e.target.value as typeof form.status)}
           options={VEHICLE_STATUSES.map((s) => ({ value: s, label: s }))}
+        />
+        <SelectField
+          label="الخط"
+          value={form.line}
+          onChange={(e) => update("line", e.target.value as typeof form.line)}
+          options={VEHICLE_LINES.map((l) => ({ value: l, label: `الخط ${l}` }))}
         />
         <SelectField
           label="السائق"

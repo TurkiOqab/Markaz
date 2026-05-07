@@ -17,7 +17,7 @@ import { Avatar } from "../../../components/Avatar";
 import { Button } from "../../../components/Button";
 import { SelectField } from "../../../components/SelectField";
 import { TextField } from "../../../components/TextField";
-import { MARITAL_STATUSES, PHYSICAL_ABILITIES, SHIFTS } from "../../../constants/enums";
+import { MARITAL_STATUSES, PHYSICAL_ABILITIES } from "../../../constants/enums";
 import type { Employee, Team } from "../../../types/models";
 import type { EmployeeTabKey } from "../EmployeeDetailPage";
 
@@ -147,7 +147,7 @@ export function MainInfoTab({ employee, onUpdated, onNavigate }: Props) {
   return (
     <div className="space-y-6">
       {/* Hero band */}
-      <section className="rounded-lg border border-slate-200 bg-white p-6">
+      <section className="rounded-lg border border-surface-300 bg-white p-6">
         <div className="flex items-start gap-5">
           <div className="flex flex-col items-center gap-2">
             <Avatar name={employee.name} src={employee.photo_path} size="lg" />
@@ -162,7 +162,7 @@ export function MainInfoTab({ employee, onUpdated, onNavigate }: Props) {
               type="button"
               onClick={() => fileRef.current?.click()}
               disabled={uploading}
-              className="text-xs text-slate-500 hover:text-brand-700 disabled:opacity-50"
+              className="text-xs text-surface-500 hover:text-brand-700 disabled:opacity-50"
             >
               {uploading
                 ? "جارِ الرفع..."
@@ -172,8 +172,8 @@ export function MainInfoTab({ employee, onUpdated, onNavigate }: Props) {
             </button>
           </div>
           <div className="min-w-0 flex-1">
-            <h2 className="truncate text-xl font-bold text-slate-900">{employee.name}</h2>
-            <p className="mt-1 truncate text-sm text-slate-600">
+            <h2 className="truncate text-xl font-bold text-surface-900">{employee.name}</h2>
+            <p className="mt-1 truncate text-sm text-surface-500">
               {employee.rank} · {employee.specialty}
             </p>
             <dl className="mt-4 grid grid-cols-1 gap-x-6 gap-y-2 text-sm sm:grid-cols-2">
@@ -183,8 +183,7 @@ export function MainInfoTab({ employee, onUpdated, onNavigate }: Props) {
               <InfoRow label="البريد الإلكتروني" value={employee.email ?? "—"} />
               <InfoRow label="الحالة الاجتماعية" value={employee.marital_status} />
               <InfoRow label="القدرة البدنية" value={employee.physical_ability} />
-              <InfoRow label="الفريق" value={teamName} />
-              <InfoRow label="الوردية" value={employee.shift} />
+              <InfoRow label="الفرقة" value={teamName} />
             </dl>
           </div>
           {!editing ? (
@@ -220,9 +219,9 @@ export function MainInfoTab({ employee, onUpdated, onNavigate }: Props) {
 
       {/* Edit form — only shown when editing */}
       {editing ? (
-        <section className="rounded-lg border border-slate-200 bg-white">
-          <header className="border-b border-slate-200 px-6 py-4">
-            <h3 className="text-sm font-semibold text-slate-700">تعديل المعلومات</h3>
+        <section className="rounded-lg border border-surface-300 bg-white">
+          <header className="border-b border-surface-300 px-6 py-4">
+            <h3 className="text-sm font-semibold text-surface-900">تعديل المعلومات</h3>
           </header>
           <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-4 p-6 md:grid-cols-2">
             <TextField
@@ -285,16 +284,10 @@ export function MainInfoTab({ employee, onUpdated, onNavigate }: Props) {
               options={PHYSICAL_ABILITIES.map((s) => ({ value: s, label: s }))}
             />
             <SelectField
-              label="الفريق"
+              label="الفرقة"
               value={String(form.team_id)}
               onChange={(e) => update("team_id", Number(e.target.value))}
               options={teams.map((t) => ({ value: t.id, label: t.name }))}
-            />
-            <SelectField
-              label="الوردية"
-              value={form.shift}
-              onChange={(e) => update("shift", e.target.value as typeof form.shift)}
-              options={SHIFTS.map((s) => ({ value: s, label: s }))}
             />
 
             <div className="flex justify-between gap-2 md:col-span-2">
@@ -325,8 +318,8 @@ export function MainInfoTab({ employee, onUpdated, onNavigate }: Props) {
 function InfoRow({ label, value }: { label: string; value: string | null }) {
   return (
     <div className="flex gap-2">
-      <dt className="shrink-0 text-slate-500">{label}:</dt>
-      <dd className="min-w-0 truncate font-medium text-slate-800">{value || "—"}</dd>
+      <dt className="shrink-0 text-surface-500">{label}:</dt>
+      <dd className="min-w-0 truncate font-medium text-surface-900">{value || "—"}</dd>
     </div>
   );
 }
@@ -346,14 +339,14 @@ function SummaryCard({
     <button
       type="button"
       onClick={onClick}
-      className="group flex items-center gap-4 rounded-lg border border-slate-200 bg-white p-4 text-start transition hover:border-brand-400 hover:shadow-sm"
+      className="group flex items-center gap-4 rounded-lg border border-surface-300 bg-white p-4 text-start transition hover:border-brand-400 hover:shadow-sm"
     >
-      <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-slate-100 text-slate-600 group-hover:bg-brand-50 group-hover:text-brand-700">
+      <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-surface-100 text-surface-500 group-hover:bg-brand-50 group-hover:text-brand-700">
         <Icon size={20} />
       </div>
       <div>
-        <p className="text-xs text-slate-500">{label}</p>
-        <p className="text-xl font-bold text-slate-900">{value ?? "—"}</p>
+        <p className="text-xs text-surface-500">{label}</p>
+        <p className="text-xl font-bold text-surface-900">{value ?? "—"}</p>
       </div>
     </button>
   );

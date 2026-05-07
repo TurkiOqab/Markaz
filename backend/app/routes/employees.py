@@ -8,18 +8,22 @@ from fastapi import (
     UploadFile,
     status,
 )
+from pydantic import BaseModel, Field
 from sqlalchemy import func, or_, select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from app.db import get_db
 from app.dependencies import get_current_chief
+from app.auth.password import verify_password
 from app.models import (
     Certification,
     Chief,
     Employee,
     Equipment,
+    ManagerNote,
     MonthlyRating,
+    Proxy,
     Vehicle,
 )
 from app.schemas.common import ListResponse, Shift
@@ -34,6 +38,8 @@ from app.schemas.employees import (
     EquipmentCreate,
     EquipmentOut,
     EquipmentUpdate,
+    ManagerNoteCreate,
+    ManagerNoteOut,
     MonthlyRatingCreate,
     MonthlyRatingOut,
     MonthlyRatingUpdate,
@@ -73,7 +79,54 @@ def list_employees(
         .all()
     )
 
-    items = [EmployeeSummary.model_validate(e) for e in rows]
+    # Aggregate per-employee facts in three single queries (no N+1).
+    emp_ids = [e.id for e in rows]
+    rating_score: dict[int, int] = {}
+    cert_count: dict[int, int] = {}
+    cert_names: dict[int, list[str]] = {}
+    proxy_balance: dict[int, int] = {}
+    if emp_ids:
+        total_expr = (
+            MonthlyRating.specialty_score
+            + MonthlyRating.discipline_score
+            + MonthlyRating.fitness_score
+            + MonthlyRating.appearance_score
+        )
+        avg_rows = db.execute(
+            select(MonthlyRating.employee_id, func.avg(total_expr))
+            .where(MonthlyRating.employee_id.in_(emp_ids))
+            .group_by(MonthlyRating.employee_id)
+        ).all()
+        for emp_id, avg in avg_rows:
+            if avg is not None:
+                rating_score[emp_id] = round(float(avg))
+
+        cert_rows = db.execute(
+            select(Certification.employee_id, Certification.name)
+            .where(Certification.employee_id.in_(emp_ids))
+            .order_by(Certification.id)
+        ).all()
+        for emp_id, name in cert_rows:
+            cert_count[emp_id] = cert_count.get(emp_id, 0) + 1
+            cert_names.setdefault(emp_id, []).append(name)
+
+        proxy_rows = db.execute(
+            select(Proxy.substitute_id, func.count())
+            .where(Proxy.substitute_id.in_(emp_ids), Proxy.settled.is_(False))
+            .group_by(Proxy.substitute_id)
+        ).all()
+        for sub_id, c in proxy_rows:
+            proxy_balance[sub_id] = int(c)
+
+    items = []
+    for e in rows:
+        summary = EmployeeSummary.model_validate(e)
+        summary.rating_score = rating_score.get(e.id)
+        summary.certifications_count = cert_count.get(e.id, 0)
+        summary.certification_names = cert_names.get(e.id, [])
+        summary.proxy_balance = proxy_balance.get(e.id, 0)
+        items.append(summary)
+
     return {
         "data": ListResponse[EmployeeSummary](
             items=items, total=total, page=page, page_size=page_size
@@ -408,5 +461,81 @@ def delete_rating(
     if rating is None or rating.employee_id != employee_id:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="التقييم غير موجود")
     db.delete(rating)
+    db.commit()
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
+
+
+# ---------- Manager notes (password-gated on read) ----------
+
+
+class _PasswordPayload(BaseModel):
+    password: str = Field(min_length=1, max_length=200)
+
+
+@router.post("/{employee_id}/manager-notes/list")
+def list_manager_notes(
+    employee_id: int,
+    payload: _PasswordPayload,
+    db: Session = Depends(get_db),
+    chief: Chief = Depends(get_current_chief),
+) -> dict:
+    """Return manager notes for an employee.
+
+    Re-authenticates the current chief's password before returning the notes —
+    these are sensitive enough that we don't want a stolen session cookie alone
+    to expose them.
+    """
+    if not verify_password(payload.password, chief.password_hash):
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="كلمة السر غير صحيحة")
+    _get_employee_or_404(db, employee_id)
+    rows = (
+        db.execute(
+            select(ManagerNote)
+            .where(ManagerNote.employee_id == employee_id)
+            .order_by(ManagerNote.created_at.desc())
+        )
+        .scalars()
+        .all()
+    )
+    items = [ManagerNoteOut.model_validate(n).model_dump(mode="json") for n in rows]
+    return {"data": {"items": items, "total": len(items)}}
+
+
+@router.post("/{employee_id}/manager-notes", status_code=status.HTTP_201_CREATED)
+def create_manager_note(
+    employee_id: int,
+    payload: ManagerNoteCreate,
+    db: Session = Depends(get_db),
+    chief: Chief = Depends(get_current_chief),
+) -> dict:
+    _get_employee_or_404(db, employee_id)
+    action = (payload.action_taken or "").strip() or None
+    note = ManagerNote(
+        employee_id=employee_id,
+        author_chief_id=chief.id,
+        text=payload.text.strip(),
+        action_taken=action,
+    )
+    db.add(note)
+    db.commit()
+    db.refresh(note)
+    return {"data": ManagerNoteOut.model_validate(note).model_dump(mode="json")}
+
+
+@router.delete(
+    "/{employee_id}/manager-notes/{note_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+)
+def delete_manager_note(
+    employee_id: int,
+    note_id: int,
+    db: Session = Depends(get_db),
+    _chief: Chief = Depends(get_current_chief),
+) -> Response:
+    _get_employee_or_404(db, employee_id)
+    note = db.get(ManagerNote, note_id)
+    if note is None or note.employee_id != employee_id:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="الملاحظة غير موجودة")
+    db.delete(note)
     db.commit()
     return Response(status_code=status.HTTP_204_NO_CONTENT)
