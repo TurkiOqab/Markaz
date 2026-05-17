@@ -8,8 +8,8 @@ function at(h: number, m: number): Date {
 }
 
 const BOTH_NULL: CenterTakmeel[] = [
-  { id: "م22", submittedAt: null },
-  { id: "م23", submittedAt: null },
+  { id: "م22", region: "جازان", responsible: "عبدالله الزهراني", submittedAt: null },
+  { id: "م23", region: "صبيا", responsible: "سامي القرني", submittedAt: null },
 ];
 
 describe("deriveTakmeelView", () => {
@@ -34,8 +34,8 @@ describe("deriveTakmeelView", () => {
 
   it("before 09:00 with an early submission -> pending but counts it, no judgment", () => {
     const centers: CenterTakmeel[] = [
-      { id: "م22", submittedAt: "07:32" },
-      { id: "م23", submittedAt: null },
+      { id: "م22", region: "جازان", responsible: "عبدالله الزهراني", submittedAt: "07:32" },
+      { id: "م23", region: "صبيا", responsible: "سامي القرني", submittedAt: null },
     ];
     const v = deriveTakmeelView(centers, at(8, 0));
     expect(v.state).toBe("pending");
@@ -50,8 +50,8 @@ describe("deriveTakmeelView", () => {
 
   it("after 09:00, both submitted -> complete, fastest = earliest", () => {
     const centers: CenterTakmeel[] = [
-      { id: "م22", submittedAt: "07:51" },
-      { id: "م23", submittedAt: "07:32" },
+      { id: "م22", region: "جازان", responsible: "عبدالله الزهراني", submittedAt: "07:51" },
+      { id: "م23", region: "صبيا", responsible: "سامي القرني", submittedAt: "07:32" },
     ];
     const v = deriveTakmeelView(centers, at(10, 0));
     expect(v.state).toBe("complete");
@@ -64,8 +64,8 @@ describe("deriveTakmeelView", () => {
 
   it("after 09:00, one missing 23 min late -> partial, yellow tier", () => {
     const centers: CenterTakmeel[] = [
-      { id: "م22", submittedAt: "07:32" },
-      { id: "م23", submittedAt: null },
+      { id: "م22", region: "جازان", responsible: "عبدالله الزهراني", submittedAt: "07:32" },
+      { id: "م23", region: "صبيا", responsible: "سامي القرني", submittedAt: null },
     ];
     const v = deriveTakmeelView(centers, at(9, 23));
     expect(v.state).toBe("partial");
@@ -97,7 +97,7 @@ describe("deriveTakmeelView", () => {
   });
 
   it("formats submitted time as arabic-digit 12h", () => {
-    const centers: CenterTakmeel[] = [{ id: "م22", submittedAt: "07:32" }];
+    const centers: CenterTakmeel[] = [{ id: "م22", region: "جازان", responsible: "عبدالله الزهراني", submittedAt: "07:32" }];
     const v = deriveTakmeelView(centers, at(10, 0));
     expect(v.centers[0].submittedLabel).toBe("٧:٣٢ ص");
   });
