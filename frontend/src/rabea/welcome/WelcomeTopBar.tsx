@@ -4,12 +4,11 @@ export function WelcomeTopBar({ dateLabel }: { dateLabel: string }) {
   return (
     <header className="flex min-h-[44px] flex-nowrap items-center justify-between gap-4">
       <div className="flex items-center gap-3">
-        <span
-          aria-hidden="true"
-          className="relative grid h-11 w-11 flex-none place-items-center rounded-full border-[1.5px] border-[#d9c79a] text-[18px] font-extrabold text-[#d9c79a] shadow-[inset_0_0_0_4px_rgba(217,199,154,.10)] before:absolute before:inset-1.5 before:rounded-full before:border before:border-dashed before:border-[rgba(217,199,154,.55)] before:content-['']"
-        >
-          <span className="font-display">إ</span>
-        </span>
+        <img
+          src="/logo.png"
+          alt="إنجاز"
+          className="h-11 w-11 flex-none rounded-xl object-contain"
+        />
         <div>
           <div className="text-[14.5px] font-bold tracking-tight text-[#f5f1e6]">نظام إنجاز</div>
           <div className="mt-px text-[11.5px] text-[#a9b8ad]">لوحة شعبة العمليات</div>

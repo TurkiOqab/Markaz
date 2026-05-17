@@ -48,6 +48,17 @@ export function OperationsWelcomePage() {
         aria-hidden="true"
         className="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(1100px_600px_at_80%_-10%,rgba(70,169,106,.18),transparent_60%),radial-gradient(800px_500px_at_10%_100%,rgba(217,199,154,.06),transparent_60%),linear-gradient(160deg,#062319_0%,#061a10_50%,#04130b_100%)]"
       />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none fixed inset-0 -z-10 flex items-center justify-center opacity-[0.18]"
+      >
+        <div
+          className="relative w-[78%] max-w-[1100px] animate-shape-drift-slow"
+          style={{ filter: "drop-shadow(0 30px 80px rgba(0,0,0,0.4))" }}
+        >
+          <img src="/shape.webp" alt="" className="block h-auto w-full" />
+        </div>
+      </div>
       <WelcomeTopBar dateLabel={longDate(now)} />
 
       <div className="mx-auto grid w-full max-w-[1280px] grid-cols-[1.05fr_1fr] items-center gap-8 max-[980px]:grid-cols-1 max-[980px]:gap-7">
