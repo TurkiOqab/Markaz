@@ -173,7 +173,7 @@ function RabeaWelcomeOverlay({
               مرحباً بعودتك
               <br />
               <em className="font-extrabold not-italic text-injaz-gold-soft">
-                إنجاز ٩.
+                ربيع ٩.
               </em>
             </h1>
             <div className="mb-8 flex flex-wrap items-center gap-3 text-base opacity-75 animate-fade-slide-3">
