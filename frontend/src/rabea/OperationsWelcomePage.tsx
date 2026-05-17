@@ -42,7 +42,7 @@ export function OperationsWelcomePage() {
   return (
     <main
       dir="rtl"
-      className="relative grid min-h-screen grid-rows-[auto_1fr_auto] gap-[22px] overflow-hidden bg-[#061a10] px-7 py-[22px] text-[#f5f1e6] max-[560px]:px-4"
+      className="relative grid min-h-screen grid-rows-[auto_1fr_auto] gap-[22px] overflow-hidden bg-[#061a10] px-7 py-[22px] text-[#f5f1e6] max-[560px]:px-4 animate-welcome-reveal will-change-transform"
     >
       <div
         aria-hidden="true"
