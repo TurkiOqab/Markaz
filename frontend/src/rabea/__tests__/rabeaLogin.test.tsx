@@ -43,7 +43,7 @@ describe("Rabea login distinction", () => {
     window.history.pushState({}, "", "/");
   });
 
-  it("REB9 navigates to the Rabea welcome page without calling the login API", async () => {
+  it("REB9 plays the entrance sweep then lands on the Rabea welcome page, no login API", async () => {
     render(<App />);
 
     await screen.findByRole("heading", { name: "تسجيل الدخول" });
@@ -51,8 +51,11 @@ describe("Rabea login distinction", () => {
     await user.type(screen.getByLabelText("كلمة المرور"), "1234567891");
     await user.click(screen.getByRole("button", { name: "تسجيل الدخول" }));
 
-    await screen.findByText("ربيع ٩.");
+    expect(screen.getByTestId("rabea-sweep")).toBeInTheDocument();
+
+    await screen.findByText("ربيع ٩.", {}, { timeout: 3000 });
     expect(screen.getByText("حالة التكميل اليومي")).toBeInTheDocument();
+    expect(screen.queryByTestId("rabea-sweep")).not.toBeInTheDocument();
 
     const loginCalls = fetchMock.mock.calls.filter((c) =>
       String(c[0]).includes("/api/auth/login"),
@@ -75,5 +78,6 @@ describe("Rabea login distinction", () => {
       expect(loginCalls.length).toBeGreaterThan(0);
     });
     expect(screen.queryByText("ربيع ٩.")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("rabea-sweep")).not.toBeInTheDocument();
   });
 });
