@@ -174,7 +174,7 @@ export function deriveTakmeelView(
     if (submitted) {
       subText = `تم التكميل في الموعد · المسؤول: ${c.responsible}`;
     } else if (showLate) {
-      subText = `متأخر ${cLateLabel} · المسؤول: ${c.responsible}`;
+      subText = `${cLateLabel} · المسؤول: ${c.responsible}`;
     } else {
       subText = `قبل موعد التكميل · المسؤول: ${c.responsible}`;
     }
