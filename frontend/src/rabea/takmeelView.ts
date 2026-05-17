@@ -50,6 +50,8 @@ export interface TakmeelView {
   ringCircumference: number;     // 427.26
   ringDash: string;              // "213.63 427.26"
   summary: TakmeelSummary;
+  /** Most severe tier among pending (late) centers; null if none/before deadline. */
+  worstPendingTier: LateTier | null;
   centers: CenterView[];
 }
 
@@ -90,6 +92,14 @@ function lateTier(minutes: number): LateTier {
   return "red";
 }
 
+// Graduated alert text by tier — NO numeric duration (per the latest
+// directive), only the status word + a tier-dependent advisory suffix.
+function lateText(tier: LateTier): string {
+  if (tier === "orange") return "متأخر — يُنصح بالمتابعة";
+  if (tier === "red") return "متأخر — تدخّل عاجل ⚠️";
+  return "متأخر";
+}
+
 export function deriveTakmeelView(
   centers: CenterTakmeel[],
   now: Date,
@@ -110,6 +120,7 @@ export function deriveTakmeelView(
       ringCircumference: RING_CIRCUMFERENCE,
       ringDash: `0.00 ${RING_CIRCUMFERENCE}`,
       summary: { kind: "empty", pendingCount: 0, firstPendingName: null, firstPendingDelayLabel: null },
+      worstPendingTier: null,
       centers: [],
     };
   }
@@ -168,13 +179,14 @@ export function deriveTakmeelView(
       submittedLabel = format12h(h, m);
     }
     const showLate = !submitted && !beforeDeadline;
+    const cTier: LateTier | null = showLate ? lateTier(lateMinutesNow) : null;
     const cLateLabel = showLate ? lateLabel(lateMinutesNow) : null;
     const regionLabel = `مركز ${toArabicDigits(c.id)} · ${c.region}`;
     let subText: string;
     if (submitted) {
       subText = `تم التكميل في الموعد · المسؤول: ${c.responsible}`;
-    } else if (showLate) {
-      subText = `متأخر · المسؤول: ${c.responsible}`;
+    } else if (cTier) {
+      subText = `${lateText(cTier)} · المسؤول: ${c.responsible}`;
     } else {
       subText = `قبل موعد التكميل · المسؤول: ${c.responsible}`;
     }
@@ -187,7 +199,7 @@ export function deriveTakmeelView(
       fastest: isComplete && c.id === fastestId,
       lateMinutes: showLate ? lateMinutesNow : null,
       lateLabel: cLateLabel,
-      lateTier: showLate ? lateTier(lateMinutesNow) : null,
+      lateTier: cTier,
       regionLabel,
       subText,
       metaTime,
@@ -209,6 +221,22 @@ export function deriveTakmeelView(
       summaryKind === "pendingAfterDeadline" && firstPending ? firstPending.lateLabel : null,
   };
 
+  const pendingTiers = centerViews
+    .filter((c) => !c.submitted && c.lateTier)
+    .map((c) => c.lateTier as LateTier);
+  const worstPendingTier: LateTier | null = pendingTiers.includes("red")
+    ? "red"
+    : pendingTiers.includes("orange")
+      ? "orange"
+      : pendingTiers.includes("yellow")
+        ? "yellow"
+        : null;
+
+  // Pending centers first (draw attention), then completed — stable sort.
+  const orderedCenters = [...centerViews].sort(
+    (a, b) => Number(a.submitted) - Number(b.submitted),
+  );
+
   return {
     state,
     submittedCount,
@@ -222,6 +250,7 @@ export function deriveTakmeelView(
     ringCircumference: RING_CIRCUMFERENCE,
     ringDash: `${(percent / 100 * RING_CIRCUMFERENCE).toFixed(2)} ${RING_CIRCUMFERENCE}`,
     summary,
-    centers: centerViews,
+    worstPendingTier,
+    centers: orderedCenters,
   };
 }

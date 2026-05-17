@@ -154,8 +154,27 @@ describe("deriveTakmeelView", () => {
     expect(done.metaSub).toBe("اليوم");
     const wait = v.centers.find((c) => c.id === "م23")!;
     expect(wait.regionLabel).toBe("مركز م٢٣ · صبيا");
-    expect(wait.subText).toBe("متأخر · المسؤول: سامي القرني");
+    expect(wait.subText).toBe("متأخر — تدخّل عاجل ⚠️ · المسؤول: سامي القرني");
     expect(wait.metaTime).toBe("— —:—");
     expect(wait.metaSub).toBe("غير مُسجّل");
+  });
+
+  it("orders pending centers before completed ones (stable)", () => {
+    const v = deriveTakmeelView(TWO, at(17, 19));
+    expect(v.centers.map((c) => c.id)).toEqual(["م23", "م22"]);
+  });
+
+  it("graduated late text + worstPendingTier by tier", () => {
+    expect(deriveTakmeelView(TWO, at(9, 20)).centers[0].subText).toBe(
+      "متأخر · المسؤول: سامي القرني",
+    );
+    expect(deriveTakmeelView(TWO, at(9, 45)).centers[0].subText).toBe(
+      "متأخر — يُنصح بالمتابعة · المسؤول: سامي القرني",
+    );
+    expect(deriveTakmeelView(TWO, at(17, 19)).worstPendingTier).toBe("red");
+    expect(deriveTakmeelView(TWO, at(9, 20)).worstPendingTier).toBe("yellow");
+    expect(deriveTakmeelView(TWO, at(9, 45)).worstPendingTier).toBe("orange");
+    expect(deriveTakmeelView(TWO, at(8, 0)).worstPendingTier).toBeNull();
+    expect(deriveTakmeelView([], at(10, 0)).worstPendingTier).toBeNull();
   });
 });
