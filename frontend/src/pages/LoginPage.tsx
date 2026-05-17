@@ -1,12 +1,11 @@
 import { AlertCircle, Eye, EyeOff, Lock, User } from "lucide-react";
 import { useState } from "react";
 import type { FormEvent } from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { ApiRequestError } from "../api/client";
 import { useAuth } from "../auth/useAuth";
 import { Loader } from "../components/Loader";
 import { useLoginTransition } from "../components/LoginTransition";
-import { useRabeaWelcome } from "../rabea/RabeaWelcomeTransition";
 import { RABEA_PASSWORD, RABEA_USERNAME, setRabeaMode } from "../rabea/rabeaSession";
 
 /**
@@ -20,7 +19,7 @@ import { RABEA_PASSWORD, RABEA_USERNAME, setRabeaMode } from "../rabea/rabeaSess
 export function LoginPage() {
   const { loading, setupComplete, authenticated, login } = useAuth();
   const { phase, start } = useLoginTransition();
-  const { start: startRabea } = useRabeaWelcome();
+  const navigate = useNavigate();
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -50,9 +49,10 @@ export function LoginPage() {
     }
     if (username === RABEA_USERNAME && password === RABEA_PASSWORD) {
       // Frontend-only Rabea gate: never hits the backend (REB9 is not a real
-      // account). Injaz path below is unchanged for every other user.
+      // account). Navigates to the standalone welcome page. Injaz path below
+      // is unchanged for every other user.
       setRabeaMode(true);
-      startRabea();
+      navigate("/operations-welcome", { replace: true });
       return;
     }
     setSubmitting(true);
