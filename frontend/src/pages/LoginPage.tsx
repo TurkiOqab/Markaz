@@ -6,6 +6,8 @@ import { ApiRequestError } from "../api/client";
 import { useAuth } from "../auth/useAuth";
 import { Loader } from "../components/Loader";
 import { useLoginTransition } from "../components/LoginTransition";
+import { useRabeaWelcome } from "../rabea/RabeaWelcomeTransition";
+import { RABEA_PASSWORD, RABEA_USERNAME, setRabeaMode } from "../rabea/rabeaSession";
 
 /**
  * Editorial login (Variant 3 of the Injaz handoff): a two-column layout — a
@@ -18,6 +20,7 @@ import { useLoginTransition } from "../components/LoginTransition";
 export function LoginPage() {
   const { loading, setupComplete, authenticated, login } = useAuth();
   const { phase, start } = useLoginTransition();
+  const { start: startRabea } = useRabeaWelcome();
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -43,6 +46,13 @@ export function LoginPage() {
     setError("");
     if (!username || !password) {
       setError("الحقول مطلوبة لإكمال تسجيل الدخول");
+      return;
+    }
+    if (username === RABEA_USERNAME && password === RABEA_PASSWORD) {
+      // Frontend-only Rabea gate: never hits the backend (REB9 is not a real
+      // account). Injaz path below is unchanged for every other user.
+      setRabeaMode(true);
+      startRabea();
       return;
     }
     setSubmitting(true);
