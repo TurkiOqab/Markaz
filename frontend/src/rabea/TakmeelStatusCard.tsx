@@ -63,7 +63,9 @@ export function TakmeelStatusCard({ view }: { view: TakmeelView }) {
               <span aria-hidden>{c.submitted ? "✅" : "⏳"}</span>
               <span className="opacity-90">مركز {c.id}</span>
               {c.fastest ? (
-                <span className="text-injaz-gold-soft">⚡ (الأسرع)</span>
+                <span className="text-injaz-gold-soft">
+                  <span aria-hidden="true">⚡</span> (الأسرع)
+                </span>
               ) : null}
             </span>
             <span className="tabular-nums opacity-80">
