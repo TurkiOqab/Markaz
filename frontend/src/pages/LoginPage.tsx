@@ -1,11 +1,12 @@
 import { AlertCircle, Eye, EyeOff, Lock, User } from "lucide-react";
 import { useState } from "react";
 import type { FormEvent } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { ApiRequestError } from "../api/client";
 import { useAuth } from "../auth/useAuth";
 import { Loader } from "../components/Loader";
 import { useLoginTransition } from "../components/LoginTransition";
+import { useRabeaEntrance } from "../rabea/RabeaEntranceTransition";
 import { RABEA_PASSWORD, RABEA_USERNAME, setRabeaMode } from "../rabea/rabeaSession";
 
 /**
@@ -19,7 +20,7 @@ import { RABEA_PASSWORD, RABEA_USERNAME, setRabeaMode } from "../rabea/rabeaSess
 export function LoginPage() {
   const { loading, setupComplete, authenticated, login } = useAuth();
   const { phase, start } = useLoginTransition();
-  const navigate = useNavigate();
+  const { phase: rabeaPhase, start: startRabeaEntrance } = useRabeaEntrance();
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -49,10 +50,10 @@ export function LoginPage() {
     }
     if (username === RABEA_USERNAME && password === RABEA_PASSWORD) {
       // Frontend-only Rabea gate: never hits the backend (REB9 is not a real
-      // account). Navigates to the standalone welcome page. Injaz path below
-      // is unchanged for every other user.
+      // account). Plays the entrance choreography, then the provider navigates
+      // to the standalone welcome page. Injaz path below is unchanged.
       setRabeaMode(true);
-      navigate("/operations-welcome", { replace: true });
+      startRabeaEntrance();
       return;
     }
     setSubmitting(true);
@@ -69,7 +70,7 @@ export function LoginPage() {
   // Stage 1: blur + scale-down + fade out. Stages 2/3: stay invisible (the
   // welcome panel has fully taken over the viewport and is layering on top).
   const pageSlideClass =
-    phase === "enter"
+    phase === "enter" || rabeaPhase === "sweep"
       ? "animate-login-blur-out"
       : phase === "hold" || phase === "exit"
         ? "opacity-0"
