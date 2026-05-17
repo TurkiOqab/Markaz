@@ -10,8 +10,14 @@ export type LateTier = "yellow" | "orange" | "red";
 export interface CenterView {
   id: string;
   submitted: boolean;
+  /** Arabic-digit 12h label (e.g. "٧:٣٢ ص") when submitted; null otherwise. */
   submittedLabel: string | null;
+  /** Only meaningful when the overall state is "complete": true for the
+   *  earliest submitter. Always false in every other state. */
   fastest: boolean;
+  /** Late metrics are non-null ONLY for a center that has not submitted AND
+   *  the 09:00 deadline has passed. They are null both for submitted centers
+   *  and for any center while still before the deadline ("pending"). */
   lateMinutes: number | null;
   lateLabel: string | null;
   lateTier: LateTier | null;
