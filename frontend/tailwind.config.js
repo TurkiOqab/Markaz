@@ -8,6 +8,7 @@ export default {
       fontFamily: {
         sans: ['"IBM Plex Sans Arabic"', 'system-ui', 'sans-serif'],
         display: ['Tajawal', '"IBM Plex Sans Arabic"', 'system-ui', 'sans-serif'],
+        mono: ['"IBM Plex Mono"', 'ui-monospace', 'monospace'],
       },
       colors: {
         brand: {
