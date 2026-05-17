@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import { today } from "../lib/clock";
 import { isRabeaMode } from "./rabeaSession";
-import { getTodayTakmeel } from "./takmeelMock";
+import { getTodayCenters } from "./rabeaTakmeelStore";
 import { deriveTakmeelView } from "./takmeelView";
 import { CompletionPanel } from "./welcome/CompletionPanel";
 import { WelcomeFooter } from "./welcome/WelcomeFooter";
@@ -37,7 +37,7 @@ export function OperationsWelcomePage() {
     return <Navigate to="/login" replace />;
   }
 
-  const view = deriveTakmeelView(getTodayTakmeel(), now);
+  const view = deriveTakmeelView(getTodayCenters(), now);
 
   return (
     <main
@@ -108,6 +108,8 @@ export function OperationsWelcomePage() {
         <WelcomeGreeting
           summary={view.summary}
           onPrimary={() => navigate("/operations")}
+          onPending={() => navigate("/operations-welcome/substitute")}
+          pendingTier={view.worstPendingTier}
         />
         <CompletionPanel view={view} dateLabel={shortDate(now)} />
       </div>

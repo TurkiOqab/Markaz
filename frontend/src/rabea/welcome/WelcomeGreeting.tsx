@@ -1,8 +1,17 @@
 import { ArrowLeft, Clipboard, User } from "lucide-react";
-import type { TakmeelSummary } from "../takmeelView";
+import type { LateTier, TakmeelSummary } from "../takmeelView";
 
 const AR = "٠١٢٣٤٥٦٧٨٩";
 const ar = (n: number) => String(n).replace(/\d/g, (d) => AR[Number(d)]);
+
+// "تكميل المراكز المعلّقة" button graduates by the worst pending tier
+// (yellow keeps the neutral look per spec; orange/red escalate, red glows).
+const PENDING_BTN: Record<"none" | LateTier, string> = {
+  none: "border-white/15 bg-white/5 text-white/85 hover:bg-white/10",
+  yellow: "border-white/15 bg-white/5 text-white/85 hover:bg-white/10",
+  orange: "border-[#e1a04a]/45 bg-[#e1a04a]/12 text-[#f0a04b] hover:bg-[#e1a04a]/20",
+  red: "border-[#e56050]/50 bg-[#c0392b]/15 text-[#ff8a7a] shadow-[0_0_18px_-4px_rgba(229,96,80,.55)] hover:bg-[#c0392b]/25",
+};
 
 function SummaryText({ s }: { s: TakmeelSummary }) {
   if (s.kind === "empty") {
@@ -33,9 +42,13 @@ function SummaryText({ s }: { s: TakmeelSummary }) {
 export function WelcomeGreeting({
   summary,
   onPrimary,
+  onPending,
+  pendingTier,
 }: {
   summary: TakmeelSummary;
   onPrimary: () => void;
+  onPending: () => void;
+  pendingTier: LateTier | null;
 }) {
   return (
     <section className="flex flex-col gap-[22px]">
@@ -73,7 +86,10 @@ export function WelcomeGreeting({
         </button>
         <button
           type="button"
-          className="inline-flex cursor-default items-center gap-2.5 rounded-full border border-white/15 bg-white/5 px-6 py-[18px] text-[14px] font-semibold text-white/85 transition-colors hover:bg-white/10"
+          onClick={onPending}
+          className={`inline-flex items-center gap-2.5 rounded-full border px-6 py-[18px] text-[14px] font-semibold transition-colors ${
+            PENDING_BTN[pendingTier ?? "none"]
+          }`}
         >
           <Clipboard size={14} aria-hidden="true" />
           تكميل المراكز المعلّقة

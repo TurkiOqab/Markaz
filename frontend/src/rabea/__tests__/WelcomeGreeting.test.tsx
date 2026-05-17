@@ -18,12 +18,22 @@ describe("WelcomeGreeting", () => {
       at(17, 19),
     );
     const onPrimary = vi.fn();
-    render(<WelcomeGreeting summary={v.summary} onPrimary={onPrimary} />);
+    const onPending = vi.fn();
+    render(
+      <WelcomeGreeting
+        summary={v.summary}
+        onPrimary={onPrimary}
+        onPending={onPending}
+        pendingTier={v.worstPendingTier}
+      />,
+    );
     expect(screen.getByText("INJAZ · OPERATIONS CENTER")).toBeInTheDocument();
     expect(screen.getByText("ربيع ٩.")).toBeInTheDocument();
     expect(screen.getByText("مدير شعبة العمليات")).toBeInTheDocument();
     expect(screen.getByText(/لديك/)).toBeInTheDocument();
     await userEvent.click(screen.getByRole("button", { name: /الانتقال إلى لوحة التحكم/ }));
     expect(onPrimary).toHaveBeenCalledTimes(1);
+    await userEvent.click(screen.getByRole("button", { name: /تكميل المراكز المعلّقة/ }));
+    expect(onPending).toHaveBeenCalledTimes(1);
   });
 });
