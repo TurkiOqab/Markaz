@@ -11,8 +11,8 @@ describe("TakmeelStatusCard", () => {
   it("renders the title and X / total", () => {
     const view = deriveTakmeelView(
       [
-        { id: "م22", submittedAt: "07:32" },
-        { id: "م23", submittedAt: null },
+        { id: "م22", region: "جازان", responsible: "عبدالله الزهراني", submittedAt: "07:32" },
+        { id: "م23", region: "صبيا", responsible: "سامي القرني", submittedAt: null },
       ],
       at(9, 23),
     );
