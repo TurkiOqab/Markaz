@@ -2,6 +2,8 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { AuthProvider } from "./auth/AuthProvider";
 import { AppLayout } from "./components/AppLayout";
 import { LoginTransitionProvider } from "./components/LoginTransition";
+import { OperationsPlaceholderPage } from "./rabea/OperationsPlaceholderPage";
+import { RabeaWelcomeTransitionProvider } from "./rabea/RabeaWelcomeTransition";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { BuildingPage } from "./pages/building/BuildingPage";
 import { DashboardPage } from "./pages/DashboardPage";
@@ -26,9 +28,11 @@ export default function App() {
     <BrowserRouter>
       <AuthProvider>
         <LoginTransitionProvider>
+        <RabeaWelcomeTransitionProvider>
         <Routes>
           <Route path="/setup" element={<SetupPage />} />
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/operations" element={<OperationsPlaceholderPage />} />
           <Route
             element={
               <ProtectedRoute>
@@ -56,6 +60,7 @@ export default function App() {
             <Route path="/building" element={<BuildingPage />} />
           </Route>
         </Routes>
+        </RabeaWelcomeTransitionProvider>
         </LoginTransitionProvider>
       </AuthProvider>
     </BrowserRouter>
