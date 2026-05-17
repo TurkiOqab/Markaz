@@ -24,8 +24,8 @@ function SummaryText({ s }: { s: TakmeelSummary }) {
   return (
     <>
       لديك <b>{s.pendingCount === 1 ? "مركز واحد" : `${ar(s.pendingCount)} مراكز`}</b> لم
-      يُكمل تكميل اليوم حتى الآن — <b>{s.firstPendingName}</b> متأخّر منذ{" "}
-      <b>{s.firstPendingDelayLabel}</b>. ابدأ بمتابعته قبل الانتقال إلى لوحة التحكم.
+      يُكمل تكميل اليوم حتى الآن — <b>{s.firstPendingName}</b> متأخّر. ابدأ بمتابعته قبل
+      الانتقال إلى لوحة التحكم.
     </>
   );
 }
@@ -66,14 +66,14 @@ export function WelcomeGreeting({
         <button
           type="button"
           onClick={onPrimary}
-          className="group inline-flex items-center gap-2.5 rounded-[12px] bg-[linear-gradient(180deg,#e8d8aa,#d9c79a)] px-5 py-3 text-[14px] font-semibold text-[#1d160a] shadow-[0_10px_30px_-10px_rgba(217,199,154,.45),inset_0_1px_0_rgba(255,255,255,.4),inset_0_-1px_0_rgba(0,0,0,.10)] transition-[filter] hover:brightness-105"
+          className="group inline-flex items-center gap-3.5 rounded-full bg-injaz-gold-soft px-8 py-[18px] text-[15px] font-semibold tracking-wide text-[#0d3a24] shadow-[0_12px_32px_rgba(232,217,184,0.18)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-white hover:shadow-[0_18px_44px_rgba(232,217,184,0.28)]"
         >
           الانتقال إلى لوحة التحكم
-          <ArrowLeft size={16} aria-hidden="true" className="transition-transform duration-200 group-hover:-translate-x-[3px]" />
+          <ArrowLeft size={18} aria-hidden="true" className="transition-transform duration-200 group-hover:-translate-x-1.5" />
         </button>
         <button
           type="button"
-          className="inline-flex cursor-default items-center gap-2.5 rounded-[12px] border border-[rgba(245,241,230,.16)] px-5 py-3 text-[14px] font-semibold text-[#e6dfcc] hover:bg-[rgba(245,241,230,.04)]"
+          className="inline-flex cursor-default items-center gap-2.5 rounded-full border border-white/15 bg-white/5 px-6 py-[18px] text-[14px] font-semibold text-white/85 transition-colors hover:bg-white/10"
         >
           <Clipboard size={14} aria-hidden="true" />
           تكميل المراكز المعلّقة

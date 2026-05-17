@@ -154,7 +154,7 @@ describe("deriveTakmeelView", () => {
     expect(done.metaSub).toBe("اليوم");
     const wait = v.centers.find((c) => c.id === "م23")!;
     expect(wait.regionLabel).toBe("مركز م٢٣ · صبيا");
-    expect(wait.subText).toBe(`${wait.lateLabel} · المسؤول: سامي القرني`);
+    expect(wait.subText).toBe("متأخر · المسؤول: سامي القرني");
     expect(wait.metaTime).toBe("— —:—");
     expect(wait.metaSub).toBe("غير مُسجّل");
   });
