@@ -4,6 +4,7 @@ import { AppLayout } from "./components/AppLayout";
 import { LoginTransitionProvider } from "./components/LoginTransition";
 import { OperationsPlaceholderPage } from "./rabea/OperationsPlaceholderPage";
 import { OperationsWelcomePage } from "./rabea/OperationsWelcomePage";
+import { SubstituteTakmeelPage } from "./rabea/SubstituteTakmeelPage";
 import { RabeaEntranceTransitionProvider } from "./rabea/RabeaEntranceTransition";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { BuildingPage } from "./pages/building/BuildingPage";
@@ -35,6 +36,7 @@ export default function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/operations" element={<OperationsPlaceholderPage />} />
           <Route path="/operations-welcome" element={<OperationsWelcomePage />} />
+          <Route path="/operations-welcome/substitute" element={<SubstituteTakmeelPage />} />
           <Route
             element={
               <ProtectedRoute>
