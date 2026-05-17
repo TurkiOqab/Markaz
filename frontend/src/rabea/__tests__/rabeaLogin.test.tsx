@@ -15,8 +15,10 @@ function json(body: unknown, init?: ResponseInit) {
 
 describe("Rabea login distinction", () => {
   let fetchMock: FetchMock;
+  let user: ReturnType<typeof userEvent.setup>;
 
   beforeEach(() => {
+    user = userEvent.setup();
     fetchMock = vi.fn((input: string | URL | Request) => {
       const url = typeof input === "string" ? input : input.toString();
       if (url.includes("/api/auth/status")) {
@@ -37,17 +39,16 @@ describe("Rabea login distinction", () => {
 
   afterEach(() => {
     vi.unstubAllGlobals();
-    setRabeaMode(false);
+    setRabeaMode(false); // also clears the sessionStorage rabea flag
     window.history.pushState({}, "", "/");
   });
 
   it("REB9 opens the Rabea welcome without calling the login API", async () => {
     render(<App />);
-    const user = userEvent.setup();
 
     await screen.findByRole("heading", { name: "تسجيل الدخول" });
-    await user.type(screen.getByPlaceholderText("اسم المستخدم"), "REB9");
-    await user.type(screen.getByPlaceholderText("••••••••••"), "1234567891");
+    await user.type(screen.getByLabelText("اسم المستخدم"), "REB9");
+    await user.type(screen.getByLabelText("كلمة المرور"), "1234567891");
     await user.click(screen.getByRole("button", { name: "تسجيل الدخول" }));
 
     await screen.findByText("ربيع - مدير شعبة العمليات");
@@ -61,11 +62,10 @@ describe("Rabea login distinction", () => {
 
   it("a non-REB9 user still goes through the backend login (Injaz path)", async () => {
     render(<App />);
-    const user = userEvent.setup();
 
     await screen.findByRole("heading", { name: "تسجيل الدخول" });
-    await user.type(screen.getByPlaceholderText("اسم المستخدم"), "somechief");
-    await user.type(screen.getByPlaceholderText("••••••••••"), "passwordlong");
+    await user.type(screen.getByLabelText("اسم المستخدم"), "somechief");
+    await user.type(screen.getByLabelText("كلمة المرور"), "passwordlong");
     await user.click(screen.getByRole("button", { name: "تسجيل الدخول" }));
 
     await waitFor(() => {
