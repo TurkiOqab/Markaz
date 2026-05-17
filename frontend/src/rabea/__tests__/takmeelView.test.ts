@@ -101,4 +101,61 @@ describe("deriveTakmeelView", () => {
     const v = deriveTakmeelView(centers, at(10, 0));
     expect(v.centers[0].submittedLabel).toBe("٧:٣٢ ص");
   });
+
+  const TWO: CenterTakmeel[] = [
+    { id: "م22", region: "جازان", responsible: "عبدالله الزهراني", submittedAt: "07:32" },
+    { id: "م23", region: "صبيا", responsible: "سامي القرني", submittedAt: null },
+  ];
+
+  it("derives ring + percent + counts (1 of 2 after deadline)", () => {
+    const v = deriveTakmeelView(TWO, at(17, 19));
+    expect(v.ringCircumference).toBeCloseTo(427.26, 2);
+    expect(v.ringDash).toBe(`${(0.5 * 427.26).toFixed(2)} 427.26`);
+    expect(v.percentLabel).toBe("٥٠٪");
+    expect(v.completedCount).toBe(1);
+    expect(v.pendingCount).toBe(1);
+  });
+
+  it("builds the pendingAfterDeadline summary", () => {
+    const v = deriveTakmeelView(TWO, at(17, 19));
+    expect(v.summary.kind).toBe("pendingAfterDeadline");
+    expect(v.summary.pendingCount).toBe(1);
+    expect(v.summary.firstPendingName).toBe("مركز م٢٣");
+    expect(v.summary.firstPendingDelayLabel).toBe(v.centers.find((c) => c.id === "م23")!.lateLabel);
+  });
+
+  it("builds the allComplete summary", () => {
+    const both: CenterTakmeel[] = [
+      { id: "م22", region: "جازان", responsible: "ع", submittedAt: "07:32" },
+      { id: "م23", region: "صبيا", responsible: "س", submittedAt: "07:51" },
+    ];
+    const v = deriveTakmeelView(both, at(10, 0));
+    expect(v.summary.kind).toBe("allComplete");
+    expect(v.summary.firstPendingName).toBeNull();
+  });
+
+  it("builds the beforeDeadline summary", () => {
+    const v = deriveTakmeelView(TWO, at(8, 0));
+    expect(v.summary.kind).toBe("beforeDeadline");
+    expect(v.summary.pendingCount).toBe(1);
+  });
+
+  it("empty summary kind for no centers", () => {
+    const v = deriveTakmeelView([], at(10, 0));
+    expect(v.summary.kind).toBe("empty");
+  });
+
+  it("per-center display fields (completed vs pending)", () => {
+    const v = deriveTakmeelView(TWO, at(17, 19));
+    const done = v.centers.find((c) => c.id === "م22")!;
+    expect(done.regionLabel).toBe("مركز م٢٢ · جازان");
+    expect(done.subText).toBe("تم التكميل في الموعد · المسؤول: عبدالله الزهراني");
+    expect(done.metaTime).toBe("٧:٣٢ ص");
+    expect(done.metaSub).toBe("اليوم");
+    const wait = v.centers.find((c) => c.id === "م23")!;
+    expect(wait.regionLabel).toBe("مركز م٢٣ · صبيا");
+    expect(wait.subText).toBe(`متأخر ${wait.lateLabel} · المسؤول: سامي القرني`);
+    expect(wait.metaTime).toBe("— —:—");
+    expect(wait.metaSub).toBe("غير مُسجّل");
+  });
 });

@@ -16,11 +16,25 @@ export interface CenterView {
    *  earliest submitter. Always false in every other state. */
   fastest: boolean;
   /** Late metrics are non-null ONLY for a center that has not submitted AND
-   *  the 09:00 deadline has passed. They are null both for submitted centers
-   *  and for any center while still before the deadline ("pending"). */
+   *  the 09:00 deadline has passed. Null for submitted centers and before
+   *  the deadline. */
   lateMinutes: number | null;
   lateLabel: string | null;
   lateTier: LateTier | null;
+  /** Display fields for the redesigned page. */
+  regionLabel: string; // "مركز م٢٢ · جازان"
+  subText: string;     // completed/pending descriptive line
+  metaTime: string;    // "٧:٣٢ ص" or "— —:—"
+  metaSub: string;     // "اليوم" / "غير مُسجّل" / "قبل الموعد"
+}
+
+export type SummaryKind = "allComplete" | "beforeDeadline" | "pendingAfterDeadline" | "empty";
+
+export interface TakmeelSummary {
+  kind: SummaryKind;
+  pendingCount: number;
+  firstPendingName: string | null;
+  firstPendingDelayLabel: string | null;
 }
 
 export interface TakmeelView {
@@ -30,10 +44,17 @@ export interface TakmeelView {
   percent: number;
   headline: string;
   beforeDeadline: boolean;
+  completedCount: number;
+  pendingCount: number;
+  percentLabel: string;          // "٥٠٪"
+  ringCircumference: number;     // 427.26
+  ringDash: string;              // "213.63 427.26"
+  summary: TakmeelSummary;
   centers: CenterView[];
 }
 
 const AR_DIGITS = "٠١٢٣٤٥٦٧٨٩";
+const RING_CIRCUMFERENCE = 427.26; // 2π·68, matches handoff ring r=68
 
 function toArabicDigits(input: string): string {
   return input.replace(/\d/g, (d) => AR_DIGITS[Number(d)]);
@@ -83,6 +104,12 @@ export function deriveTakmeelView(
       percent: 0,
       headline: "لا توجد مراكز مرتبطة بحسابك",
       beforeDeadline: false,
+      completedCount: 0,
+      pendingCount: 0,
+      percentLabel: "٠٪",
+      ringCircumference: RING_CIRCUMFERENCE,
+      ringDash: `0.00 ${RING_CIRCUMFERENCE}`,
+      summary: { kind: "empty", pendingCount: 0, firstPendingName: null, firstPendingDelayLabel: null },
       centers: [],
     };
   }
@@ -131,6 +158,8 @@ export function deriveTakmeelView(
 
   const isComplete = state === "complete";
 
+  const pendingCount = total - submittedCount;
+
   const centerViews: CenterView[] = centers.map((c) => {
     const submitted = c.submittedAt !== null;
     let submittedLabel: string | null = null;
@@ -139,16 +168,46 @@ export function deriveTakmeelView(
       submittedLabel = format12h(h, m);
     }
     const showLate = !submitted && !beforeDeadline;
+    const cLateLabel = showLate ? lateLabel(lateMinutesNow) : null;
+    const regionLabel = `مركز ${toArabicDigits(c.id)} · ${c.region}`;
+    let subText: string;
+    if (submitted) {
+      subText = `تم التكميل في الموعد · المسؤول: ${c.responsible}`;
+    } else if (showLate) {
+      subText = `متأخر ${cLateLabel} · المسؤول: ${c.responsible}`;
+    } else {
+      subText = `قبل موعد التكميل · المسؤول: ${c.responsible}`;
+    }
+    const metaTime = submitted ? (submittedLabel as string) : "— —:—";
+    const metaSub = submitted ? "اليوم" : beforeDeadline ? "قبل الموعد" : "غير مُسجّل";
     return {
       id: c.id,
       submitted,
       submittedLabel,
       fastest: isComplete && c.id === fastestId,
       lateMinutes: showLate ? lateMinutesNow : null,
-      lateLabel: showLate ? lateLabel(lateMinutesNow) : null,
+      lateLabel: cLateLabel,
       lateTier: showLate ? lateTier(lateMinutesNow) : null,
+      regionLabel,
+      subText,
+      metaTime,
+      metaSub,
     };
   });
+
+  const firstPending = centerViews.find((c) => !c.submitted) ?? null;
+  let summaryKind: SummaryKind;
+  if (state === "complete") summaryKind = "allComplete";
+  else if (beforeDeadline) summaryKind = "beforeDeadline";
+  else summaryKind = "pendingAfterDeadline";
+  const summary: TakmeelSummary = {
+    kind: summaryKind,
+    pendingCount,
+    firstPendingName:
+      summaryKind === "pendingAfterDeadline" && firstPending ? firstPending.regionLabel.split(" · ")[0] : null,
+    firstPendingDelayLabel:
+      summaryKind === "pendingAfterDeadline" && firstPending ? firstPending.lateLabel : null,
+  };
 
   return {
     state,
@@ -157,6 +216,12 @@ export function deriveTakmeelView(
     percent,
     headline,
     beforeDeadline,
+    completedCount: submittedCount,
+    pendingCount,
+    percentLabel: `${toArabicDigits(String(percent))}٪`,
+    ringCircumference: RING_CIRCUMFERENCE,
+    ringDash: `${(percent / 100 * RING_CIRCUMFERENCE).toFixed(2)} ${RING_CIRCUMFERENCE}`,
+    summary,
     centers: centerViews,
   };
 }
