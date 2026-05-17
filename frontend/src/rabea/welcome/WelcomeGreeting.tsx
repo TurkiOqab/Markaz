@@ -1,21 +1,29 @@
 import { ArrowLeft, Clipboard, User } from "lucide-react";
 import type { TakmeelSummary } from "../takmeelView";
 
+const AR = "٠١٢٣٤٥٦٧٨٩";
+const ar = (n: number) => String(n).replace(/\d/g, (d) => AR[Number(d)]);
+
 function SummaryText({ s }: { s: TakmeelSummary }) {
+  if (s.kind === "empty") {
+    // The page guards this (CompletionPanel shows the empty state); render
+    // nothing here defensively rather than a broken "منذ null" sentence.
+    return null;
+  }
   if (s.kind === "allComplete") {
     return <>أكملت جميع المراكز تكميل اليوم — يمكنك الانتقال إلى لوحة التحكم.</>;
   }
   if (s.kind === "beforeDeadline") {
     return (
       <>
-        لم يبدأ وقت رفع التكميل بعد (٩:٠٠ ص) — <b>{s.pendingCount}</b> مركز قيد الانتظار.
+        لم يبدأ وقت رفع التكميل بعد (٩:٠٠ ص) — <b>{ar(s.pendingCount)}</b> مركز قيد الانتظار.
       </>
     );
   }
   // pendingAfterDeadline
   return (
     <>
-      لديك <b>{s.pendingCount === 1 ? "مركز واحد" : `${s.pendingCount} مراكز`}</b> لم
+      لديك <b>{s.pendingCount === 1 ? "مركز واحد" : `${ar(s.pendingCount)} مراكز`}</b> لم
       يُكمل تكميل اليوم حتى الآن — <b>{s.firstPendingName}</b> متأخّر منذ{" "}
       <b>{s.firstPendingDelayLabel}</b>. ابدأ بمتابعته قبل الانتقال إلى لوحة التحكم.
     </>
@@ -45,7 +53,7 @@ export function WelcomeGreeting({
 
       <div className="flex flex-wrap items-center gap-2 text-[14px] text-[#a9b8ad]">
         <span className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-full border border-[rgba(245,241,230,.10)] bg-[rgba(245,241,230,.04)] px-[11px] py-[5px] text-[12.5px] font-medium text-[#e6dfcc]">
-          <User size={13} className="text-[#a9b8ad]" />
+          <User size={13} aria-hidden="true" className="text-[#a9b8ad]" />
           مدير شعبة العمليات
         </span>
       </div>
@@ -61,13 +69,13 @@ export function WelcomeGreeting({
           className="group inline-flex items-center gap-2.5 rounded-[12px] bg-[linear-gradient(180deg,#e8d8aa,#d9c79a)] px-5 py-3 text-[14px] font-semibold text-[#1d160a] shadow-[0_10px_30px_-10px_rgba(217,199,154,.45),inset_0_1px_0_rgba(255,255,255,.4),inset_0_-1px_0_rgba(0,0,0,.10)] transition-[filter] hover:brightness-105"
         >
           الانتقال إلى لوحة التحكم
-          <ArrowLeft size={16} className="transition-transform duration-200 group-hover:-translate-x-[3px]" />
+          <ArrowLeft size={16} aria-hidden="true" className="transition-transform duration-200 group-hover:-translate-x-[3px]" />
         </button>
         <button
           type="button"
           className="inline-flex cursor-default items-center gap-2.5 rounded-[12px] border border-[rgba(245,241,230,.16)] px-5 py-3 text-[14px] font-semibold text-[#e6dfcc] hover:bg-[rgba(245,241,230,.04)]"
         >
-          <Clipboard size={14} />
+          <Clipboard size={14} aria-hidden="true" />
           تكميل المراكز المعلّقة
         </button>
       </div>
