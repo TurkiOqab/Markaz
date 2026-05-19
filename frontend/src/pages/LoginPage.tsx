@@ -6,6 +6,7 @@ import { ApiRequestError } from "../api/client";
 import { useAuth } from "../auth/useAuth";
 import { Loader } from "../components/Loader";
 import { useLoginTransition } from "../components/LoginTransition";
+import { InjazAuraBackdrop } from "../components/InjazAuraBackdrop";
 import { useRabeaEntrance } from "../rabea/RabeaEntranceTransition";
 import { RABEA_PASSWORD, RABEA_USERNAME, setRabeaMode } from "../rabea/rabeaSession";
 import { useWajebEntrance } from "../wajeb/WajebEntranceTransition";
@@ -225,11 +226,11 @@ export function LoginPage() {
 
       {/* Brand stage — visually on the left in RTL. Hidden on small screens. */}
       <aside
-        className="relative hidden flex-col overflow-hidden bg-gradient-to-b from-[#0d3a24] via-[#14502f] to-[#1a6b3d] px-14 py-12 text-white md:flex"
+        className="relative hidden flex-col overflow-hidden px-14 py-12 text-white md:flex"
         style={{ flex: "1.4 1 0%" }}
         aria-hidden="false"
       >
-        <BrandShape />
+        <InjazAuraBackdrop contained />
 
         <div className="relative z-10 flex items-start justify-between">
           <div className="flex items-center gap-3.5 opacity-0 animate-fade-slide-1">
@@ -326,63 +327,4 @@ function FieldInput(props: React.InputHTMLAttributes<HTMLInputElement>) {
   );
 }
 
-// ---------- Brand silhouette + drifting scan lines ----------
-
-function BrandShape() {
-  return (
-    <div
-      aria-hidden
-      className="pointer-events-none absolute inset-0 flex items-center justify-center"
-    >
-      <div
-        className="relative w-[95%] max-w-[820px] animate-shape-drift"
-        style={{ filter: "drop-shadow(0 20px 60px rgba(0,0,0,0.25))" }}
-      >
-        <img
-          src="/shape.webp"
-          alt=""
-          className="block h-auto w-full opacity-85"
-        />
-        <svg
-          viewBox="0 0 306 237"
-          preserveAspectRatio="none"
-          className="pointer-events-none absolute inset-0 h-full w-full"
-        >
-          <defs>
-            <linearGradient id="loginGlint" x1="0" y1="0" x2="1" y2="0">
-              <stop offset="0%" stopColor="#e8d9b8" stopOpacity="0" />
-              <stop offset="50%" stopColor="#e8d9b8" stopOpacity="0.55" />
-              <stop offset="100%" stopColor="#e8d9b8" stopOpacity="0" />
-            </linearGradient>
-            <linearGradient id="loginGlintSoft" x1="0" y1="0" x2="1" y2="0">
-              <stop offset="0%" stopColor="#e8d9b8" stopOpacity="0" />
-              <stop offset="50%" stopColor="#e8d9b8" stopOpacity="0.3" />
-              <stop offset="100%" stopColor="#e8d9b8" stopOpacity="0" />
-            </linearGradient>
-          </defs>
-          <rect x="0" y="80" width="110" height="0.8" fill="url(#loginGlintSoft)">
-            <animate attributeName="x" values="-40;220;-40" dur="11s" repeatCount="indefinite" />
-          </rect>
-          <rect x="0" y="125" width="140" height="1" fill="url(#loginGlint)">
-            <animate
-              attributeName="x"
-              values="-50;230;-50"
-              dur="9s"
-              repeatCount="indefinite"
-              begin="-3s"
-            />
-          </rect>
-          <rect x="0" y="170" width="100" height="0.8" fill="url(#loginGlintSoft)">
-            <animate
-              attributeName="x"
-              values="-30;240;-30"
-              dur="13s"
-              repeatCount="indefinite"
-              begin="-6s"
-            />
-          </rect>
-        </svg>
-      </div>
-    </div>
-  );
-}
+// The login brand stage uses the shared <InjazAuraBackdrop /> (contained).

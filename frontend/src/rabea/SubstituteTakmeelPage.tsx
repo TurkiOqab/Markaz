@@ -2,6 +2,7 @@ import { ArrowRight, ClipboardList } from "lucide-react";
 import { useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import { today } from "../lib/clock";
+import { InjazAuraBackdrop } from "../components/InjazAuraBackdrop";
 import type { CenterTakmeel } from "./takmeelMock";
 import { isRabeaMode } from "./rabeaSession";
 import { getPendingCenters, saveSubstituteTakmeel } from "./rabeaTakmeelStore";
@@ -436,17 +437,9 @@ function Shell({
   return (
     <main
       dir="rtl"
-      className="relative min-h-screen overflow-hidden bg-gradient-to-b from-[#0a2818] via-[#0d3a24] to-[#14502f] px-7 py-[22px] text-[#f5f1e6] max-[560px]:px-4"
+      className="relative min-h-screen overflow-hidden px-7 py-[22px] text-[#f5f1e6] max-[560px]:px-4"
     >
-      <BrandBackdrop />
-      <div
-        aria-hidden="true"
-        className="pointer-events-none fixed inset-0 -z-10"
-        style={{
-          background:
-            "radial-gradient(ellipse 1200px 800px at 50% 50%, transparent 0%, rgba(10,40,24,0.4) 100%)",
-        }}
-      />
+      <InjazAuraBackdrop />
       <div className="relative z-10 mx-auto w-full max-w-[1000px]">
         <header className="mb-7 flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-center gap-3">
@@ -502,57 +495,4 @@ function PageHead({ title, subtitle }: { title: string; subtitle: string }) {
   );
 }
 
-function BrandBackdrop() {
-  return (
-    <div
-      aria-hidden="true"
-      className="pointer-events-none fixed inset-0 -z-10 flex items-center justify-center opacity-[0.18]"
-    >
-      <div
-        className="relative w-[78%] max-w-[1100px] animate-shape-drift-slow"
-        style={{ filter: "drop-shadow(0 30px 80px rgba(0,0,0,0.4))" }}
-      >
-        <img src="/shape.webp" alt="" className="block h-auto w-full" />
-        <svg
-          viewBox="0 0 306 237"
-          preserveAspectRatio="none"
-          className="pointer-events-none absolute inset-0 h-full w-full"
-        >
-          <defs>
-            <linearGradient id="rabeaSubGlint" x1="0" y1="0" x2="1" y2="0">
-              <stop offset="0%" stopColor="#e8d9b8" stopOpacity="0" />
-              <stop offset="50%" stopColor="#e8d9b8" stopOpacity="0.55" />
-              <stop offset="100%" stopColor="#e8d9b8" stopOpacity="0" />
-            </linearGradient>
-            <linearGradient id="rabeaSubGlintSoft" x1="0" y1="0" x2="1" y2="0">
-              <stop offset="0%" stopColor="#e8d9b8" stopOpacity="0" />
-              <stop offset="50%" stopColor="#e8d9b8" stopOpacity="0.3" />
-              <stop offset="100%" stopColor="#e8d9b8" stopOpacity="0" />
-            </linearGradient>
-          </defs>
-          <rect x="0" y="80" width="110" height="0.8" fill="url(#rabeaSubGlintSoft)">
-            <animate attributeName="x" values="-40;220;-40" dur="11s" repeatCount="indefinite" />
-          </rect>
-          <rect x="0" y="125" width="140" height="1" fill="url(#rabeaSubGlint)">
-            <animate
-              attributeName="x"
-              values="-50;230;-50"
-              dur="9s"
-              repeatCount="indefinite"
-              begin="-3s"
-            />
-          </rect>
-          <rect x="0" y="170" width="100" height="0.8" fill="url(#rabeaSubGlintSoft)">
-            <animate
-              attributeName="x"
-              values="-30;240;-30"
-              dur="13s"
-              repeatCount="indefinite"
-              begin="-6s"
-            />
-          </rect>
-        </svg>
-      </div>
-    </div>
-  );
-}
+// Ambient backdrop is shared via <InjazAuraBackdrop /> (see Shell above).

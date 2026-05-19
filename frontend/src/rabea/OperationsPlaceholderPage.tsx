@@ -1,5 +1,6 @@
 import { Construction } from "lucide-react";
 import { Navigate, useNavigate } from "react-router-dom";
+import { InjazAuraBackdrop } from "../components/InjazAuraBackdrop";
 import { isRabeaMode } from "./rabeaSession";
 
 export function OperationsPlaceholderPage() {
@@ -10,17 +11,8 @@ export function OperationsPlaceholderPage() {
   }
 
   return (
-    <main className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-gradient-to-b from-[#0a2818] via-[#0d3a24] to-[#14502f] px-8 text-center text-white">
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 flex items-center justify-center opacity-[0.15]"
-      >
-        <img
-          src="/shape.webp"
-          alt=""
-          className="w-[70%] max-w-[900px] animate-shape-drift-slow"
-        />
-      </div>
+    <main className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-8 text-center text-white">
+      <InjazAuraBackdrop />
       <div className="relative z-10 flex flex-col items-center gap-5">
         <span className="flex h-16 w-16 items-center justify-center rounded-2xl border border-injaz-gold-soft/25 bg-injaz-gold-soft/10 text-injaz-gold-soft">
           <Construction size={32} strokeWidth={1.7} />
