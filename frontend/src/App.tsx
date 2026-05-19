@@ -6,6 +6,8 @@ import { OperationsPlaceholderPage } from "./rabea/OperationsPlaceholderPage";
 import { OperationsWelcomePage } from "./rabea/OperationsWelcomePage";
 import { SubstituteTakmeelPage } from "./rabea/SubstituteTakmeelPage";
 import { RabeaEntranceTransitionProvider } from "./rabea/RabeaEntranceTransition";
+import { DutyWelcomePage } from "./wajeb/DutyWelcomePage";
+import { WajebEntranceTransitionProvider } from "./wajeb/WajebEntranceTransition";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { BuildingPage } from "./pages/building/BuildingPage";
 import { DashboardPage } from "./pages/DashboardPage";
@@ -31,12 +33,14 @@ export default function App() {
       <AuthProvider>
         <LoginTransitionProvider>
         <RabeaEntranceTransitionProvider>
+        <WajebEntranceTransitionProvider>
         <Routes>
           <Route path="/setup" element={<SetupPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/operations" element={<OperationsPlaceholderPage />} />
           <Route path="/operations-welcome" element={<OperationsWelcomePage />} />
           <Route path="/operations-welcome/substitute" element={<SubstituteTakmeelPage />} />
+          <Route path="/duty-welcome" element={<DutyWelcomePage />} />
           <Route
             element={
               <ProtectedRoute>
@@ -64,6 +68,7 @@ export default function App() {
             <Route path="/building" element={<BuildingPage />} />
           </Route>
         </Routes>
+        </WajebEntranceTransitionProvider>
         </RabeaEntranceTransitionProvider>
         </LoginTransitionProvider>
       </AuthProvider>

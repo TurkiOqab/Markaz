@@ -8,6 +8,8 @@ import { Loader } from "../components/Loader";
 import { useLoginTransition } from "../components/LoginTransition";
 import { useRabeaEntrance } from "../rabea/RabeaEntranceTransition";
 import { RABEA_PASSWORD, RABEA_USERNAME, setRabeaMode } from "../rabea/rabeaSession";
+import { useWajebEntrance } from "../wajeb/WajebEntranceTransition";
+import { WAJEB_PASSWORD, WAJEB_USERNAME, setWajebMode } from "../wajeb/wajebSession";
 
 /**
  * Editorial login (Variant 3 of the Injaz handoff): a two-column layout — a
@@ -21,6 +23,7 @@ export function LoginPage() {
   const { loading, setupComplete, authenticated, login } = useAuth();
   const { phase, start } = useLoginTransition();
   const { phase: rabeaPhase, start: startRabeaEntrance } = useRabeaEntrance();
+  const { phase: wajebPhase, start: startWajebEntrance } = useWajebEntrance();
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -56,6 +59,13 @@ export function LoginPage() {
       startRabeaEntrance();
       return;
     }
+    if (username === WAJEB_USERNAME && password === WAJEB_PASSWORD) {
+      // Frontend-only Wajeb gate — same rationale as the Rabea branch above
+      // (WAJEB1 is not a real backend account; never hits the login API).
+      setWajebMode(true);
+      startWajebEntrance();
+      return;
+    }
     setSubmitting(true);
     try {
       await login(username, password);
@@ -70,7 +80,7 @@ export function LoginPage() {
   // Stage 1: blur + scale-down + fade out. Stages 2/3: stay invisible (the
   // welcome panel has fully taken over the viewport and is layering on top).
   const pageSlideClass =
-    phase === "enter" || rabeaPhase === "sweep"
+    phase === "enter" || rabeaPhase === "sweep" || wajebPhase === "sweep"
       ? "animate-login-blur-out"
       : phase === "hold" || phase === "exit"
         ? "opacity-0"
