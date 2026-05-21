@@ -51,7 +51,7 @@ export function OperationsWelcomePage() {
       <div className="mx-auto grid w-full max-w-[1280px] grid-cols-[1.05fr_1fr] items-center gap-8 max-[980px]:grid-cols-1 max-[980px]:gap-7">
         <WelcomeGreeting
           summary={view.summary}
-          onPrimary={() => navigate("/operations")}
+          onPrimary={() => navigate("/operations-panel")}
           onPending={() => navigate("/operations-welcome/substitute")}
           pendingTier={view.worstPendingTier}
         />
