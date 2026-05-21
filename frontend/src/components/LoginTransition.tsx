@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 import { getTodayRollCall, upsertTodayRollCall } from "../api/rollCalls";
 import { listTeams } from "../api/teams";
 import { today } from "../lib/clock";
+import { InjazAuraBackdrop } from "./InjazAuraBackdrop";
 import type { RollCall, Team } from "../types/models";
 
 /**
@@ -283,20 +284,10 @@ function WelcomeOverlay({
       aria-live="polite"
     >
       <div
-        className={`pointer-events-auto absolute inset-0 flex flex-col overflow-hidden bg-gradient-to-b from-[#0a2818] via-[#0d3a24] to-[#14502f] px-14 pb-9 pt-10 text-white ${animationClass}`}
+        className={`pointer-events-auto absolute inset-0 flex flex-col overflow-hidden px-14 pb-9 pt-10 text-white ${animationClass}`}
       >
-        {/* shape silhouette + scan lines */}
-        <BrandShapeBackdrop />
-
-        {/* radial vignette to focus content */}
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0"
-          style={{
-            background:
-              "radial-gradient(ellipse 1200px 800px at 50% 50%, transparent 0%, rgba(10,40,24,0.4) 100%)",
-          }}
-        />
+        {/* unified ambient backdrop (same as the rest of the welcome surfaces) */}
+        <InjazAuraBackdrop contained />
 
         {/* incoming sheen — only during reveal, very subtle */}
         {phase === "enter" ? (
@@ -328,16 +319,16 @@ function WelcomeOverlay({
             <div
               role="tablist"
               aria-label="مستوى الإنذار"
-              className="flex gap-1 rounded-full border border-white/10 bg-black/20 p-[3px]"
+              className="flex gap-1 rounded-full border border-[rgba(245,241,230,.10)] bg-[rgba(245,241,230,.04)] p-1"
             >
               {(["white", "orange", "red"] as const).map((a) => {
                 const isActive = alertLevel === a;
                 const activeCls =
                   a === "white"
-                    ? "bg-white/95 text-[#14502f]"
+                    ? "bg-white/10 text-[#f5f1e6]"
                     : a === "orange"
-                      ? "bg-[#e89e40] text-[#1a1208]"
-                      : "bg-[#c0392b] text-white";
+                      ? "bg-[#e1a04a]/15 text-[#f0a04b]"
+                      : "bg-[#c0392b]/20 text-[#ff8a7a]";
                 return (
                   <button
                     key={a}
@@ -346,7 +337,7 @@ function WelcomeOverlay({
                     aria-selected={isActive}
                     onClick={() => setAlertLevel(a)}
                     className={`rounded-full px-3.5 py-1.5 text-[11px] font-medium tracking-wider transition-colors ${
-                      isActive ? activeCls : "text-white/60 hover:text-white/90"
+                      isActive ? activeCls : "text-[#a9b8ad] hover:text-[#e6dfcc]"
                     }`}
                   >
                     {a === "white" ? "أبيض" : a === "orange" ? "برتقالي" : "أحمر"}
@@ -362,7 +353,7 @@ function WelcomeOverlay({
         </header>
 
         {/* MAIN — greeting + cards */}
-        <div className="relative z-10 my-auto grid grid-cols-1 items-center gap-12 md:grid-cols-[1.1fr_0.9fr]">
+        <div className="relative z-10 mx-auto my-auto grid w-full max-w-[1280px] grid-cols-1 items-center gap-8 md:grid-cols-[1.05fr_1fr]">
           <div className="max-w-[640px]">
             <p className="mb-5 text-xs uppercase tracking-[0.24em] opacity-55 animate-fade-slide-2">
               INJAZ · CONTROL CENTER
@@ -487,7 +478,7 @@ function TeamCard({
 
   return (
     <Card delayClass="opacity-0 animate-fade-slide-3">
-      <CardHead label="الفرقة المستلمة">
+      <CardHead label="الفرقة المستلمة لهذا اليوم">
         <Users size={16} />
       </CardHead>
       <div className="grid grid-cols-3 gap-2">
@@ -514,14 +505,11 @@ function TeamCard({
                     />
                   ) : null}
                   <div
-                    className={`mb-1 font-display text-[36px] font-extrabold leading-none ${
+                    className={`font-display text-[40px] font-extrabold leading-none ${
                       isActive ? "text-injaz-gold-soft" : "text-white/95"
                     }`}
                   >
                     {t.name}
-                  </div>
-                  <div className="text-[11px] tracking-wider opacity-60">
-                    {t.description ?? `الفرقة ${t.name}`}
                   </div>
                 </button>
               );
@@ -590,16 +578,8 @@ function Card({
 }) {
   return (
     <div
-      className={`relative overflow-hidden rounded-[18px] border border-white/10 bg-white/[0.05] px-6 py-[22px] backdrop-blur-md backdrop-saturate-150 ${delayClass}`}
+      className={`relative overflow-hidden rounded-[22px] border border-[rgba(245,241,230,.16)] bg-[linear-gradient(180deg,rgba(245,241,230,.04),rgba(245,241,230,.02)),rgba(6,26,16,.55)] px-6 py-[22px] shadow-[0_30px_80px_-30px_rgba(0,0,0,.55),inset_0_1px_0_rgba(245,241,230,.06)] backdrop-blur-[8px] ${delayClass}`}
     >
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0"
-        style={{
-          background:
-            "linear-gradient(135deg, rgba(255,255,255,0.05), transparent 50%)",
-        }}
-      />
       <div className="relative">{children}</div>
     </div>
   );
@@ -633,57 +613,5 @@ function Stat({ label, value }: { label: string; value: string }) {
   );
 }
 
-function BrandShapeBackdrop() {
-  return (
-    <div
-      aria-hidden
-      className="pointer-events-none absolute inset-0 flex items-center justify-center opacity-[0.18]"
-    >
-      <div
-        className="relative w-[78%] max-w-[1100px] animate-shape-drift-slow"
-        style={{ filter: "drop-shadow(0 30px 80px rgba(0,0,0,0.4))" }}
-      >
-        <img src="/shape.webp" alt="" className="block h-auto w-full" />
-        <svg
-          viewBox="0 0 306 237"
-          preserveAspectRatio="none"
-          className="pointer-events-none absolute inset-0 h-full w-full"
-        >
-          <defs>
-            <linearGradient id="welcomeGlint" x1="0" y1="0" x2="1" y2="0">
-              <stop offset="0%" stopColor="#e8d9b8" stopOpacity="0" />
-              <stop offset="50%" stopColor="#e8d9b8" stopOpacity="0.55" />
-              <stop offset="100%" stopColor="#e8d9b8" stopOpacity="0" />
-            </linearGradient>
-            <linearGradient id="welcomeGlintSoft" x1="0" y1="0" x2="1" y2="0">
-              <stop offset="0%" stopColor="#e8d9b8" stopOpacity="0" />
-              <stop offset="50%" stopColor="#e8d9b8" stopOpacity="0.3" />
-              <stop offset="100%" stopColor="#e8d9b8" stopOpacity="0" />
-            </linearGradient>
-          </defs>
-          <rect x="0" y="80" width="110" height="0.8" fill="url(#welcomeGlintSoft)">
-            <animate attributeName="x" values="-40;220;-40" dur="11s" repeatCount="indefinite" />
-          </rect>
-          <rect x="0" y="125" width="140" height="1" fill="url(#welcomeGlint)">
-            <animate
-              attributeName="x"
-              values="-50;230;-50"
-              dur="9s"
-              repeatCount="indefinite"
-              begin="-3s"
-            />
-          </rect>
-          <rect x="0" y="170" width="100" height="0.8" fill="url(#welcomeGlintSoft)">
-            <animate
-              attributeName="x"
-              values="-30;240;-30"
-              dur="13s"
-              repeatCount="indefinite"
-              begin="-6s"
-            />
-          </rect>
-        </svg>
-      </div>
-    </div>
-  );
-}
+// (Old shape.webp + glint backdrop removed — replaced by the shared
+// <InjazAuraBackdrop /> used across all welcome surfaces.)
